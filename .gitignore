@@ -1,0 +1,4 @@
+# Local tooling
+.claude/
+# Reference render (not used by the site)
+LongDen.jpeg
