@@ -153,6 +153,31 @@
     position: absolute; top: -9px; right: 12px; padding: 2px 9px; border-radius: 999px;
     font-size: 11px; font-weight: 700; background: #2b2233; color: #ffd48a; letter-spacing: .02em;
   }
+  /* Featured member: full-width golden card */
+  .member.featured {
+    grid-column: 1 / -1; gap: 20px; padding: 20px 26px 20px 20px; margin-bottom: 6px;
+    flex-direction: row; text-align: left;
+    background: linear-gradient(120deg, #fff4d6 0%, #ffe3a3 55%, #ffd08a 100%);
+    border: 2px solid #f2b84f; box-shadow: 0 6px 0 #c98a25, 0 0 44px rgba(255, 190, 90, .35);
+  }
+  .team-modal.open .member.featured:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #c98a25, 0 0 54px rgba(255, 190, 90, .5); }
+  .member.featured::before, .member.featured::after {
+    content: "✦"; position: absolute; color: #e8a33a; font-size: 18px; opacity: .8;
+    animation: twinkle 2.4s ease-in-out infinite;
+  }
+  .member.featured::before { top: 12px; right: 28%; }
+  .member.featured::after { bottom: 12px; right: 34px; font-size: 13px; animation-delay: 1.2s; }
+  @keyframes twinkle { 50% { opacity: .2; transform: scale(.7) rotate(20deg); } }
+  .member.featured .ava {
+    width: 92px; height: 92px;
+    background: radial-gradient(circle at 50% 55%, #fffaf0 0 60%, #ffe9bd 61%);
+    box-shadow: 0 0 0 3px #f2b84f;
+  }
+  .member.featured .ava svg { width: 82px; height: 82px; }
+  .member.featured b { font-size: 21px; }
+  .member.featured .role { font-size: 13px; color: #a2561b; }
+  .member.featured .note { display: block; margin-top: 8px; max-width: 62ch; font-size: 14px; line-height: 1.55; color: #4a3520; }
+  .member.featured .badge { background: linear-gradient(135deg, #c9441f, #e8773a); color: #fff; font-size: 12px; padding: 3px 12px; right: 20px; }
   .cta {
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
     padding: 13px 22px; border-radius: 999px; border: 0; cursor: pointer;
@@ -205,14 +230,14 @@
   }
   @keyframes pulse { 50% { box-shadow: 0 0 0 11px rgba(255, 200, 120, 0); } }
   .hotspot .tip {
-    position: absolute; left: 50%; bottom: calc(100% + 12px); transform: translate(-50%, 6px);
+    position: absolute; left: 50%; bottom: calc(100% + 12px); transform: translate(calc(-50% + var(--shift, 0px)), 6px);
     width: 220px; padding: 12px 14px; border-radius: 12px; text-align: left;
     background: rgba(12, 18, 36, .92); border: 1px solid var(--line);
     font-size: 13px; line-height: 1.5; color: var(--muted);
     opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
   }
   .hotspot .tip b { display: block; color: var(--text); font-weight: 600; margin-bottom: 3px; font-size: 14px; }
-  .hotspot:hover .tip, .hotspot:focus-visible .tip, .hotspot.open .tip { opacity: 1; transform: translate(-50%, 0); }
+  .hotspot:hover .tip, .hotspot:focus-visible .tip, .hotspot.open .tip { opacity: 1; transform: translate(calc(-50% + var(--shift, 0px)), 0); }
   body.no-labels #hotspots, body.presenting #hotspots { display: none; }
 
   /* ---------- Memories ---------- */
@@ -330,14 +355,22 @@
   /* ---------- Responsive ---------- */
   @media (max-width: 1400px) { .hint { display: none; } }
   @media (max-height: 900px) and (min-width: 861px) {
-    .lead { font-size: 14px; margin-bottom: 14px; }
+    .intro .eyebrow { margin-bottom: 10px; }
+    .intro h1 { margin-bottom: 12px; }
+    .lead { font-size: 13.5px; line-height: 1.55; margin-bottom: 14px; }
     .tags { margin-bottom: 18px; }
     .actions { margin-bottom: 22px; }
     .parts { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; }
     .parts button { padding: 8px 2px; font-size: 14px; gap: 10px; }
     .parts .arrow { display: none; }
   }
+  @media (max-height: 760px) and (min-width: 861px) {
+    .tags { margin-bottom: 14px; }
+    .actions { margin-bottom: 16px; }
+    .parts button { padding: 7px 2px; }
+  }
   @media (max-width: 1200px) and (min-width: 861px) {
+    .team-peek .stack span:nth-child(n+2), .mem-peek .thumbs img:nth-child(n+2) { display: none; }
     .chip { padding: 8px 10px; }
     .dimmer { font-size: 0; gap: 0; }
     .dimmer input { width: 72px; }
@@ -372,6 +405,8 @@
     .team-title { font-size: 28px; padding-right: 44px; }
     .team-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px 12px; }
     .member { flex-direction: column; text-align: center; padding: 16px 10px 14px; }
+    .member.featured { flex-direction: column; text-align: center; padding: 22px 16px 18px; gap: 12px; }
+    .member.featured b { font-size: 19px; }
   }
   @media (max-height: 560px) and (orientation: landscape) {
     .stage { height: 100svh; min-height: 0; }
@@ -400,7 +435,7 @@
     .member { flex-direction: row; text-align: left; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .hotspot .dot, .loader .orb, .bob { animation: none; }
+    .hotspot .dot, .loader .orb, .bob, .member.featured::before, .member.featured::after { animation: none; }
     .team-modal.open .member { animation: none; opacity: 1; transform: none; }
     .member:hover .ava svg { animation: none; }
   }
@@ -455,11 +490,11 @@
 </section>
 
 <main class="intro" id="info">
-  <p class="eyebrow">Nhóm Two The Top giới thiệu</p>
-  <h1>Lồng đèn <em>Mặt Trời &amp; Vầng Trăng</em></h1>
+  <p class="eyebrow">Lồng đèn Trung Thu · Two The Top</p>
+  <h1>Khi Mặt Trời <em>gặp Vầng Trăng</em></h1>
   <p class="lead">
-    Mặt trời rực rỡ với vành đai sao treo, hai vầng trăng khuyết lấp lánh và những tầng mây
-    nhiều màu trên chiếc đế phát sáng.
+    Đêm rằm này, ngày và đêm cùng thắp sáng: mặt trời rực rỡ giữa vòng sao treo, hai vầng trăng
+    ôm lấy những tầng mây lấp lánh — tất cả làm nên từ que tre, bìa giấy và 18 đôi tay của Two The Top.
   </p>
   <ul class="tags" aria-label="Chất liệu">
     <li>Bìa cứng</li><li>Que tre</li><li>Giấy nhũ</li><li>Giấy scan</li><li>Đèn LED đom đóm</li><li>Đế LED</li>
@@ -470,13 +505,13 @@
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>
       Bắt đầu trình chiếu
     </button>
-    <button class="team-peek" id="btnTeam">
+    <button class="team-peek" id="btnTeam" title="Gặp gỡ các thành viên">
       <span class="stack" id="teamStack"></span>
       <b id="teamCount"></b>
     </button>
-    <button class="team-peek mem-peek" id="btnMemories">
+    <button class="team-peek mem-peek" id="btnMemories" title="Hành trình &amp; kỷ niệm làm lồng đèn">
       <span class="thumbs" id="memThumbs"></span>
-      <b>Hành trình &amp; kỷ niệm</b>
+      <b>Hành trình</b>
     </button>
   </div>
 
@@ -484,7 +519,7 @@
   <ol class="parts" id="partList"></ol>
 </main>
 
-<div class="team-modal" id="teamModal" role="dialog" aria-modal="true" aria-labelledby="teamTitle">
+<div class="team-modal" id="teamModal" role="dialog" aria-modal="true" aria-labelledby="teamTitle" inert>
   <div class="team-sheet">
     <button class="round team-close" id="teamClose" aria-label="Đóng">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -496,7 +531,7 @@
   </div>
 </div>
 
-<div class="memories" id="memories" role="dialog" aria-modal="true" aria-labelledby="memTitle">
+<div class="memories" id="memories" role="dialog" aria-modal="true" aria-labelledby="memTitle" inert>
   <div class="mem-sheet">
     <header class="mem-head">
       <div>
@@ -512,7 +547,7 @@
   </div>
 </div>
 
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Xem ảnh và video">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Xem ảnh và video" inert>
   <button class="round lb-close" id="lbClose" aria-label="Đóng">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
@@ -526,7 +561,7 @@
   <div class="lb-cap"><span id="lbCount"></span><b id="lbText"></b></div>
 </div>
 
-<div class="caption" id="caption" aria-live="polite">
+<div class="caption" id="caption" aria-live="polite" inert>
   <p class="step" id="capStep"></p>
   <h3 id="capTitle"></h3>
   <p id="capText"></p>
@@ -557,8 +592,11 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
    Nội dung trang — sửa ở đây
    ========================================================= */
 // Thành viên nhóm (thứ tự hiển thị).
-// look: món đồ của linh vật lồng đèn · color: màu lồng đèn · lead: nhãn nhỏ phía trên thẻ.
+// look: món đồ của linh vật lồng đèn · color: màu lồng đèn · lead: nhãn nhỏ phía trên thẻ
+// featured + note: thẻ nổi bật chiếm cả hàng, kèm lời ghi chú.
 const TEAM = [
+  { name: 'Ong Thị Cẩm Tú', role: 'Người gánh vác team lồng đèn', look: 'carry', color: 'coral', lead: 'Ngôi sao của nhóm',
+    featured: true, note: 'Người gánh gần như hầu hết công việc làm lồng đèn — từ khung tre, dán giấy đến từng bóng đèn. Cảm ơn chị Tú rất nhiều! 💛' },
   { name: 'Trà Nguyễn Gia Khánh', role: 'Nhóm trưởng', look: 'crown', color: 'red', lead: 'Nhóm trưởng' },
   { name: 'Lê Thanh Trí', role: 'Nhóm phó', look: 'star', color: 'sky', lead: 'Nhóm phó' },
   { name: 'Đinh Quang Thắng', role: 'Cánh tay trái nhóm trưởng', look: 'armL', color: 'peach' },
@@ -576,7 +614,6 @@ const TEAM = [
   { name: 'Châu Huệ Mẫn', role: 'Bộ 3 team SEO', look: 'magnifier', color: 'pink' },
   { name: 'Nguyễn Hoàng Bảo Khanh', role: 'Bộ 3 team SEO', look: 'magnifier', color: 'sun' },
   { name: 'Nguyễn Trí Trung', role: 'Anh trai tháo vát', look: 'wrench', color: 'red' },
-  { name: 'Ong Thị Cẩm Tú', role: 'Người gánh vác team lồng đèn', look: 'carry', color: 'coral' },
 ];
 // Màu lồng đèn: [thân, viền đậm]
 const LANTERN_COLORS = {
@@ -585,8 +622,8 @@ const LANTERN_COLORS = {
   lilac: ['#b69cff', '#7d5fd6'], pink: ['#ff9dbb', '#d9648a'],
 };
 const INTRO = {
-  title: 'Two The Top',
-  text: 'Nhóm Two The Top giới thiệu lồng đèn Mặt Trời & Vầng Trăng — mặt trời, mặt trăng, mây và sao cùng hội tụ trong một đêm rằm lung linh.',
+  title: 'Khi Mặt Trời gặp Vầng Trăng',
+  text: 'Lồng đèn Mặt Trời & Vầng Trăng của Two The Top — đêm rằm này, ngày và đêm cùng thắp sáng trong một chiếc lồng đèn làm nên từ que tre, bìa giấy và 18 đôi tay.',
 };
 
 /* =========================================================
@@ -608,7 +645,7 @@ const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.dampingFactor = 0.06;
 controls.minDistance = 13;
-controls.maxDistance = 46;
+controls.maxDistance = 56;
 controls.zoomSpeed = 0.55;
 controls.rotateSpeed = 0.8;
 controls.enablePan = false;
@@ -710,7 +747,7 @@ function lamp(hex, glow = 1, { map = texBoard, flat = false, rough = 0.8 } = {})
   lampMats.push(m);
   return m;
 }
-const twineMat = new THREE.MeshStandardMaterial({ color: 0xe9dcc4, roughness: 0.9 });
+const yarnMat = new THREE.MeshStandardMaterial({ color: 0xf4ead8, emissive: 0x3a2c1a, roughness: 1 });
 const stickMat = new THREE.MeshStandardMaterial({ color: 0x6f4a28, emissive: 0x2a1606, roughness: 0.7 });
 const hoopMat = new THREE.MeshStandardMaterial({ color: 0x8a6440, emissive: 0x3a220c, roughness: 0.75 });
 const woodMat = new THREE.MeshStandardMaterial({ color: 0x5d4330, roughness: 0.7 });
@@ -1058,7 +1095,7 @@ function hang(anchor, starY, R, type, spin = 0) {
   const pivot = new THREE.Group();
   pivot.position.copy(anchor);
   const len = Math.max(0.2, anchor.y - starY - R);
-  const str = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, len, 4), twineMat);
+  const str = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, len, 6), yarnMat); // dây len
   str.position.y = -len / 2;
   const star = type === 'stick' ? stickStar(R) : puffyStar(R);
   star.position.y = -len - R;
@@ -1175,7 +1212,7 @@ const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const PARTS = [
   { name: 'Mặt trời', text: 'Đĩa tròn phát sáng từ bên trong, 14 tia nhũ vàng xếp đều quanh viền.',
     pos: () => SUN_POS.clone().add(new THREE.Vector3(-0.9, 1.1, 0.2)), normal: [0, 0, 1], cam: VIEWS.sun },
-  { name: 'Vành đai & sao treo', text: 'Vòng tròn quấn dây đèn đom đóm, treo sao que tre và sao giấy bằng dây gai.',
+  { name: 'Vành đai & sao treo', text: 'Vòng tròn quấn dây đèn đom đóm, treo sao que tre và sao giấy bằng dây len.',
     pos: () => hangers[3].star.getWorldPosition(new THREE.Vector3()), normal: [0.2, 0, 1],
     cam: { dir: [0.35, 0.05, 1], dist: 17, target: [0.8, 7.4, 0.5] } },
   { name: 'Vầng trăng khuyết', text: 'Hai vầng trăng lớn đặt đối xứng hai bên, gắn dày đèn đom đóm lấp lánh.',
@@ -1218,13 +1255,15 @@ function closeTips() { document.querySelectorAll('.hotspot.open').forEach(x => x
 document.addEventListener('click', closeTips);
 
 function setActivePart(p) { PARTS.forEach(q => q.row.classList.toggle('active', q === p)); }
+let tipTimer;
 function focusPart(p) {
+  clearTimeout(tipTimer);
   setAutoRotate(false);
   setActiveView(null);
   setActivePart(p);
   flyTo(pose(p.cam));
   closeTips();
-  setTimeout(() => p.el.classList.add('open'), 1400);
+  tipTimer = setTimeout(() => p.el.classList.add('open'), 1400);
   if (isCompact()) stage.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -1238,8 +1277,26 @@ function updateHotspots() {
     const visible = _v.z < 1 && facing > 0.05;
     p.el.style.opacity = visible ? Math.min(1, facing * 2.5) : 0;
     p.el.style.pointerEvents = visible ? 'auto' : 'none';
-    p.el.style.left = ((_v.x + 1) / 2) * w + 'px';
+    const x = ((_v.x + 1) / 2) * w, half = (w <= 860 ? 180 : 220) / 2 + 8;
+    p.el.style.left = x + 'px';
+    p.el.style.setProperty('--shift', `${Math.max(half, Math.min(w - half, x)) - x}px`);
     p.el.style.top = ((1 - _v.y) / 2) * h + 'px';
+  }
+}
+
+/* ---- Overlay helper ---- */
+const returnFocus = new Map();
+function setOverlay(el, open, focusSel) {
+  if (el.classList.contains('open') === open) return;
+  el.classList.toggle('open', open);
+  el.inert = !open;
+  if (open) {
+    returnFocus.set(el, document.activeElement);
+    if (!document.body.classList.contains('presenting') || el === lightbox) el.querySelector(focusSel)?.focus({ preventScroll: true });
+  } else {
+    const back = returnFocus.get(el);
+    returnFocus.delete(el);
+    if (back && el.contains(document.activeElement) && document.body.contains(back)) back.focus({ preventScroll: true });
   }
 }
 
@@ -1321,20 +1378,20 @@ function mascot(look, color) {
 }
 
 const teamModal = document.getElementById('teamModal');
-document.getElementById('teamCount').textContent = `Gặp gỡ ${TEAM.length} thành viên`;
+document.getElementById('teamCount').textContent = `${TEAM.length} thành viên`;
 document.getElementById('teamSub').textContent = `${TEAM.length} chiếc lồng đèn nhỏ cùng nhau thắp sáng một chiếc lồng đèn lớn ✨`;
-document.getElementById('teamStack').innerHTML = TEAM.slice(0, 5).map(m => `<span>${mascot(m.look, m.color)}</span>`).join('');
+document.getElementById('teamStack').innerHTML = TEAM.slice(0, 3).map(m => `<span>${mascot(m.look, m.color)}</span>`).join('');
 document.getElementById('teamGrid').innerHTML = TEAM.map((m, i) => {
   const [body, dark] = LANTERN_COLORS[m.color] || LANTERN_COLORS.coral;
-  return `<div class="member" style="--body:${body};--dark:${dark};--i:${i};--tilt:${i % 2 ? 0.8 : -0.8}deg">
+  return `<div class="member${m.featured ? ' featured' : ''}" style="--body:${body};--dark:${dark};--i:${i};--tilt:${m.featured ? 0 : i % 2 ? 0.8 : -0.8}deg">
     ${m.lead ? `<span class="badge">${m.lead}</span>` : ''}
     <span class="ava">${mascot(m.look, m.color)}</span>
-    <span class="who"><b>${m.name}</b><span class="role">${m.role}</span></span>
+    <span class="who"><b>${m.name}</b><span class="role">${m.role}</span>${m.note ? `<span class="note">${m.note}</span>` : ''}</span>
   </div>`;
 }).join('');
 
-function openTeam() { teamModal.classList.add('open'); }
-function closeTeam() { teamModal.classList.remove('open'); }
+function openTeam() { setOverlay(teamModal, true, '#teamClose'); }
+function closeTeam() { setOverlay(teamModal, false); }
 document.getElementById('btnTeam').addEventListener('click', (e) => { e.stopPropagation(); openTeam(); });
 document.getElementById('teamClose').addEventListener('click', () => {
   if (document.body.classList.contains('presenting')) stopPresenting();
@@ -1407,8 +1464,8 @@ document.getElementById('memTimeline').innerHTML = MEMORIES.map(ch => `
   </section>`).join('');
 
 const memories = document.getElementById('memories');
-function openMemories() { memories.classList.add('open'); }
-function closeMemories() { memories.classList.remove('open'); stopPreviews(); }
+function openMemories() { setOverlay(memories, true, '#memClose'); }
+function closeMemories() { closeLightbox(); stopPreviews(); setOverlay(memories, false); }
 document.getElementById('btnMemories').addEventListener('click', (e) => { e.stopPropagation(); openMemories(); });
 document.getElementById('memClose').addEventListener('click', () => {
   if (document.body.classList.contains('presenting')) stopPresenting();
@@ -1417,16 +1474,21 @@ document.getElementById('memClose').addEventListener('click', () => {
 
 // Hover preview for video tiles (mouse only).
 function stopPreviews() {
-  document.querySelectorAll('.tile.previewing').forEach(t => { t.classList.remove('previewing'); t.querySelector('video')?.remove(); });
+  document.querySelectorAll('.tile').forEach(t => {
+    clearTimeout(t._previewTimer);
+    t.classList.remove('previewing');
+    t.querySelector('video')?.remove();
+  });
 }
 document.querySelectorAll('.tile').forEach(tile => {
   const m = ALL_MEDIA[+tile.dataset.i];
   tile.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(+tile.dataset.i); });
   if (m.type !== 'video') return;
-  let timer;
   tile.addEventListener('pointerenter', (e) => {
     if (e.pointerType !== 'mouse') return;
-    timer = setTimeout(() => {
+    clearTimeout(tile._previewTimer);
+    tile._previewTimer = setTimeout(() => {
+      if (!memories.classList.contains('open') || lightbox.classList.contains('open')) return;
       const v = document.createElement('video');
       Object.assign(v, { src: m.src, muted: true, loop: true, playsInline: true });
       v.addEventListener('playing', () => tile.classList.add('previewing'), { once: true });
@@ -1435,7 +1497,7 @@ document.querySelectorAll('.tile').forEach(tile => {
     }, 250);
   });
   tile.addEventListener('pointerleave', () => {
-    clearTimeout(timer);
+    clearTimeout(tile._previewTimer);
     tile.classList.remove('previewing');
     tile.querySelector('video')?.remove();
   });
@@ -1452,8 +1514,8 @@ function renderLightbox() {
   document.getElementById('lbCount').textContent = `${lbIndex + 1} / ${ALL_MEDIA.length}`;
   document.getElementById('lbText').textContent = m.caption;
 }
-function openLightbox(i) { stopPreviews(); lbIndex = i; renderLightbox(); lightbox.classList.add('open'); }
-function closeLightbox() { lightbox.classList.remove('open'); lbStage.innerHTML = ''; }
+function openLightbox(i) { stopPreviews(); lbIndex = i; renderLightbox(); setOverlay(lightbox, true, '#lbNext'); }
+function closeLightbox() { setOverlay(lightbox, false); lbStage.innerHTML = ''; }
 function stepLightbox(d) { lbIndex = (lbIndex + d + ALL_MEDIA.length) % ALL_MEDIA.length; renderLightbox(); }
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
 document.getElementById('lbPrev').addEventListener('click', () => stepLightbox(-1));
@@ -1467,8 +1529,9 @@ lbStage.addEventListener('pointerup', (e) => {
 });
 document.addEventListener('keydown', (e) => {
   if (lightbox.classList.contains('open')) {
-    if (e.key === 'ArrowRight') stepLightbox(1);
-    else if (e.key === 'ArrowLeft') stepLightbox(-1);
+    if (e.key === ' ' && e.target.closest?.('video')) return; // Space on the player = play/pause
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') stepLightbox(1);
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') stepLightbox(-1);
     else if (e.key === 'Escape') closeLightbox();
     else return;
     e.preventDefault(); e.stopImmediatePropagation();
@@ -1503,12 +1566,14 @@ function showStep(i) {
 }
 function startPresenting() {
   document.body.classList.add('presenting');
+  caption.inert = false;
   document.documentElement.requestFullscreen?.().catch(() => {});
   resize();
   showStep(0);
 }
 function stopPresenting() {
   document.body.classList.remove('presenting');
+  caption.inert = true;
   if (document.fullscreenElement) document.exitFullscreen?.();
   closeTeam();
   closeMemories();
@@ -1526,7 +1591,10 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'Escape') stopPresenting();
 });
 document.addEventListener('fullscreenchange', () => {
-  if (!document.fullscreenElement && document.body.classList.contains('presenting')) stopPresenting();
+  if (document.fullscreenElement || !document.body.classList.contains('presenting')) return;
+  // Esc in fullscreen is eaten by the browser: if a video/photo is open, just close it and keep presenting.
+  if (lightbox.classList.contains('open')) closeLightbox();
+  else stopPresenting();
 });
 
 /* =========================================================
@@ -1645,7 +1713,7 @@ function tick() {
   applyPower(shown * (1 + Math.sin(t * 2.1 + 1) * 0.015));
 
   controls.update();
-  composer.render();
+  if (!lightbox.classList.contains('open') && !memories.classList.contains('open')) composer.render();
   if (!document.body.classList.contains('presenting')) updateHotspots();
   requestAnimationFrame(tick);
 }
