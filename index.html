@@ -1164,6 +1164,7 @@ function pose({ dir, dist, target }) {
 
 let tween = null;
 function flyTo({ pos, target }, dur = 1.5) {
+  zoomGoal = null;
   tween = { fromPos: camera.position.clone(), fromTarget: controls.target.clone(), toPos: pos, toTarget: target, t: 0, dur };
 }
 const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -1556,6 +1557,23 @@ btnPower.addEventListener('click', () => { lampOn = !lampOn; setToggle(btnPower,
 slider.addEventListener('input', () => { if (!lampOn) { lampOn = true; setToggle(btnPower, true); } });
 controls.addEventListener('start', () => { tween = null; setActiveView(null); setActivePart(null); });
 
+// Own wheel zoom: OrbitControls r160 divides by (devicePixelRatio | 0), which is 0 when the
+// browser is zoomed below 100% — one notch then jumps straight to min/max distance.
+// Captured on the stage so OrbitControls never sees the wheel; pinch zoom is untouched.
+let zoomGoal = null;
+stage.addEventListener('wheel', (e) => {
+  if (e.target !== canvas) return;
+  e.stopPropagation();
+  if (isCompact() && !e.ctrlKey && !document.body.classList.contains('presenting')) return; // let the page scroll
+  e.preventDefault();
+  const px = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaMode === 2 ? e.deltaY * 600 : e.deltaY;
+  const step = THREE.MathUtils.clamp(px / 100, -1, 1) * 0.12;
+  const from = zoomGoal ?? camera.position.distanceTo(controls.target);
+  zoomGoal = THREE.MathUtils.clamp(from * Math.exp(step), controls.minDistance, controls.maxDistance);
+  tween = null;
+  setActiveView(null);
+}, { capture: true, passive: false });
+
 /* =========================================================
    Resize + loop
    ========================================================= */
@@ -1593,6 +1611,13 @@ const clock = new THREE.Clock();
 let shown = 1;
 function tick() {
   const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+
+  if (zoomGoal !== null) {
+    const offset = camera.position.clone().sub(controls.target);
+    const d = offset.length(), nd = d + (zoomGoal - d) * Math.min(1, dt * 9);
+    camera.position.copy(controls.target).addScaledVector(offset.normalize(), nd);
+    if (Math.abs(zoomGoal - nd) < 0.01) zoomGoal = null;
+  }
 
   if (tween) {
     tween.t += dt / tween.dur;
