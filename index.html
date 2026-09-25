@@ -15,14 +15,14 @@
 <meta property="og:url" content="https://trakhanh.github.io/TwoTheTop/">
 <meta property="og:title" content="Nhật Nguyệt Đồng Huy · Lồng đèn 3D của Two The Top">
 <meta property="og:description" content="Mặt Trời và Mặt Trăng cùng tỏa sáng — lồng đèn làm từ que tre, bìa giấy và 19 đôi tay. Xoay, phóng to, bật tắt đèn và thả đèn ước trên mô hình 3D.">
-<meta property="og:image" content="https://trakhanh.github.io/TwoTheTop/assets/og-image.jpg">
+<meta property="og:image" content="https://trakhanh.github.io/TwoTheTop/assets/og-image.jpg?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Lồng đèn Nhật Nguyệt Đồng Huy của nhóm Two The Top đang phát sáng">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Nhật Nguyệt Đồng Huy · Lồng đèn 3D của Two The Top">
 <meta name="twitter:description" content="Mặt Trời và Mặt Trăng cùng tỏa sáng — lồng đèn Trung Thu của Two The Top, xem mô hình 3D tương tác.">
-<meta name="twitter:image" content="https://trakhanh.github.io/TwoTheTop/assets/og-image.jpg">
+<meta name="twitter:image" content="https://trakhanh.github.io/TwoTheTop/assets/og-image.jpg?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&family=Baloo+2:wght@600;700;800&display=swap&subset=vietnamese" rel="stylesheet">
@@ -40,6 +40,17 @@
     --colw: clamp(330px, 31vw, 460px);
   }
   * { box-sizing: border-box; }
+  /* Slim gold scrollbars everywhere (instead of the grey default with arrows) */
+  * { scrollbar-width: thin; scrollbar-color: rgba(255, 197, 110, .45) transparent; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+  ::-webkit-scrollbar-thumb {
+    border: 2px solid transparent; border-radius: 999px; background-clip: padding-box;
+    background-color: rgba(255, 197, 110, .38);
+  }
+  ::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 197, 110, .7); }
+  ::-webkit-scrollbar-corner { background: transparent; }
   [hidden] { display: none !important; } /* classes like .team-peek set display and would otherwise override it */
   html, body { margin: 0; height: 100%; }
   body {
@@ -600,7 +611,8 @@
   }
   .wish-tabs button[aria-selected="true"] { background: var(--gold); color: #2a1605; font-weight: 600; }
   .wish-tabs .count { opacity: .75; font-weight: 500; }
-  .wall { list-style: none; margin: 0; padding: 0 4px 0 0; display: grid; gap: 8px; max-height: min(56svh, 460px); overflow-y: auto; scrollbar-width: thin; overscroll-behavior: contain; }
+  .wall { list-style: none; margin: 0; padding: 2px 6px 14px 0;
+    -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 26px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 26px), transparent); display: grid; gap: 8px; max-height: min(56svh, 460px); overflow-y: auto; scrollbar-width: thin; overscroll-behavior: contain; }
   .wall li {
     display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 10px;
     padding: 11px 12px 10px 14px; border-radius: 14px; background: rgba(255, 255, 255, .045); border: 1px solid transparent;
@@ -681,31 +693,64 @@
   body.tv .stage::before { opacity: 0; }
   body.tv { cursor: none; }
   body.tv.pointer { cursor: auto; }
-  .tv-title { position: fixed; z-index: 4; left: 4vw; top: 13vh; width: 26vw; }
+  .tv-title { position: fixed; z-index: 4; left: 4vw; top: 12vh; width: min(34vw, 620px); }
   .tv-title .eyebrow { font-size: clamp(12px, 1vw, 18px); }
-  .tv-title h2 { margin: 0 0 22px; font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(34px, 3.4vw, 66px); line-height: 1.2; letter-spacing: .02em; }
-  .tv-title h2 em { display: block; color: var(--gold); }
-  .tv-meaning { margin: -8px 0 22px; font-family: "Playfair Display", serif; font-style: italic; font-size: clamp(15px, 1.2vw, 22px); line-height: 1.5; color: #e9d7b6; }
-  .tv-stats { display: grid; gap: 8px; margin: 0; font-size: clamp(16px, 1.35vw, 26px); color: var(--muted); }
-  .tv-stats b { color: var(--text); font-weight: 600; }
-  .tv-qr {
-    position: fixed; z-index: 4; left: 4vw; bottom: 6vh; width: max-content;
-    display: flex; align-items: center; gap: 18px; padding: 14px 22px 14px 14px; border-radius: 20px;
-    background: rgba(12, 18, 36, .82); border: 1px solid rgba(255, 200, 120, .35);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  .tv-title h2 { margin: 0 0 18px; font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(36px, 3.8vw, 76px); line-height: 1.12; letter-spacing: .02em; text-shadow: 0 4px 30px rgba(0, 0, 0, .5); }
+  .tv-title h2 em { display: block; color: var(--gold); text-shadow: 0 0 34px rgba(255, 180, 90, .45); }
+  .tv-meaning {
+    margin: 0 0 26px; padding-left: 16px; border-left: 2px solid rgba(255, 197, 110, .6);
+    font-family: "Playfair Display", serif; font-style: italic; font-size: clamp(15px, 1.2vw, 23px); line-height: 1.5; color: #eedcb9;
   }
-  .tv-qr img { width: clamp(110px, 9.5vw, 190px); height: auto; padding: 8px; border-radius: 12px; background: #fff; }
-  .tv-qr b { display: block; margin-bottom: 6px; font-size: clamp(17px, 1.4vw, 28px); line-height: 1.3; white-space: nowrap; }
-  .tv-qr span { font-size: clamp(13px, 1vw, 20px); color: var(--gold); }
+  /* Live numbers as three glass tiles */
+  .tv-stats { display: flex; gap: 12px; margin: 0; }
+  .tv-stats span {
+    flex: 1; min-width: 0; padding: 12px 14px 11px; border-radius: 16px;
+    background: linear-gradient(160deg, rgba(255, 200, 120, .12), rgba(255, 255, 255, .03)); border: 1px solid rgba(255, 197, 110, .25);
+  }
+  .tv-stats b { display: block; font-family: "Playfair Display", serif; font-size: clamp(26px, 2.4vw, 46px); line-height: 1; color: var(--gold); font-weight: 600; }
+  .tv-stats small { display: block; margin-top: 6px; font-size: clamp(11px, .85vw, 16px); color: var(--muted); letter-spacing: .02em; }
+  /* Scan card */
+  .tv-qr {
+    position: fixed; z-index: 4; left: 4vw; bottom: 6vh; width: min(34vw, 620px);
+    display: flex; align-items: center; gap: clamp(14px, 1.4vw, 26px); padding: clamp(12px, 1.1vw, 20px); border-radius: 24px;
+    background: linear-gradient(135deg, rgba(40, 34, 40, .88), rgba(14, 18, 36, .88));
+    border: 1px solid rgba(255, 197, 110, .45);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .45), 0 0 50px rgba(255, 170, 80, .16), inset 0 1px 0 rgba(255, 255, 255, .06);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .tv-qr-code { flex: none; padding: 8px; border-radius: 16px; background: #fff; box-shadow: 0 0 0 3px rgba(255, 197, 110, .7), 0 0 30px rgba(255, 190, 100, .5); animation: tv-qr-glow 2.6s ease-in-out infinite alternate; }
+  .tv-qr-code img { display: block; width: clamp(110px, 9.5vw, 200px); height: auto; }
+  @keyframes tv-qr-glow { to { box-shadow: 0 0 0 3px rgba(255, 210, 130, 1), 0 0 44px rgba(255, 190, 100, .8); } }
+  .tv-qr-text { min-width: 0; }
+  .tv-qr-kicker { display: block; margin-bottom: 4px; font-size: clamp(10px, .75vw, 14px); letter-spacing: .24em; text-transform: uppercase; color: var(--gold); }
+  .tv-qr b { display: block; margin-bottom: 8px; font-size: clamp(17px, 1.45vw, 30px); line-height: 1.25; }
+  .tv-qr ol { margin: 0 0 8px; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 3px; }
+  .tv-qr li { counter-increment: s; display: flex; align-items: center; gap: 8px; font-size: clamp(12px, .9vw, 18px); color: #e8dcc6; }
+  .tv-qr li::before { content: counter(s); flex: none; width: 1.5em; height: 1.5em; border-radius: 50%; display: grid; place-items: center; font-size: .8em; font-weight: 700; color: #2a1605; background: var(--gold); }
+  .tv-qr-url { font-size: clamp(12px, .9vw, 18px); color: var(--gold); opacity: .85; }
   .tv-exit { position: fixed; z-index: 5; top: 20px; right: 20px; opacity: 0; transition: opacity .3s; }
   body.tv.pointer .tv-exit { opacity: 1; }
   body.tv .wish-label { font-size: clamp(15px, 1.25vw, 24px); padding: 12px 18px 11px; }
   body.tv .wish-label .from, body.tv .wish-label .tag { font-size: .78em; }
+  /* Big-screen mode on a phone: title and numbers on top, the lantern in the middle, a slim scan card below */
   @media (max-width: 900px) {
-    .tv-title { width: auto; right: 4vw; top: 70px; }
-    .tv-title h2 { font-size: 26px; margin-bottom: 8px; }
+    .tv-title { width: auto; left: 16px; right: 16px; top: 84px; text-align: center; }
+    .tv-title .eyebrow { justify-content: center; font-size: 11px; margin-bottom: 6px; }
+    .tv-title .eyebrow::before { display: none; }
+    .tv-title h2 { font-size: 30px; margin-bottom: 10px; }
+    .tv-title h2 em { display: inline; }
     .tv-meaning { display: none; }
-    .tv-qr { max-width: none; right: 4vw; }
+    .tv-stats { gap: 8px; }
+    .tv-stats span { padding: 8px 6px 7px; text-align: center; border-radius: 12px; }
+    .tv-stats b { font-size: 20px; }
+    .tv-stats small { font-size: 10.5px; margin-top: 3px; }
+    .tv-qr { width: auto; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); padding: 10px; gap: 12px; border-radius: 18px; }
+    .tv-qr-code { padding: 5px; border-radius: 10px; }
+    .tv-qr-code img { width: 76px; }
+    .tv-qr b { font-size: 14.5px; margin-bottom: 4px; }
+    .tv-qr ol { display: none; }
+    .tv-qr-kicker { font-size: 9.5px; }
+    .tv-qr-url { font-size: 12px; }
   }
 
   .gl-lost {
@@ -1016,7 +1061,7 @@
     .team-modal.open .member { animation: none; opacity: 1; transform: none; }
     .member:hover .ava svg { animation: none; }
     .heart-fly, .photo-flash { display: none; }
-    .ld-bar::after, .ld-rays, .ld-sun, .ld-moon, .ld-halo, .ld-moon-halo, .ld-hang, .ld-lights, .ld-spark, .ld-kiss, .ld-flare, .ld-moon-in, .live-stats .dot, .ld-title .l1, .ld-title .l2, .ld-orn i, .ld-orn b { animation: none; }
+    .tv-qr-code, .ld-bar::after, .ld-rays, .ld-sun, .ld-moon, .ld-halo, .ld-moon-halo, .ld-hang, .ld-lights, .ld-spark, .ld-kiss, .ld-flare, .ld-moon-in, .live-stats .dot, .ld-title .l1, .ld-title .l2, .ld-orn i, .ld-orn b { animation: none; }
     .wall li.fresh, .heart-peek.pop .hico svg { animation: none; }
     .team-sheet, .mem-sheet, .loader, .ld-inner { transition: none; }
   }
@@ -1382,8 +1427,13 @@
     <p class="tv-stats"><span id="tvVisits"></span><span id="tvWishes"></span><span id="tvHearts"></span></p>
   </div>
   <div class="tv-qr">
-    <img src="assets/qr.svg" alt="Mã QR mở trang lồng đèn">
-    <div><b>Quét mã để thả đèn ước 🏮</b><span>trakhanh.github.io/TwoTheTop</span></div>
+    <div class="tv-qr-code"><img src="assets/qr.svg" alt="Mã QR mở trang lồng đèn"></div>
+    <div class="tv-qr-text">
+      <span class="tv-qr-kicker">Cùng thắp sáng</span>
+      <b>Quét mã, thả một chiếc đèn ước 🏮</b>
+      <ol><li>Mở camera điện thoại</li><li>Viết lời chúc</li><li>Ngắm đèn bay lên màn hình này</li></ol>
+      <span class="tv-qr-url">trakhanh.github.io/TwoTheTop</span>
+    </div>
   </div>
   <button class="round tv-exit" id="tvExit" aria-label="Thoát màn hình lớn">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -2419,7 +2469,7 @@ const lotus = (() => {
     ring(6, 0.14, 0.45, 0.12, 0.3, inner, 0.08);
     const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.2, 10), candleMat); candle.position.y = 0.22; grp.add(candle);
     const glow = new THREE.Sprite(glowMat); glow.position.y = 0.42; glow.scale.setScalar(1.3); grp.add(glow);
-    grp.traverse(o => { if (o.isMesh) o.layers.enable(2); }); // reflected in the water with the lantern
+    // Not reflected: near the edge of the view the mirror smears them into long streaks.
     const ripples = [0, 1].map(() => {
       const m = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ map: ringTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
       m.layers.set(1); m.position.y = 0.03; scene.add(m); return m;
@@ -3916,9 +3966,14 @@ const tvTitle = document.getElementById('tvTitle'), tvHud = document.getElementB
 function isTv() { return document.body.classList.contains('tv'); }
 // Numbers only go into innerHTML here (never wish text).
 function updateTvStats() {
-  document.getElementById('tvVisits').innerHTML = visitTotal !== null ? `👀 <b>${fmtNum(visitTotal)}</b> người đã ghé thăm` : '';
-  document.getElementById('tvWishes').innerHTML = db ? `🏮 <b>${fmtNum(wishTotal)}</b> chiếc đèn ước đã bay lên` : '';
-  document.getElementById('tvHearts').innerHTML = heartsReady ? `❤️ <b>${fmtNum(heartTotal)}</b> lượt thả tim` : '';
+  const stat = (id, show, n, label) => {
+    const el = document.getElementById(id);
+    el.hidden = !show;
+    if (show) el.innerHTML = `<b>${fmtNum(n)}</b><small>${label}</small>`;
+  };
+  stat('tvVisits', visitTotal !== null, visitTotal, 'người ghé thăm');
+  stat('tvWishes', !!db, wishTotal, 'đèn ước đã bay');
+  stat('tvHearts', heartsReady, heartTotal, 'lượt thả tim');
   const parts = [];
   if (visitTotal !== null) parts.push(`<b>${fmtNum(visitTotal)}</b> người đã ghé thăm`);
   if (db) parts.push(`<b>${fmtNum(wishTotal)}</b> đèn ước đã bay`);
