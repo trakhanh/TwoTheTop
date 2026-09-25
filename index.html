@@ -732,6 +732,45 @@ const texBoard = canvasTexture(boardCanvas, 0.3, 0.3);   // for extruded shapes 
 const texBoardCap = canvasTexture(boardCanvas, 2, 2);    // for 0..1 UVs
 const texPaper = canvasTexture(paperCanvas);
 
+// Smooth card surface for a flat cut-out spanning [x0, x0+w] × [y0, y0+h] in its own units:
+// brighter towards the top, a soft sheen band and fine grain. Hue comes from the material colour.
+function cardTexture(x0, y0, w, h, seed, sheen = 0.14) {
+  const S = 512, c = document.createElement('canvas');
+  c.width = c.height = S;
+  const g = c.getContext('2d'), r = rng(seed);
+  const v = g.createLinearGradient(0, 0, 0, S);
+  v.addColorStop(0, '#ffffff'); v.addColorStop(1, '#dcd2c4');
+  g.fillStyle = v; g.fillRect(0, 0, S, S);
+  const hl = g.createRadialGradient(S * 0.32, S * 0.26, 0, S * 0.32, S * 0.26, S * 0.62);
+  hl.addColorStop(0, `rgba(255,255,255,${sheen * 2})`); hl.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = hl; g.fillRect(0, 0, S, S);
+  const band = g.createLinearGradient(0, S, S, 0);
+  band.addColorStop(0.38, 'rgba(255,255,255,0)');
+  band.addColorStop(0.5, `rgba(255,255,255,${sheen})`);
+  band.addColorStop(0.62, 'rgba(255,255,255,0)');
+  g.fillStyle = band; g.fillRect(0, 0, S, S);
+  for (let i = 0; i < 7000; i++) {
+    g.fillStyle = r() < 0.5 ? 'rgba(60,40,20,0.035)' : 'rgba(255,255,255,0.05)';
+    g.fillRect(r() * S, r() * S, 1.3, 1.3);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 8;
+  t.repeat.set(1 / w, 1 / h);
+  t.offset.set(-x0 / w, -y0 / h);
+  return t;
+}
+
+// Even-looking scatter: rejection sampling with a minimum spacing between points.
+function scatter(count, minGap, sample, inside) {
+  const pts = [];
+  for (let tries = 0; pts.length < count && tries < count * 400; tries++) {
+    const q = sample();
+    if (inside(q) && pts.every(o => Math.hypot(q.x - o.x, q.y - o.y) >= minGap)) pts.push(q);
+  }
+  return pts;
+}
+
 /* =========================================================
    Materials
    ========================================================= */
@@ -759,22 +798,23 @@ foamMat = lamp('#fff8ec', 0.7, { map: texBoardCap });
 /* =========================================================
    Fairy lights (instanced, twinkling)
    ========================================================= */
-const BULB_ON = new THREE.Color(3.2, 2.5, 1.5);
+const BULB_ON = new THREE.Color(4.4, 3.5, 2.1);
 const bulbMat = new THREE.MeshBasicMaterial({ color: BULB_ON.clone() });
-const bulbGeo = new THREE.SphereGeometry(0.055, 8, 6);
+const bulbGeo = new THREE.SphereGeometry(0.065, 10, 8);
 const haloTex = (() => {
   const c = document.createElement('canvas'); c.width = c.height = 64;
   const g = c.getContext('2d'), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-  gr.addColorStop(0, 'rgba(255,244,214,1)');
-  gr.addColorStop(0.18, 'rgba(255,214,150,0.55)');
-  gr.addColorStop(0.5, 'rgba(255,180,100,0.12)');
+  gr.addColorStop(0, 'rgba(255,248,228,1)');
+  gr.addColorStop(0.14, 'rgba(255,236,190,0.85)');
+  gr.addColorStop(0.3, 'rgba(255,210,145,0.28)');
+  gr.addColorStop(0.55, 'rgba(255,180,100,0.04)');
   gr.addColorStop(1, 'rgba(255,160,80,0)');
   g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
   return t;
 })();
 const haloMat = new THREE.PointsMaterial({
-  map: haloTex, size: 0.55, sizeAttenuation: true, transparent: true, opacity: 0.85,
+  map: haloTex, size: 0.6, sizeAttenuation: true, transparent: true, opacity: 0.95,
   blending: THREE.AdditiveBlending, depthWrite: false, color: 0xffe2b0,
 });
 const bulbSets = [];
@@ -967,12 +1007,14 @@ lantern.add(sun);
   const sg = sc.getContext('2d');
   sg.drawImage(boardCanvas, 0, 0);
   const glow = sg.createRadialGradient(256, 256, 0, 256, 256, 256);
-  glow.addColorStop(0, 'rgba(255,252,240,0.95)');
-  glow.addColorStop(0.45, 'rgba(255,240,205,0.55)');
-  glow.addColorStop(0.85, 'rgba(236,190,110,0.35)');
-  glow.addColorStop(1, 'rgba(214,160,80,0.6)');
+  glow.addColorStop(0, 'rgba(255,250,236,0.5)');
+  glow.addColorStop(0.5, 'rgba(255,238,200,0.28)');
+  glow.addColorStop(0.84, 'rgba(232,186,112,0.32)');
+  glow.addColorStop(1, 'rgba(198,146,72,0.7)');
   sg.fillStyle = glow; sg.fillRect(0, 0, 512, 512);
-  const disc = new THREE.Mesh(new THREE.CylinderGeometry(SUN_R, SUN_R, 0.24, 96).rotateX(Math.PI / 2), lamp('#fde4a8', 1.05, { map: canvasTexture(sc) }));
+  sg.strokeStyle = 'rgba(186,134,64,0.35)'; sg.lineWidth = 7;
+  sg.beginPath(); sg.arc(256, 256, 256 * 0.9, 0, Math.PI * 2); sg.stroke();
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(SUN_R, SUN_R, 0.24, 96).rotateX(Math.PI / 2), lamp('#fde2a2', 0.92, { map: canvasTexture(sc) }));
   sun.add(disc);
   for (const [r, z, t] of [[SUN_R, 0.12, 0.05], [SUN_R * 0.9, 0.125, 0.025]]) {
     for (const s of [1, -1]) {
@@ -1006,10 +1048,10 @@ lantern.add(sun);
     ray.rotation.z = a - Math.PI / 2;
     sun.add(ray);
   }
-  const pts = [];
-  for (let i = 0; i < 16; i++) {
-    const a = 2.0 + rand() * 2.6;
-    pts.push(new THREE.Vector3(Math.cos(a) * (SUN_R - 0.08), Math.sin(a) * (SUN_R - 0.08), 0.16));
+  const pts = [], RIM_LEDS = 48;
+  for (let i = 0; i < RIM_LEDS; i++) {
+    const a = (i / RIM_LEDS) * Math.PI * 2, r = SUN_R - 0.1;
+    pts.push(new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0.17), new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, -0.17));
   }
   addBulbs(sun, pts);
 }
@@ -1023,9 +1065,10 @@ sun.add(ring);
 {
   ring.add(new THREE.Mesh(new THREE.TorusGeometry(RING_R, 0.06, 10, 200), hoopMat));
   const pts = [];
-  for (let i = 0; i < 44; i++) {
-    const a = (i / 44) * Math.PI * 2 + rand() * 0.08;
-    pts.push(new THREE.Vector3(Math.cos(a) * (RING_R + 0.07), Math.sin(a) * (RING_R + 0.07), (rand() - 0.5) * 0.1));
+  const HOOP_LEDS = 64;
+  for (let i = 0; i < HOOP_LEDS; i++) {
+    const a = (i / HOOP_LEDS) * Math.PI * 2;
+    pts.push(new THREE.Vector3(Math.cos(a) * (RING_R + 0.07), Math.sin(a) * (RING_R + 0.07), 0));
   }
   addBulbs(ring, pts);
 }
@@ -1034,12 +1077,11 @@ sun.add(ring);
 function moon(pos, rotZ) {
   const R1 = 2.75, R2 = 2.3, d = 1.45, depth = 0.22;
   const g = new THREE.Group();
-  g.add(new THREE.Mesh(extrude(crescentShape(R1, R2, d), depth, 0.04), [lamp('#f7eedb', 0.85), foamMat]));
-  const pts = [];
-  while (pts.length < 60) {
-    const x = (rand() * 2 - 1) * R1, y = (rand() * 2 - 1) * R1;
-    if (Math.hypot(x, y) < R1 - 0.18 && Math.hypot(x - d, y) > R2 + 0.18) pts.push(new THREE.Vector3(x, y, depth / 2 + 0.07));
-  }
+  const face = lamp('#fbf4e6', 0.9, { map: cardTexture(-R1, -R1, 2 * R1, 2 * R1, 31) });
+  g.add(new THREE.Mesh(extrude(crescentShape(R1, R2, d), depth, 0.04), [face, foamMat]));
+  const pts = scatter(88, 0.27,
+    () => new THREE.Vector3((rand() * 2 - 1) * R1, (rand() * 2 - 1) * R1, depth / 2 + 0.07),
+    (q) => Math.hypot(q.x, q.y) < R1 - 0.17 && Math.hypot(q.x - d, q.y) > R2 + 0.17);
   addBulbs(g, pts);
   g.position.copy(pos);
   g.rotation.z = rotZ;
@@ -1060,12 +1102,12 @@ const CLOUDS = [
 const cloudGroups = CLOUDS.map(([hex, glow, x, z, bumps]) => {
   const depth = 0.26;
   const g = new THREE.Group();
-  g.add(new THREE.Mesh(extrude(cloudShape(bumps), depth, 0.035), [lamp(hex, glow), foamMat]));
-  const pts = [];
-  while (pts.length < 34) {
-    const px = -2.4 + rand() * 4.8, py = 0.15 + rand() * 3.4;
-    if (bumps.some(([bx, by, br]) => Math.hypot(px - bx, py - by) < br - 0.18)) pts.push(new THREE.Vector3(px, py, depth / 2 + 0.08));
-  }
+  const gold = new THREE.Color(hex).getHSL({}).s > 0.4;
+  const face = lamp(hex, glow, { map: cardTexture(-2.7, 0, 5.4, 3.8, 50 + Math.round(x * 10), gold ? 0.24 : 0.12), rough: gold ? 0.5 : 0.75 });
+  g.add(new THREE.Mesh(extrude(cloudShape(bumps), depth, 0.035), [face, foamMat]));
+  const pts = scatter(48, 0.3,
+    () => new THREE.Vector3(-2.5 + rand() * 5, 0.15 + rand() * 3.5, depth / 2 + 0.08),
+    (q) => bumps.some(([bx, by, br]) => Math.hypot(q.x - bx, q.y - by) < br - 0.17));
   addBulbs(g, pts);
   g.position.set(x, BASE_H, z);
   lantern.add(g);
@@ -1074,7 +1116,7 @@ const cloudGroups = CLOUDS.map(([hex, glow, x, z, bumps]) => {
 
 /* ---- Hanging stars ---- */
 const hangers = [];
-const puffyMat = lamp('#fff1cf', 1.35, { map: texPaper, flat: true });
+const puffyMat = lamp('#ffe8ba', 1.6, { map: texPaper, flat: true });
 const innerStarMat = lamp('#ffe2a0', 1.5, { map: texPaper, flat: true });
 
 function stickStar(R) {
@@ -1178,7 +1220,7 @@ function applyPower(p) {
   hemi.intensity = 0.35 + Math.max(0, 1 - p) * 1.4;
   bloom.strength = BLOOM * Math.min(p, 1.3);
   pool.material.opacity = 0.3 * Math.min(p, 1.4);
-  haloMat.opacity = 0.85 * Math.min(p, 1.2);
+  haloMat.opacity = 0.95 * Math.min(p, 1.2);
 }
 
 /* =========================================================
