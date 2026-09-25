@@ -462,6 +462,12 @@
   .wall-more { display: block; margin: 12px auto 0; color: var(--text); background: rgba(255, 200, 120, .12); }
   .wall-more[hidden] { display: none; }
 
+  /* ---------- Live stats ---------- */
+  .live-stats { display: flex; align-items: center; gap: 8px; margin: -12px 0 24px; font-size: 13px; color: var(--muted); }
+  .live-stats b { color: var(--text); font-weight: 600; }
+  .live-stats .dot { width: 7px; height: 7px; flex: none; border-radius: 50%; background: #7fd8a8; box-shadow: 0 0 0 3px rgba(127, 216, 168, .2); animation: live 2s ease-in-out infinite; }
+  @keyframes live { 50% { box-shadow: 0 0 0 6px rgba(127, 216, 168, 0); } }
+
   /* ---------- Hearts ---------- */
   .heart-peek { padding-left: 7px; }
   .heart-peek .hico { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 110, 130, .14); }
@@ -710,7 +716,7 @@
     .team-modal.open .member { animation: none; opacity: 1; transform: none; }
     .member:hover .ava svg { animation: none; }
     .heart-fly, .photo-flash { display: none; }
-    .ld-bar::after, .ld-rays, .ld-sun, .ld-moon, .ld-halo { animation: none; }
+    .ld-bar::after, .ld-rays, .ld-sun, .ld-moon, .ld-halo, .live-stats .dot { animation: none; }
     .wall li.fresh, .heart-peek.pop .hico svg { animation: none; }
     .team-sheet, .mem-sheet, .loader, .ld-inner { transition: none; }
   }
@@ -868,6 +874,8 @@
     </div>
   </div>
 
+  <p class="live-stats" id="liveStats" hidden></p>
+
   <p class="section-label">Cấu tạo</p>
   <ol class="parts" id="partList"></ol>
 </main>
@@ -1004,7 +1012,7 @@
     <p class="eyebrow">Two The Top · Trung Thu 2026</p>
     <h2>Nhật Nguyệt <em>Đồng Huy</em></h2>
     <p class="tv-meaning">Mặt Trời và Mặt Trăng cùng tỏa sáng — tinh thần đồng hành, cùng nhau tạo nên ánh sáng chung.</p>
-    <p class="tv-stats"><span id="tvWishes"></span><span id="tvHearts"></span></p>
+    <p class="tv-stats"><span id="tvVisits"></span><span id="tvWishes"></span><span id="tvHearts"></span></p>
   </div>
   <div class="tv-qr">
     <img src="assets/qr.svg" alt="Mã QR mở trang lồng đèn">
@@ -2518,7 +2526,7 @@ function makeRoomAbove() {
   flyTo(pose({ dir: [d.x, Math.max(d.y, 0.05), d.z], dist: VIEWS.overview.dist * 1.08, target: [0, 9.6, 0] }), 1.4);
   setActiveView(null);
 }
-function launchWish(text, from, mine = false) {
+function launchWish(text, from, mine = false, id = null) {
   if (wishes.length >= 6) retireWish(wishes.find(w => !w.mine) || wishes[0]);
   const obj = skyLanternKit.make();
   obj.scale.setScalar(mine ? 1 : 0.85);
@@ -2535,7 +2543,7 @@ function launchWish(text, from, mine = false) {
   if (from) { const f = document.createElement('span'); f.className = 'from'; f.textContent = `— ${from}`; el.append(f); }
   wishLayer.appendChild(el);
   // Behind the lantern, your own wish starts just behind the sun so it peeks out within a second.
-  wishes.push({ obj, el, sign, beside, mine, labelAt: beside ? 0 : null,
+  wishes.push({ obj, el, id, sign, beside, mine, labelAt: beside ? 0 : null,
     startY: beside ? 0.6 : mine ? 10.5 : 2, speed: beside ? 0.85 : mine ? 1.6 : 1.5,
     offset: beside ? 0 : (Math.random() - 0.5) * (mine ? 2 : 3), age: 0, ph: Math.random() * 6.28 });
 }
@@ -2615,14 +2623,14 @@ document.getElementById('wishSuggest').replaceChildren(...PRESET_WISHES.slice(0,
 wishText.addEventListener('input', () => { wishCount.textContent = `${wishText.value.length} / 90`; });
 try { wishName.value = localStorage.getItem('ttt-name') || ''; } catch {}
 
-function release(text, name, save = true, mine = true) {
+function release(text, name, save = true, mine = true, id = null) {
   if (save) {
     saveWishes([{ text, name, at: Date.now() }, ...loadWishes()]);
     try { localStorage.setItem('ttt-name', name); } catch {}
   }
   closeWish();
   if (isCompact()) stage.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth' });
-  setTimeout(() => { launchWish(text, name, mine); sound.lift(); }, isCompact() ? 450 : 250);
+  setTimeout(() => { launchWish(text, name, mine, id); sound.lift(); }, isCompact() ? 450 : 250);
 }
 
 /* ---- Shared wishes (Supabase): everyone watching sees everyone's lanterns ---- */
@@ -2648,6 +2656,32 @@ function updateWishFine() {
   wallCount.textContent = wishTotal ? `(${wishTotal})` : '';
   updateTvStats();
 }
+
+function forgetWish(id) {
+  if (id == null) return;
+  const i = sharedPool.findIndex(w => w.id === id);
+  if (i >= 0) sharedPool.splice(i, 1);
+  const j = wall.findIndex(w => w.id === id);
+  if (j >= 0) { wall.splice(j, 1); if (!panelWall.hidden) renderWall(); }
+  for (const wi of [...wishes]) if (wi.id === id) retireWish(wi);
+  wishTotal = Math.max(0, wishTotal - 1);
+  updateWishFine();
+}
+
+/* ---- Visitors: one per device per day, counted on the server ---- */
+let visitTotal = null;
+async function countVisit(client) {
+  const { data, error } = await client.rpc('record_visit', { p_device: myDevice });
+  if (error || data == null) return; // counter not set up on Supabase yet: show nothing
+  visitTotal = Number(data);
+  updateTvStats();
+}
+// The big screen stays on for hours: refresh the visitor count now and then.
+setInterval(async () => {
+  if (!isTv() || !db || visitTotal === null) return;
+  const { data, error } = await db.rpc('visit_count');
+  if (!error && data != null) { visitTotal = Number(data); updateTvStats(); }
+}, 60000);
 
 /* ---- Wall: everyone's wishes, newest first ---- */
 const WALL_PAGE = 30;
@@ -2684,7 +2718,7 @@ function renderWall(freshId) {
     const again = document.createElement('button');
     again.type = 'button'; again.textContent = 'Thả lại';
     again.setAttribute('aria-label', `Thả lại đèn: ${w.text}`);
-    again.addEventListener('click', () => release(w.text, w.name, false, mine));
+    again.addEventListener('click', () => release(w.text, w.name, false, mine, w.id));
     li.append(txt, again, meta);
     return li;
   }));
@@ -2747,10 +2781,13 @@ async function connectWishes() {
         addToWall(w);
         const held = ownPending.get(wishKey(w.text, w.name));
         if (held) { held.push(w); return; } // could be ours: decided once the insert answers
-        if (!sceneBusy()) launchWish(w.text, w.name);
+        if (!sceneBusy()) launchWish(w.text, w.name, false, w.id);
       })
+      // A wish removed from the admin page disappears everywhere at once.
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'wishes' }, ({ old }) => forgetWish(old.id))
       .subscribe();
     connectHearts(client);
+    countVisit(client);
   } catch (err) {
     console.warn('Không kết nối được kho lời chúc chung:', err);
   }
@@ -2774,18 +2811,20 @@ wishForm.addEventListener('submit', async (e) => {
   const wait = Math.ceil((last + COOLDOWN_MS - Date.now()) / 1000);
   if (wait > 0) { showWishError(`Đèn trước vừa bay, chờ ${wait} giây rồi thả tiếp nhé.`); return; }
   showWishError('');
+  let row = null;
   if (db) {
     wishSubmit.disabled = true;
     const key = wishKey(text, name);
     ownPending.set(key, []);
     let query = db.from('wishes').insert({ text, name: name || null }).select('id,text,name,created_at').single();
     if (AbortSignal.timeout) query = query.abortSignal(AbortSignal.timeout(12000)); // never leave the button stuck
-    const { data: row, error } = await query;
+    const { data, error } = await query;
+    row = data;
     wishSubmit.disabled = false;
     const held = ownPending.get(key) || [];
     ownPending.delete(key);
     // Someone else may have sent the very same words meanwhile: they still get their lantern.
-    for (const w of held) if (!row || w.id !== row.id) { if (!sceneBusy()) launchWish(w.text, w.name); }
+    for (const w of held) if (!row || w.id !== row.id) { if (!sceneBusy()) launchWish(w.text, w.name, false, w.id); }
     if (error) { showWishError(friendlyError(error)); return; }
     addMineId(row.id);
     if (!seenIds.has(row.id)) {
@@ -2798,7 +2837,7 @@ wishForm.addEventListener('submit', async (e) => {
     }
   }
   try { localStorage.setItem('ttt-last', Date.now()); } catch {}
-  release(text, name);
+  release(text, name, true, true, row?.id ?? null);
   wishText.value = '';
   wishCount.textContent = '0 / 90';
 });
@@ -2817,7 +2856,7 @@ function ambientWish() {
   if (sceneBusy() || wishes.length >= (isTv() ? 4 : 3)) return;
   if (sharedPool.length) {
     const w = sharedPool[poolIdx++ % sharedPool.length];
-    launchWish(w.text, w.name);
+    launchWish(w.text, w.name, false, w.id);
   } else {
     launchWish(PRESET_WISHES[presetIdx++ % PRESET_WISHES.length], 'Two The Top');
   }
@@ -3029,9 +3068,17 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && photoMod
    ========================================================= */
 const tvTitle = document.getElementById('tvTitle'), tvHud = document.getElementById('tvHud');
 function isTv() { return document.body.classList.contains('tv'); }
+// Numbers only go into innerHTML here (never wish text).
 function updateTvStats() {
+  document.getElementById('tvVisits').innerHTML = visitTotal !== null ? `👀 <b>${fmtNum(visitTotal)}</b> người đã ghé thăm` : '';
   document.getElementById('tvWishes').innerHTML = db ? `🏮 <b>${fmtNum(wishTotal)}</b> chiếc đèn ước đã bay lên` : '';
   document.getElementById('tvHearts').innerHTML = heartsReady ? `❤️ <b>${fmtNum(heartTotal)}</b> lượt thả tim` : '';
+  const parts = [];
+  if (visitTotal !== null) parts.push(`<b>${fmtNum(visitTotal)}</b> người đã ghé thăm`);
+  if (db) parts.push(`<b>${fmtNum(wishTotal)}</b> đèn ước đã bay`);
+  const live = document.getElementById('liveStats');
+  live.innerHTML = parts.length ? `<span class="dot" aria-hidden="true"></span><span>${parts.join(' · ')}</span>` : '';
+  live.hidden = !parts.length;
 }
 function enterTv() {
   if (document.body.classList.contains('presenting')) stopPresenting();
