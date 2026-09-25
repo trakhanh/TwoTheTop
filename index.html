@@ -1255,7 +1255,10 @@ const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const PARTS = [
   { name: 'Mặt trời', text: 'Đĩa tròn phát sáng từ bên trong, 14 tia nhũ vàng xếp đều quanh viền.',
     pos: () => SUN_POS.clone().add(new THREE.Vector3(-0.9, 1.1, 0.2)), normal: [0, 0, 1], cam: VIEWS.sun },
-  { name: 'Vành đai & sao treo', text: 'Vòng tròn quấn dây đèn đom đóm, treo sao que tre và sao giấy bằng dây len.',
+  { name: 'Vành đai mặt trời', text: 'Vòng tròn nghiêng ôm quanh mặt trời như vành đai hành tinh, quấn kín dây đèn đom đóm sáng lấp lánh.',
+    pos: () => ring.localToWorld(new THREE.Vector3(Math.cos(-1.05) * RING_R, Math.sin(-1.05) * RING_R, 0)), normal: [0.3, 0.2, 1],
+    cam: { dir: [0.45, 0.28, 1], dist: 17, target: [0.6, 9.0, 0] } },
+  { name: 'Sao treo', text: 'Sao que tre và sao giấy treo trên vành đai bằng dây len, đung đưa nhẹ theo gió.',
     pos: () => hangers[3].star.getWorldPosition(new THREE.Vector3()), normal: [0.2, 0, 1],
     cam: { dir: [0.35, 0.05, 1], dist: 17, target: [0.8, 7.4, 0.5] } },
   { name: 'Vầng trăng khuyết', text: 'Hai vầng trăng lớn đặt đối xứng hai bên, gắn dày đèn đom đóm lấp lánh.',
@@ -1317,7 +1320,8 @@ function updateHotspots() {
     const world = p.pos();
     const facing = p.nrm.dot(_toCam.subVectors(camera.position, world).normalize());
     _v.copy(world).project(camera);
-    const visible = _v.z < 1 && facing > 0.05;
+    // Hide dots that project outside the canvas (e.g. below the stage on phones when zoomed in).
+    const visible = _v.z < 1 && facing > 0.05 && Math.abs(_v.x) < 0.97 && Math.abs(_v.y) < 0.97;
     p.el.style.opacity = visible ? Math.min(1, facing * 2.5) : 0;
     p.el.style.pointerEvents = visible ? 'auto' : 'none';
     const x = ((_v.x + 1) / 2) * w, half = (w <= 860 ? 180 : 220) / 2 + 8;
