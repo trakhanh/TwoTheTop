@@ -70,8 +70,8 @@
   .intro::-webkit-scrollbar { display: none; }
   .eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 0 0 14px; }
   .intro .eyebrow::before { content: ""; width: 26px; height: 1px; background: currentColor; flex: none; }
-  .intro h1 { font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(32px, 2.85vw, 46px); line-height: 1.08; letter-spacing: -.01em; margin: 0 0 16px; }
-  .intro h1 em { display: block; font-style: italic; color: var(--gold); }
+  .intro h1 { font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(32px, 2.85vw, 46px); line-height: 1.3; letter-spacing: .035em; word-spacing: .14em; margin: 0 0 16px; }
+  .intro h1 em { display: block; margin-top: .06em; font-style: italic; letter-spacing: .04em; color: var(--gold); }
   .lead { color: var(--muted); font-size: 15px; line-height: 1.65; margin: 0 0 18px; max-width: 42ch; }
   .tags { list-style: none; padding: 0; margin: 0 0 26px; display: flex; flex-wrap: wrap; gap: 6px; }
   .tags li { font-size: 12.5px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 200, 120, .06); }
@@ -262,7 +262,7 @@
   body.presenting .mem-sheet { padding-bottom: 240px; }
   .mem-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 34px; }
   .mem-head .eyebrow::before { content: ""; width: 26px; height: 1px; background: currentColor; flex: none; }
-  .mem-title { font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(30px, 4vw, 50px); line-height: 1.08; margin: 0 0 10px; }
+  .mem-title { font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(30px, 4vw, 50px); line-height: 1.2; letter-spacing: .01em; margin: 0 0 10px; }
   .mem-sub { color: var(--muted); margin: 0; font-size: 15px; max-width: 60ch; line-height: 1.6; }
   .mem-close { flex: none; position: sticky; top: 0; }
   .timeline { position: relative; }
@@ -322,7 +322,7 @@
     transition: opacity .35s, transform .35s;
   }
   .caption .step { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
-  .caption h3 { font-family: "Playfair Display", serif; font-size: 30px; font-weight: 600; margin: 0 0 10px; line-height: 1.15; }
+  .caption h3 { font-family: "Playfair Display", serif; font-size: 30px; font-weight: 600; margin: 0 0 10px; line-height: 1.25; letter-spacing: .01em; }
   .caption p { margin: 0 0 18px; color: var(--muted); line-height: 1.6; font-size: 15px; }
   .caption .nav { display: flex; align-items: center; gap: 8px; }
   .caption .nav .grow { flex: 1; }
@@ -358,19 +358,20 @@
     .intro .eyebrow { margin-bottom: 10px; }
     .intro h1 { margin-bottom: 12px; }
     .lead { font-size: 13.5px; line-height: 1.55; margin-bottom: 14px; }
-    .tags { margin-bottom: 18px; }
-    .actions { margin-bottom: 22px; }
+    .tags { margin-bottom: 16px; }
+    .actions { margin-bottom: 14px; }
     .parts { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; }
     .parts button { padding: 8px 2px; font-size: 14px; gap: 10px; }
     .parts .arrow { display: none; }
   }
   @media (max-height: 760px) and (min-width: 861px) {
-    .tags { margin-bottom: 14px; }
-    .actions { margin-bottom: 16px; }
-    .parts button { padding: 7px 2px; }
+    .tags { margin-bottom: 12px; }
+    .actions { margin-bottom: 10px; }
+    .parts button { padding: 6px 2px; }
   }
   @media (max-width: 1200px) and (min-width: 861px) {
     .team-peek .stack span:nth-child(n+2), .mem-peek .thumbs img:nth-child(n+2) { display: none; }
+    .parts button { padding: 6px 2px; }
     .chip { padding: 8px 10px; }
     .dimmer { font-size: 0; gap: 0; }
     .dimmer input { width: 72px; }
@@ -601,7 +602,7 @@ const TEAM = [
   { name: 'Lê Thanh Trí', role: 'Nhóm phó', look: 'star', color: 'sky', lead: 'Nhóm phó' },
   { name: 'Đinh Quang Thắng', role: 'Cánh tay trái nhóm trưởng', look: 'armL', color: 'peach' },
   { name: 'Lê Thái Hiền', role: 'Cánh tay phải nhóm trưởng', look: 'armR', color: 'coral' },
-  { name: 'Nguyễn Thị Huyền Trang', role: 'Chị gái HR', look: 'letter', color: 'pink' },
+  { name: 'Nguyễn Thị Huyền Trang', role: 'Chị gái HR dễ thương', look: 'letter', color: 'pink' },
   { name: 'Nguyễn Thị Lan My', role: 'Chị gái nhiệt huyết', look: 'flame', color: 'sun' },
   { name: 'Phạm Mai Khanh', role: 'Người thuyết trình · Chị gái năng nổ', look: 'mic', color: 'lilac' },
   { name: 'Nguyễn Thùy Vy', role: 'Người thuyết trình (Visual)', look: 'palette', color: 'mint' },
@@ -610,9 +611,9 @@ const TEAM = [
   { name: 'Phạm Minh Phát', role: 'Anh Phát Leader', look: 'flag', color: 'peach' },
   { name: 'Nguyễn Lực Minh Thông', role: 'Anh trai team Game', look: 'gamepad', color: 'mint' },
   { name: 'Nguyễn Quốc Bảo', role: 'Anh trai team Thumb', look: 'frame', color: 'lilac' },
-  { name: 'Võ Ngọc Yến Thanh', role: 'Bộ 3 team SEO', look: 'magnifier', color: 'sky' },
-  { name: 'Châu Huệ Mẫn', role: 'Bộ 3 team SEO', look: 'magnifier', color: 'pink' },
-  { name: 'Nguyễn Hoàng Bảo Khanh', role: 'Bộ 3 team SEO', look: 'magnifier', color: 'sun' },
+  { name: 'Võ Ngọc Yến Thanh', role: 'Bộ 3 team SEO dễ thương', look: 'magnifier', color: 'sky' },
+  { name: 'Châu Huệ Mẫn', role: 'Bộ 3 team SEO dễ thương', look: 'magnifier', color: 'pink' },
+  { name: 'Nguyễn Hoàng Bảo Khanh', role: 'Bộ 3 team SEO dễ thương', look: 'magnifier', color: 'sun' },
   { name: 'Nguyễn Trí Trung', role: 'Anh trai tháo vát', look: 'wrench', color: 'red' },
 ];
 // Màu lồng đèn: [thân, viền đậm]
