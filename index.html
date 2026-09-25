@@ -3,23 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Two The Top · Lồng Đèn 3D</title>
-<meta name="description" content="Nhóm Two The Top giới thiệu lồng đèn Trung Thu Mặt Trời & Vầng Trăng qua mô hình 3D tương tác.">
+<title>Nhật Nguyệt Đồng Huy · Two The Top</title>
+<meta name="description" content="Nhật Nguyệt Đồng Huy: lồng đèn Trung Thu của nhóm Two The Top, nơi Mặt Trời và Mặt Trăng cùng tỏa sáng. Xem mô hình 3D tương tác.">
 <meta name="theme-color" content="#0a1020">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="canonical" href="https://trakhanh.github.io/TwoTheTop/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="vi_VN">
 <meta property="og:site_name" content="Two The Top">
 <meta property="og:url" content="https://trakhanh.github.io/TwoTheTop/">
-<meta property="og:title" content="Khi Mặt Trời gặp Vầng Trăng · Lồng đèn 3D của Two The Top">
-<meta property="og:description" content="Lồng đèn Trung Thu làm từ que tre, bìa giấy và 19 đôi tay — xoay, phóng to, bật tắt đèn và thả đèn ước trên mô hình 3D.">
+<meta property="og:title" content="Nhật Nguyệt Đồng Huy · Lồng đèn 3D của Two The Top">
+<meta property="og:description" content="Mặt Trời và Mặt Trăng cùng tỏa sáng — lồng đèn làm từ que tre, bìa giấy và 19 đôi tay. Xoay, phóng to, bật tắt đèn và thả đèn ước trên mô hình 3D.">
 <meta property="og:image" content="https://trakhanh.github.io/TwoTheTop/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Lồng đèn Mặt Trời & Vầng Trăng của nhóm Two The Top đang phát sáng">
+<meta property="og:image:alt" content="Lồng đèn Nhật Nguyệt Đồng Huy của nhóm Two The Top đang phát sáng">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Khi Mặt Trời gặp Vầng Trăng · Lồng đèn 3D của Two The Top">
-<meta name="twitter:description" content="Lồng đèn Trung Thu làm từ que tre, bìa giấy và 19 đôi tay — xem mô hình 3D tương tác.">
+<meta name="twitter:title" content="Nhật Nguyệt Đồng Huy · Lồng đèn 3D của Two The Top">
+<meta name="twitter:description" content="Mặt Trời và Mặt Trăng cùng tỏa sáng — lồng đèn Trung Thu của Two The Top, xem mô hình 3D tương tác.">
 <meta name="twitter:image" content="https://trakhanh.github.io/TwoTheTop/assets/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,6 +50,8 @@
     overflow-x: hidden;
   }
   button { font: inherit; color: inherit; }
+  :where(button, a, input, textarea, [tabindex]):focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .field:focus-visible { outline: none; }
 
   /* ---------- Stage ---------- */
   .stage { position: fixed; inset: 0; }
@@ -89,11 +93,20 @@
   .intro .eyebrow::before { content: ""; width: 26px; height: 1px; background: currentColor; flex: none; }
   .intro h1 { font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(32px, 2.85vw, 46px); line-height: 1.3; letter-spacing: .035em; word-spacing: .14em; margin: 0 0 16px; }
   .intro h1 em { display: block; margin-top: .06em; font-style: italic; letter-spacing: .04em; color: var(--gold); }
+  .meaning { margin: -4px 0 14px; padding-left: 14px; border-left: 2px solid rgba(255, 197, 110, .55); max-width: 40ch;
+    font-family: "Playfair Display", serif; font-style: italic; font-size: 16px; line-height: 1.55; color: #e9d7b6; }
   .lead { color: var(--muted); font-size: 15px; line-height: 1.65; margin: 0 0 18px; max-width: 42ch; }
   .tags { list-style: none; padding: 0; margin: 0 0 26px; display: flex; flex-wrap: wrap; gap: 6px; }
   .tags li { font-size: 12.5px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 200, 120, .06); }
-  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 30px; }
-  .kbd-hint { flex-basis: 100%; margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+  .actions { display: grid; gap: 10px; margin: 0 0 28px; max-width: 440px; }
+  .act-main { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .act-main .cta { padding: 13px 14px; }
+  .cta.cta-soft { background: rgba(255, 200, 120, .1); color: var(--text); border: 1px solid rgba(255, 197, 110, .45); box-shadow: none; }
+  .cta.cta-soft:hover { background: rgba(255, 200, 120, .18); box-shadow: 0 8px 26px rgba(255, 150, 60, .22); }
+  .cta-soft .wico { font-size: 16px; line-height: 1; filter: drop-shadow(0 0 6px rgba(255, 160, 70, .8)); }
+  .act-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .act-grid .team-peek { width: 100%; min-width: 0; border-radius: 14px; padding: 7px 12px 7px 7px; }
+  .act-grid .team-peek b { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .section-label { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
   .parts { list-style: none; padding: 0; margin: 0; border-bottom: 1px solid var(--line); }
   .parts li { border-top: 1px solid var(--line); }
@@ -240,12 +253,13 @@
     background: none; border: 0; padding: 0; cursor: pointer; transition: opacity .25s;
   }
   .hotspot .dot {
-    display: block; width: 18px; height: 18px; border-radius: 50%;
-    background: rgba(255, 245, 225, .95); border: 3px solid rgba(255, 170, 80, .8);
-    box-shadow: 0 0 0 6px rgba(255, 200, 120, .18);
-    animation: pulse 2.2s ease-in-out infinite;
+    display: block; width: 14px; height: 14px; border-radius: 50%;
+    background: radial-gradient(circle, #fffaf0 0 38%, #ffd48a 40% 100%); border: 2px solid rgba(255, 244, 222, .95);
+    box-shadow: 0 0 0 4px rgba(255, 200, 120, .16), 0 0 14px rgba(255, 190, 100, .55);
+    animation: pulse 2.6s ease-in-out infinite;
   }
-  @keyframes pulse { 50% { box-shadow: 0 0 0 11px rgba(255, 200, 120, 0); } }
+  .hotspot:hover .dot, .hotspot.open .dot { transform: scale(1.2); }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 9px rgba(255, 200, 120, 0), 0 0 18px rgba(255, 190, 100, .7); } }
   .hotspot .tip {
     position: absolute; left: 50%; bottom: calc(100% + 12px); transform: translate(calc(-50% + var(--shift, 0px)), 6px);
     width: 220px; padding: 12px 14px; border-radius: 12px; text-align: left;
@@ -281,7 +295,7 @@
   .mem-head .eyebrow::before { content: ""; width: 26px; height: 1px; background: currentColor; flex: none; }
   .mem-title { font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(30px, 4vw, 50px); line-height: 1.2; letter-spacing: .01em; margin: 0 0 10px; }
   .mem-sub { color: var(--muted); margin: 0; font-size: 15px; max-width: 60ch; line-height: 1.6; }
-  .mem-close { flex: none; position: sticky; top: 0; }
+  .mem-close { flex: none; position: fixed; z-index: 3; top: max(20px, env(safe-area-inset-top)); right: max(20px, env(safe-area-inset-right)); background: rgba(14, 20, 40, .8); }
   .timeline { position: relative; }
   .chapter { display: grid; grid-template-columns: 200px 1fr; gap: 28px; padding: 26px 0; border-top: 1px solid var(--line); }
   .chapter-meta { position: relative; }
@@ -373,11 +387,6 @@
   body.daytime .stage::after { background: radial-gradient(120% 90% at 60% 45%, transparent 60%, rgba(10, 20, 40, .35) 100%); }
 
   /* ---------- Wish lanterns ---------- */
-  .wish-peek { padding-left: 7px; }
-  .wish-peek .wico {
-    width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; font-size: 17px;
-    background: radial-gradient(circle at 50% 60%, #ffe2a8, #ff9a45 75%); box-shadow: 0 0 16px rgba(255, 160, 70, .55);
-  }
   .share-peek { padding-left: 7px; }
   .share-peek .sico { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 200, 120, .14); color: var(--gold); }
   .share-peek .sico svg { width: 17px; height: 17px; }
@@ -419,13 +428,13 @@
   .wish-form .cta:disabled { opacity: .6; cursor: progress; }
   .wish-error { margin: 0; padding: 9px 12px; border-radius: 10px; background: rgba(255, 110, 90, .12); color: #ffb4a2; font-size: 13.5px; }
   .fine { margin: 14px 0 0; font-size: 12px; color: var(--muted); }
-  .mine { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 14px; }
-  .mine h3 { margin: 0 0 8px; font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .mine ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 190px; overflow-y: auto; scrollbar-width: thin; }
-  .mine li { display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 12px; border-radius: 10px; background: rgba(255, 255, 255, .04); font-size: 14px; }
-  .mine li span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-  .mine li button { flex: none; border: 0; background: none; color: var(--gold); cursor: pointer; font-size: 12.5px; padding: 4px 6px; border-radius: 8px; }
-  .mine li button:hover { background: rgba(255, 200, 120, .12); }
+  #wishMine { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 14px; }
+  #wishMine h3 { margin: 0 0 8px; font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  #wishMine ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 190px; overflow-y: auto; scrollbar-width: thin; }
+  #wishMine li { display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 12px; border-radius: 10px; background: rgba(255, 255, 255, .04); font-size: 14px; }
+  #wishMine li span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  #wishMine li button { flex: none; border: 0; background: none; color: var(--gold); cursor: pointer; font-size: 12.5px; padding: 4px 6px; border-radius: 8px; }
+  #wishMine li button:hover { background: rgba(255, 200, 120, .12); }
 
   /* wall of everyone's wishes */
   .wish-tabs { display: flex; gap: 4px; padding: 4px; margin: 0 0 18px; border-radius: 999px; background: rgba(255, 255, 255, .05); border: 1px solid var(--line); }
@@ -492,6 +501,7 @@
   .tv-title .eyebrow { font-size: clamp(12px, 1vw, 18px); }
   .tv-title h2 { margin: 0 0 22px; font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(34px, 3.4vw, 66px); line-height: 1.2; letter-spacing: .02em; }
   .tv-title h2 em { display: block; color: var(--gold); }
+  .tv-meaning { margin: -8px 0 22px; font-family: "Playfair Display", serif; font-style: italic; font-size: clamp(15px, 1.2vw, 22px); line-height: 1.5; color: #e9d7b6; }
   .tv-stats { display: grid; gap: 8px; margin: 0; font-size: clamp(16px, 1.35vw, 26px); color: var(--muted); }
   .tv-stats b { color: var(--text); font-weight: 600; }
   .tv-qr {
@@ -510,8 +520,17 @@
   @media (max-width: 900px) {
     .tv-title { width: auto; right: 4vw; top: 70px; }
     .tv-title h2 { font-size: 26px; margin-bottom: 8px; }
+    .tv-meaning { display: none; }
     .tv-qr { max-width: none; right: 4vw; }
   }
+
+  .gl-lost {
+    position: fixed; z-index: 12; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+    display: flex; align-items: center; gap: 14px; width: max-content; max-width: calc(100% - 24px); padding: 12px 12px 12px 18px;
+    border-radius: 16px; background: rgba(14, 20, 40, .94); border: 1px solid var(--line); box-shadow: 0 12px 40px rgba(0, 0, 0, .5);
+  }
+  .gl-lost p { margin: 0; font-size: 14px; }
+  .gl-lost .cta { flex: none; padding: 10px 16px; font-size: 14px; }
 
   /* ---------- Share / QR ---------- */
   .qr-card { width: min(260px, 100%); margin: 0 auto 18px; padding: 14px; border-radius: 18px; background: #fff; box-shadow: 0 0 0 3px #f2b84f, 0 12px 40px rgba(0, 0, 0, .4); }
@@ -533,6 +552,9 @@
     transition: opacity .9s ease, visibility 0s .9s;
   }
   .loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+  /* No WebGL: show the real photo instead of the 3D stage */
+  body.no3d #scene, body.no3d .controls, body.no3d .hint, body.no3d #hotspots, body.no3d .actions, body.no3d .section-label, body.no3d .parts { display: none; }
+  body.no3d .stage { background: #0a1020 url("IMG_VIDEO/WhatsApp%20Image%202026-09-24%20at%2019.25.58.jpeg") 70% center / contain no-repeat; }
   .loader.done .ld-inner { transform: scale(1.06); filter: blur(2px); }
   .ld-inner { display: grid; justify-items: center; transition: transform .9s ease, filter .9s ease; }
   /* twinkling star field: one element, many shadows */
@@ -636,6 +658,9 @@
     .member { flex-direction: column; text-align: center; padding: 16px 10px 14px; }
     .member.featured { flex-direction: column; text-align: center; padding: 22px 16px 18px; gap: 12px; }
     .member.featured b { font-size: 19px; }
+    body.tv { overflow: hidden; }
+    body.tv .stage { position: fixed; inset: 0; height: auto; min-height: 0; }
+    body.tv .tv-qr b { white-space: normal; }
   }
   @media (max-height: 560px) and (orientation: landscape) {
     .stage { height: 100svh; min-height: 0; }
@@ -658,6 +683,12 @@
     .lb-next { right: 14px; }
     .lb-cap { padding: 0 64px; }
   }
+  /* Small laptops: the full control bar no longer fits beside the intro column, so give it two rows */
+  @media (min-width: 861px) and (max-width: 1320px) {
+    .controls { flex-wrap: wrap; justify-content: center; row-gap: 4px; max-width: none; width: max-content; border-radius: 20px; }
+    .controls .sep { display: none; }
+    .controls .sep:first-of-type { display: block; flex-basis: 100%; height: 0; margin: 0; }
+  }
   /* Narrow phones: controls in two rows so the day/night and sound buttons stay visible */
   @media (max-width: 600px) {
     .controls { flex-wrap: wrap; justify-content: center; gap: 2px; width: max-content; padding: 5px; }
@@ -667,8 +698,10 @@
     .icon-btn { padding: 7px 9px; }
     .dimmer { font-size: 0; gap: 0; padding: 0 6px; }
   }
+  @media (max-width: 430px) {
+    .act-grid .team-peek .stack span:nth-child(n+2), .act-grid .mem-peek .thumbs img:nth-child(n+2) { display: none; }
+  }
   @media (max-width: 400px) {
-    .actions > * { flex: 1 1 100%; justify-content: center; }
     .team-grid { grid-template-columns: 1fr; }
     .member { flex-direction: row; text-align: left; }
   }
@@ -676,8 +709,31 @@
     .hotspot .dot, .bob, .loader *, .loader::before, .loader::after, .member.featured::before, .member.featured::after { animation: none; }
     .team-modal.open .member { animation: none; opacity: 1; transform: none; }
     .member:hover .ava svg { animation: none; }
+    .heart-fly, .photo-flash { display: none; }
+    .ld-bar::after, .ld-rays, .ld-sun, .ld-moon, .ld-halo { animation: none; }
+    .wall li.fresh, .heart-peek.pop .hico svg { animation: none; }
+    .team-sheet, .mem-sheet, .loader, .ld-inner { transition: none; }
   }
 </style>
+<script>
+  // If the 3D part can't start (no WebGL, or the CDN is blocked), don't leave people on the loader.
+  (function () {
+    function giveUp(msg, no3d) {
+      var el = document.getElementById('loader');
+      if (!el || window.__lanternReady) return;
+      if (no3d) document.body.classList.add('no3d');
+      el.querySelector('.ld-note').textContent = msg;
+      setTimeout(function () { el.classList.add('done'); }, 2200);
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+      var c = document.createElement('canvas');
+      var gl = null;
+      try { gl = c.getContext('webgl2') || c.getContext('webgl'); } catch (e) {}
+      if (!gl) giveUp('Trình duyệt này chưa hỗ trợ 3D, bạn xem ảnh lồng đèn thật nhé.', true);
+      else setTimeout(function () { giveUp('Mạng hơi chậm, mô hình 3D sẽ hiện khi tải xong.', false); }, 20000);
+    });
+  })();
+</script>
 <script type="importmap">
 {
   "imports": {
@@ -714,7 +770,7 @@
       </g>
     </svg>
     <p class="ld-brand">Two The Top · Trung Thu 2026</p>
-    <p class="ld-title">Khi Mặt Trời <em>gặp Vầng Trăng</em></p>
+    <p class="ld-title">Nhật Nguyệt <em>Đồng Huy</em></p>
     <div class="ld-bar"></div>
     <p class="ld-note">Đang thắp đèn…</p>
   </div>
@@ -732,8 +788,8 @@
 </header>
 
 <section class="stage" id="stage">
-  <canvas id="scene" aria-label="Mô hình 3D lồng đèn Mặt Trời & Vầng Trăng" tabindex="0"></canvas>
-  <div id="wishLabels" aria-live="polite"></div>
+  <canvas id="scene" role="img" aria-label="Mô hình 3D lồng đèn Nhật Nguyệt Đồng Huy"></canvas>
+  <div id="wishLabels" aria-hidden="true"></div>
   <div id="hotspots"></div>
 
   <div class="controls" role="toolbar" aria-label="Điều khiển mô hình">
@@ -771,40 +827,45 @@
 
 <main class="intro" id="info">
   <p class="eyebrow">Lồng đèn Trung Thu · Two The Top</p>
-  <h1>Khi Mặt Trời <em>gặp Vầng Trăng</em></h1>
+  <h1>Nhật Nguyệt <em>Đồng Huy</em></h1>
+  <p class="meaning">Mặt Trời và Mặt Trăng cùng tỏa sáng — tinh thần đồng hành, cùng nhau tạo nên ánh sáng chung.</p>
   <p class="lead">
-    Đêm rằm này, ngày và đêm cùng thắp sáng: mặt trời rực rỡ giữa vòng sao treo, hai vầng trăng
-    ôm lấy những tầng mây lấp lánh — tất cả làm nên từ que tre, bìa giấy và 19 đôi tay của Two The Top.
+    Mặt trời rực rỡ giữa vòng sao treo, hai vầng trăng ôm lấy những tầng mây lấp lánh —
+    tất cả làm nên từ que tre, bìa giấy và 19 đôi tay của Two The Top.
   </p>
   <ul class="tags" aria-label="Chất liệu">
     <li>Bìa cứng</li><li>Que tre</li><li>Giấy nhũ</li><li>Giấy scan</li><li>Đèn LED đom đóm</li><li>Đế LED</li>
   </ul>
 
   <div class="actions">
-    <button class="cta" id="btnPresent" title="Khi trình chiếu: phím ← → để chuyển phần, Esc để thoát">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>
-      Bắt đầu trình chiếu
-    </button>
-    <button class="team-peek" id="btnTeam" title="Gặp gỡ các thành viên">
-      <span class="stack" id="teamStack"></span>
-      <b id="teamCount"></b>
-    </button>
-    <button class="team-peek mem-peek" id="btnMemories" title="Hành trình &amp; kỷ niệm làm lồng đèn">
-      <span class="thumbs" id="memThumbs"></span>
-      <b>Hành trình</b>
-    </button>
-    <button class="team-peek wish-peek" id="btnWish" title="Viết lời chúc và thả đèn trời">
-      <span class="wico" aria-hidden="true">🏮</span>
-      <b>Thả đèn ước</b>
-    </button>
-    <button class="team-peek share-peek" id="btnShare" title="Chia sẻ link và mã QR">
-      <span class="sico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 17v4h-1"/></svg></span>
-      <b>Chia sẻ</b>
-    </button>
-    <button class="team-peek heart-peek" id="btnHeart" aria-pressed="false" title="Thả tim cho lồng đèn" hidden>
-      <span class="hico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.3s-7.4-4.5-9.2-9.1C1.6 7.9 3.7 4.8 7 4.8c2 0 3.6 1.1 5 2.9 1.4-1.8 3-2.9 5-2.9 3.3 0 5.4 3.1 4.2 6.4-1.8 4.6-9.2 9.1-9.2 9.1z"/></svg></span>
-      <b id="heartText">Thả tim</b>
-    </button>
+    <div class="act-main">
+      <button class="cta" id="btnPresent" title="Khi trình chiếu: phím ← → để chuyển phần, Esc để thoát">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>
+        Trình chiếu
+      </button>
+      <button class="cta cta-soft" id="btnWish" title="Viết lời chúc và thả đèn trời">
+        <span class="wico" aria-hidden="true">🏮</span>
+        Thả đèn ước
+      </button>
+    </div>
+    <div class="act-grid">
+      <button class="team-peek" id="btnTeam" title="Gặp gỡ các thành viên">
+        <span class="stack" id="teamStack"></span>
+        <b id="teamCount"></b>
+      </button>
+      <button class="team-peek mem-peek" id="btnMemories" title="Hành trình &amp; kỷ niệm làm lồng đèn">
+        <span class="thumbs" id="memThumbs"></span>
+        <b>Hành trình</b>
+      </button>
+      <button class="team-peek share-peek" id="btnShare" title="Chia sẻ link và mã QR">
+        <span class="sico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 17v4h-1"/></svg></span>
+        <b>Chia sẻ</b>
+      </button>
+      <button class="team-peek heart-peek" id="btnHeart" aria-pressed="false" title="Thả tim cho lồng đèn" hidden>
+        <span class="hico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.3s-7.4-4.5-9.2-9.1C1.6 7.9 3.7 4.8 7 4.8c2 0 3.6 1.1 5 2.9 1.4-1.8 3-2.9 5-2.9 3.3 0 5.4 3.1 4.2 6.4-1.8 4.6-9.2 9.1-9.2 9.1z"/></svg></span>
+        <b id="heartText">Thả tim</b>
+      </button>
+    </div>
   </div>
 
   <p class="section-label">Cấu tạo</p>
@@ -854,7 +915,7 @@
       <p class="fine" id="wishFine"></p>
     </div>
     <div id="panelWall" role="tabpanel" aria-labelledby="tabWall" hidden>
-      <ul class="wall" id="wallList" aria-live="polite"></ul>
+      <ul class="wall" id="wallList"></ul>
       <p class="wall-empty" id="wallEmpty" hidden>Chưa có ai thả đèn, bạn là người đầu tiên nhé!</p>
       <button class="chip wall-more" id="wallMore" hidden>Xem thêm lời chúc cũ hơn</button>
     </div>
@@ -892,7 +953,7 @@
     </button>
     <p class="eyebrow">Ảnh lồng đèn</p>
     <h2 class="team-title" id="photoTitle">Lưu khoảnh khắc</h2>
-    <div class="photo-frame"><img id="photoImg" alt="Ảnh chụp lồng đèn Mặt Trời &amp; Vầng Trăng"></div>
+    <div class="photo-frame"><img id="photoImg" alt="Ảnh chụp lồng đèn Nhật Nguyệt Đồng Huy"></div>
     <div class="share-actions">
       <a class="cta" id="photoSave" href="#" download="Long-den-Two-The-Top.jpg">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
@@ -933,10 +994,16 @@
   <div class="lb-cap"><span id="lbCount"></span><b id="lbText"></b><a class="lb-original" id="lbOriginal" href="#" download>Tải bản gốc ↓</a></div>
 </div>
 
+<div class="gl-lost" id="glLost" role="alert" hidden>
+  <p>Mô hình 3D vừa bị trình duyệt tạm dừng.</p>
+  <button class="cta" id="glReload">Tải lại trang</button>
+</div>
+
 <div class="tv-hud" id="tvHud" aria-hidden="true">
   <div class="tv-title" id="tvTitle">
     <p class="eyebrow">Two The Top · Trung Thu 2026</p>
-    <h2>Khi Mặt Trời <em>gặp Vầng Trăng</em></h2>
+    <h2>Nhật Nguyệt <em>Đồng Huy</em></h2>
+    <p class="tv-meaning">Mặt Trời và Mặt Trăng cùng tỏa sáng — tinh thần đồng hành, cùng nhau tạo nên ánh sáng chung.</p>
     <p class="tv-stats"><span id="tvWishes"></span><span id="tvHearts"></span></p>
   </div>
   <div class="tv-qr">
@@ -975,6 +1042,8 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
+const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 /* =========================================================
    Nội dung trang — sửa ở đây
    ========================================================= */
@@ -1010,8 +1079,8 @@ const LANTERN_COLORS = {
   lilac: ['#b69cff', '#7d5fd6'], pink: ['#ff9dbb', '#d9648a'],
 };
 const INTRO = {
-  title: 'Khi Mặt Trời gặp Vầng Trăng',
-  text: 'Lồng đèn Mặt Trời & Vầng Trăng của Two The Top — đêm rằm này, ngày và đêm cùng thắp sáng trong một chiếc lồng đèn làm nên từ que tre, bìa giấy và 19 đôi tay.',
+  title: 'Nhật Nguyệt Đồng Huy',
+  text: 'Mặt Trời và Mặt Trăng cùng tỏa sáng — như tinh thần đồng hành của Two The Top: cùng nhau tạo nên ánh sáng chung, từ que tre, bìa giấy và 19 đôi tay.',
 };
 
 /* =========================================================
@@ -1038,7 +1107,7 @@ controls.zoomSpeed = 0.55;
 controls.rotateSpeed = 0.8;
 controls.enablePan = false;
 controls.maxPolarAngle = Math.PI * 0.53;
-controls.autoRotate = true;
+controls.autoRotate = !REDUCED_MOTION;
 controls.autoRotateSpeed = 0.55;
 
 const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }));
@@ -1809,7 +1878,7 @@ const PARTS = [
   { name: 'Vành đai mặt trời', text: 'Vòng tròn nghiêng ôm quanh mặt trời như vành đai hành tinh, quấn kín dây đèn đom đóm sáng lấp lánh.',
     pos: () => ring.localToWorld(new THREE.Vector3(Math.cos(-1.05) * RING_R, Math.sin(-1.05) * RING_R, 0)), normal: [0.3, 0.2, 1],
     cam: { dir: [0.45, 0.28, 1], dist: 17, target: [0.6, 9.0, 0] } },
-  { name: 'Sao treo', text: 'Sao que tre và sao giấy treo trên vành đai bằng dây len, đung đưa nhẹ theo gió.',
+  { name: 'Sao treo', live: true, text: 'Sao que tre và sao giấy treo trên vành đai bằng dây len, đung đưa nhẹ theo gió.',
     pos: () => hangers[3].star.getWorldPosition(new THREE.Vector3()), normal: [0.2, 0, 1],
     cam: { dir: [0.35, 0.05, 1], dist: 17, target: [0.8, 7.4, 0.5] } },
   { name: 'Vầng trăng khuyết', text: 'Hai vầng trăng lớn đặt đối xứng hai bên, gắn dày đèn đom đóm lấp lánh.',
@@ -1861,40 +1930,54 @@ function focusPart(p) {
   flyTo(pose(p.cam));
   closeTips();
   tipTimer = setTimeout(() => p.el.classList.add('open'), 1400);
-  if (isCompact()) stage.scrollIntoView({ behavior: 'smooth' });
+  if (isCompact()) stage.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth' });
 }
 
 const _v = new THREE.Vector3(), _toCam = new THREE.Vector3();
 function updateHotspots() {
-  const w = canvas.clientWidth, h = canvas.clientHeight;
+  const w = canvas.clientWidth, h = canvas.clientHeight, half = (w <= 860 ? 180 : 220) / 2 + 8;
   for (const p of PARTS) {
-    const world = p.pos();
+    // Only the hanging star moves; the other anchors are worked out once.
+    const world = p.live || !p.world ? (p.world = p.pos()) : p.world;
     const facing = p.nrm.dot(_toCam.subVectors(camera.position, world).normalize());
     _v.copy(world).project(camera);
     // Hide dots that project outside the canvas (e.g. below the stage on phones when zoomed in).
     const visible = _v.z < 1 && facing > 0.05 && Math.abs(_v.x) < 0.97 && Math.abs(_v.y) < 0.97;
-    p.el.style.opacity = visible ? Math.min(1, facing * 2.5) : 0;
-    p.el.style.pointerEvents = visible ? 'auto' : 'none';
-    const x = ((_v.x + 1) / 2) * w, half = (w <= 860 ? 180 : 220) / 2 + 8;
-    p.el.style.left = x + 'px';
-    p.el.style.setProperty('--shift', `${Math.max(half, Math.min(w - half, x)) - x}px`);
-    p.el.style.top = ((1 - _v.y) / 2) * h + 'px';
+    const op = visible ? Math.min(1, facing * 2.5).toFixed(2) : '0';
+    if (op !== p.op) { p.op = op; p.el.style.opacity = op; p.el.style.pointerEvents = visible ? 'auto' : 'none'; }
+    if (!visible) continue;
+    const x = ((_v.x + 1) / 2) * w, y = ((1 - _v.y) / 2) * h;
+    p.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%)`;
+    const shift = Math.round(Math.max(half, Math.min(w - half, x)) - x);
+    if (shift !== p.shift) { p.shift = shift; p.el.style.setProperty('--shift', `${shift}px`); }
   }
 }
 
 /* ---- Overlay helper ---- */
 const returnFocus = new Map();
+let anyOverlay = false;
+// Keep keyboard focus inside open dialogs, and out of UI that's hidden while presenting or on the big screen.
+function syncInert() {
+  anyOverlay = !!document.querySelector('.team-modal.open, .memories.open, .lightbox.open');
+  const presenting = document.body.classList.contains('presenting');
+  document.querySelector('.topbar').inert = anyOverlay;
+  stage.inert = anyOverlay;
+  document.getElementById('info').inert = anyOverlay || presenting || isTv();
+  document.querySelector('.controls').inert = presenting || isTv();
+}
 function setOverlay(el, open, focusSel) {
   if (el.classList.contains('open') === open) return;
+  const hadFocus = el.contains(document.activeElement); // check before inert blurs it
   el.classList.toggle('open', open);
   el.inert = !open;
+  if (open) returnFocus.set(el, document.activeElement);
+  syncInert();
   if (open) {
-    returnFocus.set(el, document.activeElement);
     if (!document.body.classList.contains('presenting') || el === lightbox) el.querySelector(focusSel)?.focus({ preventScroll: true });
   } else {
     const back = returnFocus.get(el);
     returnFocus.delete(el);
-    if (back && el.contains(document.activeElement) && document.body.contains(back)) back.focus({ preventScroll: true });
+    if (back && hadFocus && document.body.contains(back)) back.focus({ preventScroll: true });
   }
 }
 
@@ -2154,7 +2237,11 @@ document.getElementById('lbPrev').addEventListener('click', () => stepLightbox(-
 document.getElementById('lbNext').addEventListener('click', () => stepLightbox(1));
 lightbox.addEventListener('click', (e) => { if (e.target === lightbox || e.target === lbStage) closeLightbox(); });
 let swipeX = null;
-lbStage.addEventListener('pointerdown', (e) => { swipeX = e.clientX; });
+lbStage.addEventListener('pointerdown', (e) => {
+  // Swipes are for touch; ignore the mouse and the bottom of a video, where its seek bar sits.
+  const r = e.target.tagName === 'VIDEO' ? e.target.getBoundingClientRect() : null;
+  swipeX = e.pointerType === 'mouse' || (r && e.clientY > r.bottom - r.height * 0.25) ? null : e.clientX;
+});
 lbStage.addEventListener('pointerup', (e) => {
   if (swipeX !== null && Math.abs(e.clientX - swipeX) > 50) stepLightbox(e.clientX < swipeX ? 1 : -1);
   swipeX = null;
@@ -2199,6 +2286,7 @@ function showStep(i) {
 function startPresenting() {
   document.body.classList.add('presenting');
   caption.inert = false;
+  syncInert();
   document.documentElement.requestFullscreen?.().catch(() => {});
   resize();
   showStep(0);
@@ -2209,15 +2297,19 @@ function stopPresenting() {
   if (document.fullscreenElement) document.exitFullscreen?.();
   closeTeam();
   closeMemories();
+  syncInert();
   resize();
   step = -1;
+  flyTo(pose(VIEWS.overview), 1.4);
+  setActiveView('overview');
+  setAutoRotate(!REDUCED_MOTION);
 }
 document.getElementById('btnPresent').addEventListener('click', startPresenting);
 document.getElementById('capNext').addEventListener('click', () => showStep(step + 1));
 document.getElementById('capPrev').addEventListener('click', () => showStep(step - 1));
 document.getElementById('capExit').addEventListener('click', stopPresenting);
 document.addEventListener('keydown', (e) => {
-  if (!document.body.classList.contains('presenting')) return;
+  if (!document.body.classList.contains('presenting') || lightbox.classList.contains('open')) return;
   if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); showStep(step + 1); }
   else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); showStep(step - 1); }
   else if (e.key === 'Escape') stopPresenting();
@@ -2386,6 +2478,7 @@ function saveWishes(list) { try { localStorage.setItem(WISH_KEY, JSON.stringify(
 // When there is no room at the sides (narrow phones) they start behind the lantern
 // and only show their words once they have risen above it.
 const LANTERN_TOP = 13.2, MIN_ROOM = 120;
+let introEdge = 0, tvEdge = 0; // left edge of the free space, refreshed on resize
 const _wv = new THREE.Vector3(), _tv = new THREE.Vector3(), _right = new THREE.Vector3(), _back = new THREE.Vector3();
 // Points around the lantern's outline (base, sun with rays, hoop, both moons), projected
 // each frame to find how much of the screen it covers.
@@ -2412,8 +2505,8 @@ function viewRooms() {
     if (x < minX) minX = x;
     if (x > maxX) maxX = x;
   }
-  const leftEdge = isTv() ? (w >= 900 ? tvTitle.getBoundingClientRect().right + 16 : 10)
-    : !isCompact() && !document.body.classList.contains('presenting') ? intro.offsetLeft + intro.offsetWidth + 16 : 10;
+  const leftEdge = isTv() ? (w >= 900 ? tvEdge : 10)
+    : !isCompact() && !document.body.classList.contains('presenting') ? introEdge : 10;
   return { w, h, cx, pxPerUnit, leftEdge, minX, maxX, room: { [-1]: [leftEdge, minX - 12], [1]: [maxX + 12, w - 10] } };
 }
 const roomWidth = (r) => r[1] - r[0];
@@ -2484,12 +2577,16 @@ function updateWishes(dt) {
     if (!inView || fade === 0) continue;
     // Keep the bubble inside the free space (or the stage, for the behind-the-lantern case).
     const [lo, hi] = wi.beside ? room : [v.leftEdge, v.w - 10];
-    wi.el.style.maxWidth = Math.max(120, Math.min(isTv() ? 440 : 230, hi - lo)) + 'px';
-    const x = ((_wv.x + 1) / 2) * v.w, lw = wi.el.offsetWidth;
+    // Measure the bubble only when its width limit changes (not every frame).
+    const mw = Math.round(Math.max(120, Math.min(isTv() ? 440 : 230, hi - lo)) / 10) * 10;
+    if (wi.mw !== mw) { wi.mw = mw; wi.el.style.maxWidth = mw + 'px'; wi.size = null; }
+    if (!wi.size) wi.size = [wi.el.offsetWidth, wi.el.offsetHeight];
+    const [lw, lh] = wi.size;
+    const x = ((_wv.x + 1) / 2) * v.w;
     const left = Math.min(Math.max(x - lw / 2, lo), hi - lw);
     wi.el.style.left = left + 'px';
     wi.el.style.setProperty('--tail', Math.min(Math.max(x - left, 14), lw - 14) + 'px');
-    wi.el.style.top = Math.max(76 + wi.el.offsetHeight, ((1 - _wv.y) / 2) * v.h) + 'px'; // stay below the header
+    wi.el.style.top = Math.max(76 + lh, ((1 - _wv.y) / 2) * v.h) + 'px'; // stay below the header
   }
 }
 
@@ -2518,14 +2615,14 @@ document.getElementById('wishSuggest').replaceChildren(...PRESET_WISHES.slice(0,
 wishText.addEventListener('input', () => { wishCount.textContent = `${wishText.value.length} / 90`; });
 try { wishName.value = localStorage.getItem('ttt-name') || ''; } catch {}
 
-function release(text, name, save = true) {
+function release(text, name, save = true, mine = true) {
   if (save) {
     saveWishes([{ text, name, at: Date.now() }, ...loadWishes()]);
     try { localStorage.setItem('ttt-name', name); } catch {}
   }
   closeWish();
-  if (isCompact()) stage.scrollIntoView({ behavior: 'smooth' });
-  setTimeout(() => { launchWish(text, name, true); sound.lift(); }, isCompact() ? 450 : 250);
+  if (isCompact()) stage.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth' });
+  setTimeout(() => { launchWish(text, name, mine); sound.lift(); }, isCompact() ? 450 : 250);
 }
 
 /* ---- Shared wishes (Supabase): everyone watching sees everyone's lanterns ---- */
@@ -2537,7 +2634,7 @@ const COOLDOWN_MS = 15000;
 let db = null, wishTotal = 0;
 const sharedPool = [];              // shared wishes that float up now and then, newest first
 const seenIds = new Set();
-const ownPending = new Set(); // our own wishes, already launched locally (skip the realtime echo)
+const ownPending = new Map(); // text|name of a wish we're sending -> realtime echoes that arrived meanwhile
 const wishFine = document.getElementById('wishFine'), wishError = document.getElementById('wishError');
 const wishSubmit = wishForm.querySelector('button[type=submit]');
 const wishKey = (text, name) => `${text}|${name || ''}`;
@@ -2575,10 +2672,9 @@ function timeAgo(iso) {
 }
 function renderWall(freshId) {
   const mineIds = loadMineIds();
-  const mineKeys = new Set(loadWishes().map(w => wishKey(w.text, w.name))); // wishes sent before ids were kept
   wallList.replaceChildren(...wall.map(w => {
     const li = document.createElement('li');
-    const mine = mineIds.has(w.id) || mineKeys.has(wishKey(w.text, w.name));
+    const mine = mineIds.has(w.id);
     li.className = (mine ? 'mine' : '') + (w.id === freshId ? ' fresh' : '');
     const txt = document.createElement('span'); txt.className = 'txt'; txt.textContent = w.text;
     const meta = document.createElement('span'); meta.className = 'meta';
@@ -2588,7 +2684,7 @@ function renderWall(freshId) {
     const again = document.createElement('button');
     again.type = 'button'; again.textContent = 'Thả lại';
     again.setAttribute('aria-label', `Thả lại đèn: ${w.text}`);
-    again.addEventListener('click', () => release(w.text, w.name, false));
+    again.addEventListener('click', () => release(w.text, w.name, false, mine));
     li.append(txt, again, meta);
     return li;
   }));
@@ -2649,7 +2745,8 @@ async function connectWishes() {
         sharedPool.unshift(w);
         if (sharedPool.length > 60) sharedPool.pop();
         addToWall(w);
-        if (ownPending.delete(wishKey(w.text, w.name))) return;
+        const held = ownPending.get(wishKey(w.text, w.name));
+        if (held) { held.push(w); return; } // could be ours: decided once the insert answers
         if (!sceneBusy()) launchWish(w.text, w.name);
       })
       .subscribe();
@@ -2680,22 +2777,24 @@ wishForm.addEventListener('submit', async (e) => {
   if (db) {
     wishSubmit.disabled = true;
     const key = wishKey(text, name);
-    ownPending.add(key);
-    const { data: row, error } = await db.from('wishes').insert({ text, name: name || null })
-      .select('id,text,name,created_at').single();
+    ownPending.set(key, []);
+    let query = db.from('wishes').insert({ text, name: name || null }).select('id,text,name,created_at').single();
+    if (AbortSignal.timeout) query = query.abortSignal(AbortSignal.timeout(12000)); // never leave the button stuck
+    const { data: row, error } = await query;
     wishSubmit.disabled = false;
-    if (error) { ownPending.delete(key); showWishError(friendlyError(error)); return; }
+    const held = ownPending.get(key) || [];
+    ownPending.delete(key);
+    // Someone else may have sent the very same words meanwhile: they still get their lantern.
+    for (const w of held) if (!row || w.id !== row.id) { if (!sceneBusy()) launchWish(w.text, w.name); }
+    if (error) { showWishError(friendlyError(error)); return; }
     addMineId(row.id);
     if (!seenIds.has(row.id)) {
       // Our answer beat the realtime echo: record it now, the echo will be ignored.
       seenIds.add(row.id);
-      ownPending.delete(key);
       wishTotal++;
       sharedPool.unshift(row);
       addToWall(row);
       updateWishFine();
-    } else {
-      setTimeout(() => ownPending.delete(key), 20000);
     }
   }
   try { localStorage.setItem('ttt-last', Date.now()); } catch {}
@@ -2748,7 +2847,7 @@ btnCopy.addEventListener('click', async () => {
   setTimeout(() => { btnCopy.textContent = 'Sao chép link'; }, 2000);
 });
 btnNativeShare.addEventListener('click', () => {
-  navigator.share({ title: 'Khi Mặt Trời gặp Vầng Trăng · Two The Top', text: 'Ngắm lồng đèn Trung Thu 3D của Two The Top 🏮', url: SITE_URL }).catch(() => {});
+  navigator.share({ title: 'Nhật Nguyệt Đồng Huy · Two The Top', text: 'Ngắm lồng đèn Trung Thu 3D của Two The Top 🏮', url: SITE_URL }).catch(() => {});
 });
 function closeShare() { setOverlay(shareModal, false); }
 document.getElementById('btnShare').addEventListener('click', (e) => { e.stopPropagation(); setOverlay(shareModal, true, '#btnCopy'); });
@@ -2777,7 +2876,7 @@ const myDevice = (() => {
 })();
 const fmtNum = (n) => n.toLocaleString('vi-VN');
 function renderHeart() {
-  heartText.textContent = heartTotal ? `${fmtNum(heartTotal)} lượt thả tim` : 'Thả tim';
+  heartText.textContent = heartTotal ? `Thả tim · ${fmtNum(heartTotal)}` : 'Thả tim';
   btnHeart.setAttribute('aria-pressed', hearted);
   btnHeart.title = hearted ? 'Bạn đã thả tim cho lồng đèn 💛' : 'Thả tim cho lồng đèn';
   updateTvStats();
@@ -2886,12 +2985,12 @@ async function takePhoto() {
   if ('letterSpacing' in g) g.letterSpacing = '0px';
   g.font = `600 ${56 * u}px "Playfair Display", serif`;
   g.fillStyle = '#f6ecd9';
-  const first = 'Khi Mặt Trời ';
+  const first = 'Nhật Nguyệt ';
   g.fillText(first, pad, OH - pad - 22 * u);
   const fw = g.measureText(first).width;
   g.font = `italic 600 ${56 * u}px "Playfair Display", serif`;
   g.fillStyle = '#ffc56e';
-  g.fillText('gặp Vầng Trăng', pad + fw, OH - pad - 22 * u);
+  g.fillText('Đồng Huy', pad + fw, OH - pad - 22 * u);
   g.font = `500 ${20 * u}px "Be Vietnam Pro", sans-serif`;
   g.fillStyle = 'rgba(246,236,217,0.7)';
   g.fillText('trakhanh.github.io/TwoTheTop', pad, OH - pad + 16 * u);
@@ -2918,7 +3017,7 @@ document.getElementById('btnPhoto').addEventListener('click', () => {
   takePhoto();
 });
 photoShare.addEventListener('click', () => {
-  navigator.share({ files: [photoFile], title: 'Khi Mặt Trời gặp Vầng Trăng', text: 'Lồng đèn Trung Thu của Two The Top 🏮 ' + SITE_URL }).catch(() => {});
+  navigator.share({ files: [photoFile], title: 'Nhật Nguyệt Đồng Huy', text: 'Lồng đèn Trung Thu của Two The Top 🏮 ' + SITE_URL }).catch(() => {});
 });
 function closePhoto() { setOverlay(photoModal, false); }
 document.getElementById('photoClose').addEventListener('click', closePhoto);
@@ -2943,6 +3042,7 @@ function enterTv() {
   controls.autoRotateSpeed = 0.35;
   setAutoRotate(true);
   setActiveView('overview');
+  syncInert();
   resize();
   flyTo(pose(VIEWS.overview), 1.6);
   updateTvStats();
@@ -2953,6 +3053,7 @@ function exitTv() {
   tvHud.setAttribute('aria-hidden', 'true');
   controls.autoRotateSpeed = 0.55;
   if (document.fullscreenElement) document.exitFullscreen?.();
+  syncInert();
   resize();
   flyTo(pose(VIEWS.overview), 1.2);
 }
@@ -3001,6 +3102,13 @@ function watchQuality(raw) {
   qWarmup = 1.5;
 }
 
+/* ---- If the browser takes the GPU away (e.g. switching apps on a phone) and doesn't give it back ---- */
+let glLostTimer;
+const glLost = document.getElementById('glLost');
+canvas.addEventListener('webglcontextlost', () => { glLostTimer = setTimeout(() => { glLost.hidden = false; }, 4000); });
+canvas.addEventListener('webglcontextrestored', () => { clearTimeout(glLostTimer); glLost.hidden = true; });
+document.getElementById('glReload').addEventListener('click', () => location.reload());
+
 /* =========================================================
    Controls UI
    ========================================================= */
@@ -3020,6 +3128,7 @@ document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click'
   setActiveView(b.dataset.view);
 }));
 btnRotate.addEventListener('click', () => setAutoRotate(!controls.autoRotate));
+setToggle(btnRotate, controls.autoRotate);
 btnLabels.addEventListener('click', () => {
   const on = !btnLabels.classList.contains('active');
   setToggle(btnLabels, on);
@@ -3080,6 +3189,9 @@ function resize() {
     camera.setViewOffset(w, h, -(caption.offsetWidth + 12) / 2, 0, w, h);
   } else camera.clearViewOffset();
   camera.updateProjectionMatrix();
+  introEdge = intro.offsetLeft + intro.offsetWidth + 16;
+  tvEdge = isTv() ? tvTitle.getBoundingClientRect().right + 16 : 0;
+  wishes.forEach(wi => { wi.size = null; });
 }
 new ResizeObserver(resize).observe(canvas);
 COMPACT_Q.addEventListener('change', resize);
@@ -3094,7 +3206,7 @@ const clock = new THREE.Clock();
 let shown = 1;
 function tick() {
   const raw = clock.getDelta(), dt = Math.min(raw, 0.05), t = clock.elapsedTime;
-  watchQuality(raw);
+  if (!anyOverlay) watchQuality(raw);
 
   if (zoomGoal !== null) {
     const offset = camera.position.clone().sub(controls.target);
@@ -3134,8 +3246,8 @@ function tick() {
 
   controls.update();
   updateWishes(dt);
-  if (!lightbox.classList.contains('open') && !memories.classList.contains('open')) composer.render();
-  if (!document.body.classList.contains('presenting')) updateHotspots();
+  if (!anyOverlay) composer.render(); // the scene is hidden or blurred behind dialogs
+  if (!document.body.classList.contains('presenting') && !isTv() && !document.body.classList.contains('no-labels')) updateHotspots();
   requestAnimationFrame(tick);
 }
 tick();
@@ -3144,9 +3256,11 @@ let loaderGone = false;
 function hideLoader() {
   if (loaderGone) return;
   loaderGone = true;
+  window.__lanternReady = true;
   const el = document.getElementById('loader');
   el.querySelector('.ld-note').textContent = 'Đèn đã sáng ✨';
   setTimeout(() => el.classList.add('done'), 350);
+  setTimeout(() => el.remove(), 1500); // stop its animations once it has faded
 }
 requestAnimationFrame(() => setTimeout(hideLoader, Math.max(0, 1600 - performance.now())));
 </script>

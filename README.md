@@ -1,4 +1,6 @@
-# Two The Top · Lồng đèn Mặt Trời & Vầng Trăng
+# Two The Top · Lồng đèn Nhật Nguyệt Đồng Huy
+
+*Mặt Trời và Mặt Trăng cùng tỏa sáng — tinh thần đồng hành, cùng nhau tạo nên ánh sáng chung.*
 
 Trang giới thiệu lồng đèn Trung Thu của nhóm **Two The Top** (Sun Media): mô hình 3D tương tác, chế độ trình chiếu, thành viên và hành trình làm lồng đèn.
 
