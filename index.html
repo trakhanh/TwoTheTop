@@ -73,12 +73,46 @@
     padding: max(18px, env(safe-area-inset-top)) max(var(--pad), env(safe-area-inset-right)) 18px max(var(--pad), env(safe-area-inset-left));
     pointer-events: none;
   }
-  .brand { display: flex; align-items: center; gap: 10px; font-family: "Playfair Display", serif; font-weight: 700; font-size: 21px; letter-spacing: .01em; }
-  .brand svg { width: 34px; height: 26px; filter: drop-shadow(0 0 10px rgba(255, 180, 90, .55)); }
-  .org { display: flex; align-items: center; gap: 16px; }
-  .org .tag { font-size: 12.5px; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
-  .org .divider { width: 1px; height: 24px; background: var(--line); }
-  .org img { display: block; height: 54px; width: auto; filter: drop-shadow(0 2px 12px rgba(0, 0, 0, .45)); }
+  /* Top-left: the team mark in the same frosted pill as the plaque on the right */
+  .brand {
+    position: relative; display: flex; align-items: center; gap: 12px; padding: 6px 20px 6px 6px; border-radius: 999px; pointer-events: auto;
+    background: linear-gradient(180deg, rgba(22, 28, 52, .7), rgba(12, 17, 34, .55));
+    border: 1px solid rgba(255, 214, 150, .16); box-shadow: 0 10px 30px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .05);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .brand::after {
+    content: ""; position: absolute; left: 22%; right: 22%; top: -1px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 197, 110, .8), transparent);
+  }
+  .brand .mark {
+    width: 46px; height: 46px; flex: none; display: grid; place-items: center; border-radius: 50%;
+    background: radial-gradient(circle at 50% 35%, #2a2f52, #121831 72%);
+    box-shadow: inset 0 0 0 1px rgba(255, 197, 110, .45), 0 0 18px rgba(255, 170, 80, .3);
+  }
+  .brand .mark svg { width: 38px; height: 38px; filter: drop-shadow(0 0 6px rgba(255, 180, 90, .55)); }
+  .brand .bname { display: grid; line-height: 1.1; }
+  .brand .bname b { font-family: "Playfair Display", serif; font-weight: 700; font-size: 20px; letter-spacing: .02em; color: #f6ecd9; }
+  .brand .bname small { margin-top: 3px; font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); opacity: .85; }
+  /* Top-right: a small frosted plaque with the date and the Sun Media logo */
+  .org {
+    position: relative; display: flex; align-items: center; gap: 18px; padding: 8px 22px 8px 18px; border-radius: 999px; pointer-events: auto;
+    background: linear-gradient(180deg, rgba(22, 28, 52, .7), rgba(12, 17, 34, .55));
+    border: 1px solid rgba(255, 214, 150, .16);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .05);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .org .tag { display: flex; align-items: center; gap: 9px; color: var(--muted); }
+  .org .tag > span { display: grid; line-height: 1.15; }
+  .org .tag small { font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+  .org .tag b { font-family: "Playfair Display", serif; font-style: italic; font-weight: 600; font-size: 15px; letter-spacing: .02em; color: var(--gold); }
+  .org .tag-moon { width: 18px; height: 18px; fill: var(--gold); filter: drop-shadow(0 0 6px rgba(255, 190, 100, .75)); }
+  .org .divider { width: 1px; height: 30px; background: linear-gradient(180deg, transparent, rgba(255, 214, 150, .35), transparent); }
+  .org::after { /* thin gold light along the top edge */
+    content: ""; position: absolute; left: 22%; right: 22%; top: -1px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 197, 110, .8), transparent);
+  }
+  .org .logo-wrap { display: grid; place-items: center; }
+  .org img { display: block; height: 46px; width: auto; filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .4)); }
 
   /* ---------- Intro column ---------- */
   .intro {
@@ -91,13 +125,25 @@
   .intro::-webkit-scrollbar { display: none; }
   .eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 0 0 14px; }
   .intro .eyebrow::before { content: ""; width: 26px; height: 1px; background: currentColor; flex: none; }
-  .intro h1 { font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(32px, 2.85vw, 46px); line-height: 1.3; letter-spacing: .035em; word-spacing: .14em; margin: 0 0 16px; }
+  .intro h1 { font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(32px, 2.85vw, 46px); line-height: 1.3; letter-spacing: .03em; word-spacing: .04em; margin: 0 0 16px; }
   .intro h1 em { display: block; margin-top: .06em; font-style: italic; letter-spacing: .04em; color: var(--gold); }
-  .meaning { margin: -4px 0 14px; padding-left: 14px; border-left: 2px solid rgba(255, 197, 110, .55); max-width: 40ch;
-    font-family: "Playfair Display", serif; font-style: italic; font-size: 16px; line-height: 1.55; color: #e9d7b6; }
+  .meaning {
+    position: relative; margin: -2px 0 16px; padding: 14px 16px 14px 44px; max-width: 44ch; border-radius: 14px;
+    background: linear-gradient(120deg, rgba(255, 197, 110, .13), rgba(255, 197, 110, .03) 70%);
+    border: 1px solid rgba(255, 197, 110, .22);
+    font-family: "Playfair Display", serif; font-style: italic; font-size: 16px; line-height: 1.55; color: #eedcb9;
+  }
+  .meaning::before {
+    content: "\201C"; position: absolute; left: 13px; top: 2px; font-size: 44px; line-height: 1; font-style: normal;
+    color: var(--gold); opacity: .8; text-shadow: 0 0 16px rgba(255, 180, 90, .5);
+  }
   .lead { color: var(--muted); font-size: 15px; line-height: 1.65; margin: 0 0 18px; max-width: 42ch; }
   .tags { list-style: none; padding: 0; margin: 0 0 26px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .tags li { font-size: 12.5px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 200, 120, .06); }
+  .tags li {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; padding: 5px 11px 5px 9px; border-radius: 999px;
+    border: 1px solid var(--line); background: rgba(255, 200, 120, .05); color: #e8dcc6;
+  }
+  .tags li::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 6px rgba(255, 190, 100, .8); }
   .actions { display: grid; gap: 10px; margin: 0 0 28px; max-width: 440px; }
   .act-main { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .act-main .cta { padding: 13px 14px; }
@@ -107,6 +153,12 @@
   .act-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .act-grid .team-peek { width: 100%; min-width: 0; border-radius: 14px; padding: 7px 12px 7px 7px; }
   .act-grid .team-peek b { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .act-grid .team-peek .stack span:nth-child(n+3), .act-grid .mem-peek .thumbs img:nth-child(n+3) { display: none; }
+  .act-grid .team-peek::after {
+    content: ""; flex: none; margin-left: auto; width: 7px; height: 7px; border: solid rgba(255, 197, 110, .7);
+    border-width: 1.6px 1.6px 0 0; transform: rotate(45deg); margin-right: 4px; transition: transform .2s;
+  }
+  .act-grid .team-peek:hover::after { transform: translateX(2px) rotate(45deg); }
   .section-label { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
   .parts { list-style: none; padding: 0; margin: 0; border-bottom: 1px solid var(--line); }
   .parts li { border-top: 1px solid var(--line); }
@@ -116,6 +168,14 @@
     transition: color .2s, padding .25s;
   }
   .parts .num { font-family: "Playfair Display", serif; font-style: italic; color: var(--gold); font-size: 14px; width: 22px; }
+  .parts .pico { width: 22px; height: 22px; flex: none; color: var(--gold); opacity: .85; }
+  .parts .pname { display: grid; gap: 1px; min-width: 0; }
+  .parts .pname b { font-weight: 500; }
+  .parts .pname small { font-size: 12px; color: var(--muted); font-weight: 400; line-height: 1.35; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 4px; }
+  .section-head .section-label { margin: 0; }
+  .section-hint { font-size: 11.5px; color: rgba(255, 197, 110, .75); }
+  .parts .pico svg { display: block; width: 100%; height: 100%; }
   .parts .arrow { margin-left: auto; color: var(--gold); opacity: 0; transform: translateX(-6px); transition: opacity .2s, transform .2s; }
   .parts button:hover, .parts button.active { color: var(--gold); padding-left: 8px; }
   .parts button:hover .arrow, .parts button.active .arrow { opacity: 1; transform: none; }
@@ -144,7 +204,7 @@
   }
   .team-modal.open { opacity: 1; pointer-events: auto; }
   .team-sheet {
-    position: relative; width: min(1060px, 100%); max-height: calc(100svh - 48px); overflow-y: auto;
+    position: relative; width: min(1060px, 100%); max-height: calc(100svh - 48px); overflow-y: auto; overflow-x: hidden;
     padding: 34px 34px 30px; border-radius: 24px;
     background: linear-gradient(180deg, rgba(28, 34, 62, .96), rgba(16, 21, 42, .96));
     border: 1px solid var(--line); scrollbar-width: thin;
@@ -208,6 +268,48 @@
   .member.featured .role { font-size: 13px; color: #a2561b; }
   .member.featured .note { display: block; margin-top: 8px; max-width: 62ch; font-size: 14px; line-height: 1.55; color: #4a3520; }
   .member.featured .badge { background: linear-gradient(135deg, #c9441f, #e8773a); color: #fff; font-size: 12px; padding: 3px 12px; right: 20px; }
+  /* ---- Team, night style: glass cards glowing in each lantern's own colour ---- */
+  .team-sub { margin-bottom: 30px; }
+  .member {
+    background: linear-gradient(155deg, color-mix(in srgb, var(--body) 17%, #161c36) 0%, #121830 72%);
+    color: var(--text); border: 1px solid color-mix(in srgb, var(--body) 32%, transparent);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .05);
+    transform: translateY(14px);
+    transition: transform .25s cubic-bezier(.2, .9, .3, 1.4), box-shadow .25s, border-color .25s;
+  }
+  @keyframes pop { to { opacity: 1; transform: none; } }
+  .team-modal.open .member:hover {
+    transform: translateY(-4px); border-color: color-mix(in srgb, var(--body) 70%, transparent);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, .4), 0 0 30px color-mix(in srgb, var(--body) 30%, transparent);
+  }
+  .member .ava {
+    background: radial-gradient(circle at 50% 46%, color-mix(in srgb, var(--body) 42%, transparent) 0, transparent 68%),
+                radial-gradient(circle, rgba(255, 255, 255, .06) 0 69%, transparent 70%);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--body) 35%, transparent);
+  }
+  .member .ava svg { filter: drop-shadow(0 0 10px color-mix(in srgb, var(--body) 70%, transparent)); }
+  .member b { color: #f6ecd9; }
+  .member .role { color: color-mix(in srgb, var(--body) 72%, #fff); font-weight: 500; }
+  .member .badge {
+    background: #131a33; color: var(--gold); border: 1px solid rgba(255, 197, 110, .5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .35); letter-spacing: .03em;
+  }
+  .member.featured {
+    background: radial-gradient(120% 160% at 0% 50%, rgba(255, 197, 110, .26), transparent 55%),
+                linear-gradient(120deg, #2a2a3e 0%, #1a1f3a 60%, #161c36 100%);
+    border: 1px solid rgba(255, 197, 110, .55);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, .4), 0 0 50px rgba(255, 180, 90, .18), inset 0 1px 0 rgba(255, 255, 255, .08);
+  }
+  .team-modal.open .member.featured:hover { transform: translateY(-3px); box-shadow: 0 18px 44px rgba(0, 0, 0, .45), 0 0 60px rgba(255, 180, 90, .3); }
+  .member.featured::before, .member.featured::after { color: var(--gold); }
+  .member.featured .ava {
+    background: radial-gradient(circle at 50% 46%, rgba(255, 180, 90, .45) 0, transparent 70%);
+    box-shadow: 0 0 0 2px rgba(255, 197, 110, .7), 0 0 30px rgba(255, 180, 90, .45);
+  }
+  .member.featured b { font-family: "Playfair Display", serif; font-weight: 600; letter-spacing: .01em; }
+  .member.featured .role { color: var(--gold); font-weight: 600; }
+  .member.featured .note { color: #e6dac4; }
+
   .cta {
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
     padding: 13px 22px; border-radius: 999px; border: 0; cursor: pointer;
@@ -296,8 +398,31 @@
   .mem-title { font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(30px, 4vw, 50px); line-height: 1.2; letter-spacing: .01em; margin: 0 0 10px; }
   .mem-sub { color: var(--muted); margin: 0; font-size: 15px; max-width: 60ch; line-height: 1.6; }
   .mem-close { flex: none; position: fixed; z-index: 3; top: max(20px, env(safe-area-inset-top)); right: max(20px, env(safe-area-inset-right)); background: rgba(14, 20, 40, .8); }
+  .mem-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .mem-stats span {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid rgba(255, 197, 110, .28); background: rgba(255, 200, 120, .07); font-size: 13px; color: var(--muted);
+  }
+  .mem-stats b { font-family: "Playfair Display", serif; font-size: 19px; line-height: 1; color: var(--gold); font-weight: 600; }
+  /* Vertical golden thread linking the days */
   .timeline { position: relative; }
-  .chapter { display: grid; grid-template-columns: 200px 1fr; gap: 28px; padding: 26px 0; border-top: 1px solid var(--line); }
+  .timeline::before {
+    content: ""; position: absolute; left: 0; top: 30px; bottom: 150px; width: 2px; border-radius: 2px;
+    background: linear-gradient(180deg, rgba(255, 197, 110, .7), rgba(255, 197, 110, .15));
+  }
+  .chapter { position: relative; display: grid; grid-template-columns: 200px 1fr; gap: 28px; padding: 26px 0 26px 30px; border-top: 1px solid var(--line); }
+  .chapter::before {
+    content: ""; position: absolute; left: -6px; top: 36px; width: 14px; height: 14px; border-radius: 50%;
+    background: radial-gradient(circle, #fff6dc 0 30%, var(--gold) 34% 100%); box-shadow: 0 0 0 4px rgba(255, 197, 110, .15), 0 0 16px rgba(255, 180, 90, .7);
+  }
+  .chapter .count { display: inline-block; margin-top: 12px; padding: 3px 10px; border-radius: 999px; font-size: 12px; color: var(--gold); background: rgba(255, 200, 120, .08); border: 1px solid rgba(255, 197, 110, .22); }
+  .memories.open .chapter { animation: rise-in .7s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--ci) * 110ms + .1s); }
+  .mem-finale { position: relative; padding: 46px 20px 20px; text-align: center; border-top: 1px solid var(--line); }
+  .mem-finale h3 { margin: 10px 0 8px; font-family: "Playfair Display", serif; font-style: italic; font-weight: 600; font-size: clamp(26px, 4vw, 36px); color: var(--gold); }
+  .mem-finale p { margin: 0 0 20px; color: var(--muted); font-size: 15px; }
+  .fin-orn { display: inline-flex; align-items: center; gap: 10px; color: var(--gold); font-size: 12px; }
+  .fin-orn i { width: 50px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 197, 110, .8)); }
+  .fin-orn i:last-child { background: linear-gradient(270deg, transparent, rgba(255, 197, 110, .8)); }
   .chapter-meta { position: relative; }
   .chapter-meta .inner { position: sticky; top: 24px; }
   .chapter .day { font-family: "Baloo 2", "Be Vietnam Pro", sans-serif; font-weight: 800; font-size: 15px; color: var(--gold); letter-spacing: .04em; }
@@ -350,7 +475,7 @@
   .lb-cap { position: absolute; left: 0; right: 0; bottom: max(22px, env(safe-area-inset-bottom)); text-align: center; padding: 0 70px; }
   .lb-cap span { display: block; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
   .lb-cap b { font-weight: 500; font-size: 15px; }
-  .lb-original { display: inline-block; margin-left: 12px; font-size: 12.5px; color: var(--muted); text-decoration: none; border-bottom: 1px dashed currentColor; }
+  .lb-original { display: inline-block; padding: 8px 2px; margin-left: 12px; font-size: 12.5px; color: var(--muted); text-decoration: none; border-bottom: 1px dashed currentColor; }
   .lb-original:hover { color: var(--gold); }
 
   /* ---------- Presentation mode ---------- */
@@ -418,13 +543,44 @@
   .field::placeholder { color: rgba(185, 171, 147, .7); }
   .field:focus { outline: none; border-color: rgba(255, 197, 110, .6); background: rgba(255, 255, 255, .08); }
   .wish-count { justify-self: end; margin-top: -6px; font-size: 12px; color: var(--muted); }
-  .suggest { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 6px; }
-  .suggest button {
+  .suggest {
+    display: flex; flex-wrap: nowrap; gap: 6px; margin: 2px -4px 6px; padding: 2px 4px 4px; overflow-x: auto; scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 22px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 22px), transparent);
+  }
+  .suggest::-webkit-scrollbar { display: none; }
+  .suggest button { flex: none; white-space: nowrap; }
+  /* Live preview: your words on the bubble your lantern will carry */
+  .wish-preview { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: 4px; margin: 0 0 16px; padding: 16px 12px 8px;
+    border-radius: 18px; background: radial-gradient(90% 120% at 50% 100%, rgba(255, 170, 80, .16), transparent 70%), rgba(255, 255, 255, .03); border: 1px solid var(--line); overflow: hidden; }
+  .wp-card {
+    position: relative; max-width: 270px; margin-bottom: 30px; padding: 9px 14px 8px; border-radius: 14px; text-align: center;
+    background: rgba(14, 20, 40, .85); border: 1px solid rgba(255, 197, 110, .75);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, .35), 0 0 26px rgba(255, 180, 90, .3); font-size: 13.5px; line-height: 1.45;
+  }
+  .wp-card::after { content: ""; position: absolute; right: -6px; bottom: 14px; width: 10px; height: 10px; transform: rotate(-45deg);
+    background: inherit; border: inherit; border-width: 0 1px 1px 0; }
+  .wp-tag { display: block; margin-bottom: 3px; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+  .wp-text { display: block; overflow-wrap: anywhere; }
+  .wp-text.empty { color: var(--muted); font-style: italic; }
+  .wp-from { display: block; margin-top: 3px; font-size: 11.5px; color: var(--gold); }
+  .wp-from:empty { display: none; }
+  .wp-lantern { flex: none; width: 52px; height: auto; overflow: visible; animation: wp-bob 3s ease-in-out infinite; }
+  .wp-glow { animation: wp-glow 1.6s ease-in-out infinite alternate; transform-origin: 30px 46px; }
+  .wp-flame { transform-origin: 30px 70px; animation: wp-flame .35s ease-in-out infinite alternate; }
+  @keyframes wp-bob { 50% { transform: translateY(-5px) rotate(2deg); } }
+  @keyframes wp-glow { from { opacity: .6; transform: scale(.9); } to { opacity: 1; transform: scale(1.08); } }
+  @keyframes wp-flame { to { transform: scaleY(.8) scaleX(1.1); } }
+  .wish-preview.sending .wp-lantern, .wish-preview.sending .wp-card { animation: wp-lift .75s cubic-bezier(.5, 0, .7, .4) forwards; }
+  .wish-preview.sending .wp-card { animation-delay: .05s; }
+  @keyframes wp-lift { to { transform: translateY(-150px) scale(.8); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .wp-lantern, .wp-glow, .wp-flame { animation: none; } }
+  .suggest button { min-height: 34px;
     border: 1px solid var(--line); background: rgba(255, 200, 120, .06); color: var(--muted); cursor: pointer;
     padding: 6px 11px; border-radius: 999px; font-size: 12.5px; transition: color .2s, background .2s;
   }
   .suggest button:hover { color: var(--text); background: rgba(255, 200, 120, .16); }
-  .wish-form .cta { justify-self: start; }
+  .wish-form .cta { justify-self: stretch; padding: 14px 22px; font-size: 15.5px; }
   .wish-form .cta:disabled { opacity: .6; cursor: progress; }
   .wish-error { margin: 0; padding: 9px 12px; border-radius: 10px; background: rgba(255, 110, 90, .12); color: #ffb4a2; font-size: 13.5px; }
   .fine { margin: 14px 0 0; font-size: 12px; color: var(--muted); }
@@ -456,14 +612,36 @@
   .wall .meta { grid-column: 1; font-size: 12px; color: var(--muted); }
   .wall .meta b { font-weight: 600; color: var(--gold); }
   .wall .you { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; background: var(--gold); color: #2a1605; }
-  .wall button { grid-column: 2; grid-row: 1 / span 2; border: 0; background: none; color: var(--gold); cursor: pointer; font-size: 12.5px; padding: 6px 8px; border-radius: 8px; white-space: nowrap; }
+  .wall button { grid-column: 2; grid-row: 1 / span 2; min-height: 36px; border: 1px solid rgba(255, 197, 110, .3); background: rgba(255, 200, 120, .06); color: var(--gold); cursor: pointer; font-size: 12.5px; padding: 8px 12px; border-radius: 999px; white-space: nowrap; }
   .wall button:hover { background: rgba(255, 200, 120, .12); }
   .wall-empty { margin: 8px 0; color: var(--muted); font-size: 14px; text-align: center; }
   .wall-more { display: block; margin: 12px auto 0; color: var(--text); background: rgba(255, 200, 120, .12); }
   .wall-more[hidden] { display: none; }
 
+  /* ---------- Opening ---------- */
+  .intro h1 .word { display: inline-block; white-space: nowrap; }
+  .intro h1 .ch { display: inline-block; }
+  body.opening-pre .intro h1 .ch, body.opening-pre .intro > :not(h1) { opacity: 0; }
+  body.opening .intro h1 .ch {
+    animation: ch-in .8s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i) * 55ms + .5s);
+  }
+  @keyframes ch-in { from { opacity: 0; transform: translateY(.45em); filter: blur(6px); } }
+  body.opening .intro > :not(h1) { animation: rise-in .9s cubic-bezier(.2, .8, .2, 1) both; }
+  body.opening .intro > .eyebrow { animation-delay: .2s; }
+  body.opening .intro > .meaning { animation-delay: 1.5s; }
+  body.opening .intro > .lead { animation-delay: 1.8s; }
+  body.opening .intro > .tags { animation-delay: 2s; }
+  body.opening .intro > .actions { animation-delay: 2.2s; }
+  body.opening .intro > .live-stats { animation-delay: 2.4s; }
+  body.opening .intro > .section-label, body.opening .intro > .parts { animation-delay: 2.5s; }
+  @keyframes rise-in { from { opacity: 0; transform: translateY(14px); } }
+  @media (prefers-reduced-motion: reduce) { .memories.open .chapter { animation: none; } }
+
   /* ---------- Live stats ---------- */
-  .live-stats { display: flex; align-items: center; gap: 8px; margin: -12px 0 24px; font-size: 13px; color: var(--muted); }
+  .live-stats {
+    display: flex; align-items: center; gap: 9px; width: fit-content; max-width: 100%; margin: -14px 0 24px; padding: 7px 14px 7px 11px;
+    border-radius: 999px; background: rgba(127, 216, 168, .07); border: 1px solid rgba(127, 216, 168, .2); font-size: 13px; color: var(--muted);
+  }
   .live-stats b { color: var(--text); font-weight: 600; }
   .live-stats .dot { width: 7px; height: 7px; flex: none; border-radius: 50%; background: #7fd8a8; box-shadow: 0 0 0 3px rgba(127, 216, 168, .2); animation: live 2s ease-in-out infinite; }
   @keyframes live { 50% { box-shadow: 0 0 0 6px rgba(127, 216, 168, 0); } }
@@ -496,10 +674,10 @@
   .tv-promo div { flex: 1; min-width: 0; }
   .tv-promo b { display: block; font-size: 14px; margin-bottom: 2px; }
   .tv-promo span { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
-  .tv-promo .chip { flex: none; color: #2a1605; background: var(--gold); font-weight: 600; }
+  .tv-promo .chip { flex: none; min-height: 38px; padding: 8px 18px; color: #2a1605; background: var(--gold); font-weight: 600; }
   .tv-hud { display: none; }
   body.tv .tv-hud { display: block; }
-  body.tv .intro, body.tv .controls, body.tv .hint, body.tv #hotspots, body.tv .org .tag, body.tv .org .divider { display: none; }
+  body.tv .intro, body.tv .controls, body.tv .hint, body.tv #hotspots, body.tv .org .divider { display: none; } body.tv .org .tag { display: none; }
   body.tv .stage::before { opacity: 0; }
   body.tv { cursor: none; }
   body.tv.pointer { cursor: auto; }
@@ -545,8 +723,8 @@
     display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; margin-bottom: 14px;
     border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 255, 255, .04);
   }
-  .share-url span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
-  .share-url .chip { flex: none; color: var(--text); background: rgba(255, 200, 120, .14); }
+  .share-url span { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 13.5px; line-height: 1.35; }
+  .share-url .chip { flex: none; min-height: 38px; color: var(--text); background: rgba(255, 200, 120, .14); }
   .share-actions { display: flex; flex-wrap: wrap; gap: 10px; }
   .share-actions .cta { text-decoration: none; }
 
@@ -597,8 +775,20 @@
   @keyframes ld-moon { from { transform: translateX(26px); } to { transform: translateX(0); } }
   @keyframes ld-halo { from { opacity: .25; transform: scale(.85); } to { opacity: .9; transform: scale(1.08); } }
   .ld-brand { margin: 0 0 8px; font-size: 12px; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); }
-  .ld-title { margin: 0; font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(24px, 6.4vw, 34px); line-height: 1.25; letter-spacing: .03em; color: var(--text); }
-  .ld-title em { display: block; color: var(--gold); }
+  .ld-title { display: grid; justify-items: center; margin: 4px 0 0; font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(27px, 7vw, 40px); line-height: 1.15; color: var(--text); }
+  .ld-title .l1, .ld-title .l2 { display: block; letter-spacing: .08em; animation: ld-track 1.6s cubic-bezier(.2, .8, .2, 1) both; }
+  .ld-title .l2 { color: var(--gold); font-style: italic; animation-delay: .45s; text-shadow: 0 0 22px rgba(255, 180, 90, .45); }
+  .ld-orn { display: flex; align-items: center; gap: 10px; margin: 10px 0 8px; color: var(--gold); font-size: 11px; }
+  .ld-orn i { display: block; width: 58px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 197, 110, .8)); transform-origin: right; animation: ld-line 1.2s .25s cubic-bezier(.2, .8, .2, 1) both; }
+  .ld-orn i:last-child { background: linear-gradient(270deg, transparent, rgba(255, 197, 110, .8)); transform-origin: left; }
+  .ld-orn b { font-weight: 400; animation: ld-twinkle-star 2.4s ease-in-out infinite; }
+  @keyframes ld-track { from { opacity: 0; letter-spacing: .6em; filter: blur(6px); } }
+  @keyframes ld-line { from { transform: scaleX(0); opacity: 0; } }
+  @keyframes ld-twinkle-star { 50% { opacity: .35; transform: scale(.75) rotate(45deg); } }
+  /* The moment the lantern is ready: sun and moon flare once */
+  .loader.lit .ld-halo { animation: ld-flare .7s ease-out forwards; }
+  .loader.lit .ld-art { filter: drop-shadow(0 0 46px rgba(255, 190, 100, .75)); transition: filter .5s; }
+  @keyframes ld-flare { to { opacity: 1; transform: scale(1.45); } }
   .ld-bar { position: relative; width: 150px; height: 2px; margin: 22px 0 12px; border-radius: 2px; overflow: hidden; background: rgba(255, 214, 150, .15); }
   .ld-bar::after {
     content: ""; position: absolute; inset: 0; width: 40%; border-radius: 2px;
@@ -609,7 +799,7 @@
   .ld-note { margin: 0; font-size: 13px; letter-spacing: .04em; }
 
   /* ---------- Responsive ---------- */
-  @media (max-width: 1640px) { .hint { display: none; } }
+  @media (max-width: 2000px) { .hint { display: none; } } /* would sit on top of the control bar */
   @media (max-height: 900px) and (min-width: 861px) {
     .intro .eyebrow { margin-bottom: 10px; }
     .intro h1 { margin-bottom: 12px; }
@@ -619,8 +809,15 @@
     .parts { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; }
     .parts button { padding: 8px 2px; font-size: 14px; gap: 10px; }
     .parts .arrow { display: none; }
+    .parts .pico, .parts .pname small { display: none; }
   }
-  @media (max-height: 760px) and (min-width: 861px) {
+  @media (max-height: 800px) and (min-width: 861px) {
+    /* Short laptop screens: keep the essentials, drop the longer description */
+    .intro .lead { display: none; }
+    .intro h1 { font-size: clamp(30px, 2.5vw, 40px); margin-bottom: 10px; }
+    .meaning { font-size: 14.5px; padding: 10px 14px 10px 40px; margin-bottom: 12px; }
+    .meaning::before { font-size: 36px; }
+    .act-grid .team-peek { min-height: 64px; padding: 8px 6px; gap: 5px; }
     .tags { margin-bottom: 12px; }
     .actions { margin-bottom: 10px; }
     .parts button { padding: 6px 2px; }
@@ -638,15 +835,35 @@
     .stage { position: relative; height: 72svh; min-height: 420px; }
     .stage::before { display: none; }
     .topbar { position: absolute; padding: max(14px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 14px max(16px, env(safe-area-inset-left)); }
-    .brand { font-size: 19px; }
+    .brand { padding: 4px 14px 4px 4px; gap: 9px; }
+    .brand .mark { width: 38px; height: 38px; }
+    .brand .mark svg { width: 31px; height: 31px; }
+    .brand .bname b { font-size: 17px; }
+    .brand .bname small { font-size: 9.5px; letter-spacing: .16em; }
     .org .tag, .org .divider { display: none; }
-    .org img { height: 42px; }
+    .org { padding: 6px 16px; }
+    .org::after { left: 18%; right: 18%; }
+    .org img { height: 36px; }
     .intro {
       position: relative; top: auto; left: auto; transform: none; width: auto; max-width: 620px;
       max-height: none; overflow: visible; margin: 0 auto;
       padding: 30px max(20px, env(safe-area-inset-right)) 48px max(20px, env(safe-area-inset-left));
     }
     .intro h1 { font-size: clamp(30px, 8vw, 42px); }
+    /* Parts as a grid of small cards */
+    .section-label { margin-bottom: 10px; }
+    .parts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border: 0; }
+    .parts li { border: 0; }
+    .parts button {
+      position: relative; height: 100%; flex-direction: column; align-items: flex-start; gap: 10px; padding: 12px 12px 13px;
+      border-radius: 14px; border: 1px solid var(--line); background: linear-gradient(160deg, rgba(255, 200, 120, .08), rgba(255, 255, 255, .02));
+      font-size: 14.5px; font-weight: 500; line-height: 1.3;
+    }
+    .parts button:hover, .parts button.active { padding-left: 12px; border-color: rgba(255, 197, 110, .5); background: rgba(255, 200, 120, .12); }
+    .parts .num { position: absolute; top: 10px; right: 12px; width: auto; font-size: 13px; opacity: .7; }
+    .parts .pname b { font-weight: 600; }
+    .parts .pico { width: 30px; height: 30px; padding: 5px; border-radius: 10px; background: rgba(255, 197, 110, .12); opacity: 1; }
+    .parts .arrow { display: none; }
     .controls { position: absolute; left: 50%; bottom: 12px; max-width: calc(100% - 24px); justify-content: flex-start; border-radius: 16px; }
     .dimmer input { width: 70px; }
     #hotspots, #wishLabels { position: absolute; }
@@ -659,7 +876,7 @@
     .caption p { font-size: 14px; margin-bottom: 14px; }
     .team-modal { padding: 12px; }
     .team-sheet { padding: 26px 16px 20px; max-height: calc(100svh - 24px); }
-    .team-title { font-size: 28px; padding-right: 44px; }
+    .team-title { font-size: 26px; padding-right: 50px; }
     .team-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px 12px; }
     .member { flex-direction: column; text-align: center; padding: 16px 10px 14px; }
     .member.featured { flex-direction: column; text-align: center; padding: 22px 16px 18px; gap: 12px; }
@@ -676,7 +893,9 @@
     body.presenting .team-sheet { padding-bottom: 170px; }
   }
   @media (max-width: 760px) {
-    .chapter { grid-template-columns: 1fr; gap: 14px; padding: 22px 0; }
+    .chapter { grid-template-columns: 1fr; gap: 14px; padding: 22px 0 22px 22px; }
+    .chapter::before { top: 30px; }
+    .chapter .count { grid-column: 1 / -1; justify-self: start; margin-top: 10px; }
     .chapter-meta .inner { position: static; display: grid; grid-template-columns: auto 1fr; column-gap: 14px; align-items: baseline; }
     .chapter .date { font-size: 32px; margin: 0; grid-row: span 2; }
     .chapter .day { grid-column: 2; }
@@ -690,8 +909,8 @@
     .lb-cap { padding: 0 64px; }
   }
   /* Small laptops: the full control bar no longer fits beside the intro column, so give it two rows */
-  @media (min-width: 861px) and (max-width: 1320px) {
-    .controls { flex-wrap: wrap; justify-content: center; row-gap: 4px; max-width: none; width: max-content; border-radius: 20px; }
+  @media (min-width: 861px) and (max-width: 1480px) {
+    .controls { flex-wrap: wrap; justify-content: center; row-gap: 4px; width: max-content; border-radius: 20px; }
     .controls .sep { display: none; }
     .controls .sep:first-of-type { display: block; flex-basis: 100%; height: 0; margin: 0; }
   }
@@ -700,23 +919,45 @@
     .controls { flex-wrap: wrap; justify-content: center; gap: 2px; width: max-content; padding: 5px; }
     .controls .sep { display: none; }
     .controls .sep:first-of-type { display: block; flex-basis: 100%; height: 0; margin: 0; } /* line break after the views */
-    .chip { padding: 7px 8px; font-size: 12.5px; }
-    .icon-btn { padding: 7px 9px; }
+    .chip { padding: 10px 9px; font-size: 12.5px; min-height: 38px; }
+    .icon-btn { padding: 10px 11px; min-width: 40px; justify-content: center; }
     .dimmer { font-size: 0; gap: 0; padding: 0 6px; }
   }
   @media (max-width: 430px) {
     .act-grid .team-peek .stack span:nth-child(n+2), .act-grid .mem-peek .thumbs img:nth-child(n+2) { display: none; }
+    .act-grid .team-peek { gap: 8px; padding-right: 8px; }
+    .act-grid .team-peek::after { display: none; } /* room for the full label */
+    .act-grid .team-peek b { font-size: 13.5px; }
   }
   @media (max-width: 400px) {
     .team-grid { grid-template-columns: 1fr; }
     .member { flex-direction: row; text-align: left; }
   }
+  @media (max-height: 690px) and (min-width: 861px) { .intro .tags { display: none; } }
+  /* ---- Secondary actions: one compact row of icon tiles (lighter left column) ---- */
+  .act-grid { display: flex; gap: 8px; }
+  .act-grid .team-peek {
+    flex: 1 1 0; min-width: 0; flex-direction: column; justify-content: center; gap: 7px;
+    min-height: 78px; padding: 11px 6px 10px; border-radius: 14px; text-align: center;
+  }
+  .act-grid .team-peek::after { display: none; }
+  .act-grid .team-peek b { font-size: 12.5px; font-weight: 500; line-height: 1.25; white-space: normal; overflow: visible; }
+  .act-grid .team-peek .stack span { width: 28px; height: 28px; margin-left: -9px; }
+  .act-grid .team-peek .stack span:first-child { margin-left: 0; }
+  .act-grid .team-peek .stack svg { width: 23px; height: 23px; }
+  .act-grid .team-peek .stack span:nth-child(n+3), .act-grid .mem-peek .thumbs img:nth-child(n+3) { display: none; }
+  .act-grid .team-peek .stack span:nth-child(2), .act-grid .mem-peek .thumbs img:nth-child(2) { display: grid; }
+  .act-grid .mem-peek .thumbs img { width: 24px; height: 29px; margin-left: -9px; }
+  .act-grid .mem-peek .thumbs img:first-child { margin-left: 0; }
+  .act-grid .sico, .act-grid .hico { width: 30px; height: 30px; }
+  .live-stats { margin-top: -12px; }
+
   @media (prefers-reduced-motion: reduce) {
     .hotspot .dot, .bob, .loader *, .loader::before, .loader::after, .member.featured::before, .member.featured::after { animation: none; }
     .team-modal.open .member { animation: none; opacity: 1; transform: none; }
     .member:hover .ava svg { animation: none; }
     .heart-fly, .photo-flash { display: none; }
-    .ld-bar::after, .ld-rays, .ld-sun, .ld-moon, .ld-halo, .live-stats .dot { animation: none; }
+    .ld-bar::after, .ld-rays, .ld-sun, .ld-moon, .ld-halo, .live-stats .dot, .ld-title .l1, .ld-title .l2, .ld-orn i, .ld-orn b { animation: none; }
     .wall li.fresh, .heart-peek.pop .hico svg { animation: none; }
     .team-sheet, .mem-sheet, .loader, .ld-inner { transition: none; }
   }
@@ -749,7 +990,7 @@
 }
 </script>
 </head>
-<body>
+<body class="no-labels">
 
 <div class="loader" id="loader" role="status" aria-live="polite">
   <div class="ld-sky" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -776,7 +1017,11 @@
       </g>
     </svg>
     <p class="ld-brand">Two The Top · Trung Thu 2026</p>
-    <p class="ld-title">Nhật Nguyệt <em>Đồng Huy</em></p>
+    <p class="ld-title" aria-label="Nhật Nguyệt Đồng Huy">
+      <span class="l1">Nhật Nguyệt</span>
+      <span class="ld-orn" aria-hidden="true"><i></i><b>✦</b><i></i></span>
+      <em class="l2">Đồng Huy</em>
+    </p>
     <div class="ld-bar"></div>
     <p class="ld-note">Đang thắp đèn…</p>
   </div>
@@ -784,13 +1029,27 @@
 
 <header class="topbar">
   <div class="brand">
-    <svg viewBox="0 0 34 26" aria-hidden="true">
-      <defs><linearGradient id="peak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0c8"/><stop offset="1" stop-color="#ff9a45"/></linearGradient></defs>
-      <path d="M1 24 L11 7 L17 16 L23 3 L33 24 Z" fill="url(#peak)"/>
-    </svg>
-    Two The Top
+    <span class="mark" aria-hidden="true">
+      <svg viewBox="0 0 44 44">
+        <defs>
+          <linearGradient id="peak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3d2"/><stop offset="1" stop-color="#ff9a45"/></linearGradient>
+          <linearGradient id="peak2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd48a"/><stop offset="1" stop-color="#c9602a"/></linearGradient>
+          <radialGradient id="markSun"><stop offset="0" stop-color="#fffaf0"/><stop offset=".6" stop-color="#ffd27a"/><stop offset="1" stop-color="#ffb050" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle cx="27" cy="17" r="9" fill="url(#markSun)"/>
+        <path d="M5 33 L15 17.5 L20.5 25 L26.5 13 L39 33 Z" fill="url(#peak)"/>
+        <path d="M26.5 13 L39 33 H31 L25.2 22.5 Z" fill="url(#peak2)" opacity=".55"/>
+        <path d="M24.2 17.6 L26.5 13 L28.9 17.7 L27.2 16.6 L26.5 18 L25.7 16.6 Z" fill="#fffaf0"/>
+        <circle cx="12" cy="11" r="1" fill="#fff3d2"/><circle cx="35" cy="9" r=".8" fill="#fff3d2"/>
+      </svg>
+    </span>
+    <span class="bname"><b>Two The Top</b><small>Team · Sun Media</small></span>
   </div>
-  <div class="org"><span class="tag">Trung Thu 2026</span><span class="divider"></span><img src="assets/sunmedia-logo-light.svg" alt="Sun Media"></div>
+  <div class="org">
+    <span class="tag"><svg class="tag-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1z"/></svg><span><small>Trung Thu</small><b>Rằm 2026</b></span></span>
+    <span class="divider"></span>
+    <span class="logo-wrap"><img src="assets/sunmedia-logo-light.svg" alt="Sun Media"></span>
+  </div>
 </header>
 
 <section class="stage" id="stage">
@@ -807,7 +1066,7 @@
     <button class="chip icon-btn active" id="btnRotate" title="Tự động xoay" aria-pressed="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
     </button>
-    <button class="chip icon-btn active" id="btnLabels" title="Chú thích" aria-pressed="true">
+    <button class="chip icon-btn" id="btnLabels" title="Chú thích" aria-pressed="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/></svg>
     </button>
     <button class="chip icon-btn active" id="btnPower" title="Bật / tắt đèn" aria-pressed="true">
@@ -876,7 +1135,10 @@
 
   <p class="live-stats" id="liveStats" hidden></p>
 
-  <p class="section-label">Cấu tạo</p>
+  <div class="section-head">
+    <p class="section-label">Cấu tạo · 6 phần</p>
+    <span class="section-hint">Chạm để xem trên mô hình</span>
+  </div>
   <ol class="parts" id="partList"></ol>
 </main>
 
@@ -905,6 +1167,25 @@
     </div>
     <div id="panelWrite" role="tabpanel" aria-labelledby="tabWrite">
       <p class="team-sub">Viết một lời chúc Trung Thu, chiếc đèn trời sẽ mang nó bay lên cao.</p>
+      <div class="wish-preview" id="wishPreview" aria-hidden="true">
+        <div class="wp-card">
+          <span class="wp-tag">Đèn của bạn ✨</span>
+          <span class="wp-text" id="wpText"></span>
+          <span class="wp-from" id="wpFrom"></span>
+        </div>
+        <svg class="wp-lantern" viewBox="0 0 60 84">
+          <defs>
+            <linearGradient id="wpPaper" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff4d0"/><stop offset=".35" stop-color="#ffc766"/><stop offset=".8" stop-color="#f48a3e"/><stop offset="1" stop-color="#d0582a"/></linearGradient>
+            <radialGradient id="wpGlow"><stop offset="0" stop-color="#ffc877" stop-opacity=".85"/><stop offset="1" stop-color="#ff9a45" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle class="wp-glow" cx="30" cy="46" r="30" fill="url(#wpGlow)"/>
+          <path d="M18 70 C10 60 7 40 12 24 C15 14 22 8 30 8 C38 8 45 14 48 24 C53 40 50 60 42 70 Z" fill="url(#wpPaper)"/>
+          <path d="M30 8v62M21 11c-5 16-5 40 1 58M39 11c5 16 5 40-1 58" stroke="#a24b1b" stroke-opacity=".3" stroke-width="1.2" fill="none"/>
+          <path d="M16 62h28" stroke="#c98a25" stroke-width="2"/>
+          <ellipse cx="30" cy="70.5" rx="12" ry="2.4" fill="#8a5a2a"/>
+          <path class="wp-flame" d="M30 62c3 3.5 4 6.5 0 9.5-4-3-3-6 0-9.5z" fill="#fff6d8"/>
+        </svg>
+      </div>
       <form class="wish-form" id="wishForm">
         <textarea class="field" id="wishText" rows="3" maxlength="90" placeholder="Lời chúc của bạn…" required></textarea>
         <span class="wish-count" id="wishCount">0 / 90</span>
@@ -979,6 +1260,7 @@
         <p class="eyebrow">Hành trình &amp; kỷ niệm</p>
         <h2 class="mem-title" id="memTitle">Từ que tre đến ánh đèn</h2>
         <p class="mem-sub" id="memSub"></p>
+        <div class="mem-stats" id="memStats"></div>
       </div>
       <button class="round mem-close" id="memClose" aria-label="Đóng">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -1049,6 +1331,7 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -1106,6 +1389,7 @@ scene.background = new THREE.Color(0x0a1020);
 scene.fog = new THREE.Fog(0x0a1020, 40, 80);
 
 const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 400);
+camera.layers.enable(1); // sky objects kept out of the water reflection
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.dampingFactor = 0.06;
@@ -1248,6 +1532,7 @@ function lamp(hex, glow = 1, { map = texBoard, flat = false, rough = 0.8 } = {})
     roughness: rough, metalness: 0, side: THREE.DoubleSide, flatShading: flat,
   });
   m.userData.baseGlow = glow * GLOW;
+  m.userData.group = 'base'; // which part of the lantern it belongs to (re-tagged below)
   lampMats.push(m);
   return m;
 }
@@ -1259,6 +1544,7 @@ const poleMat = new THREE.MeshStandardMaterial({ color: 0xf2efe8, roughness: 0.6
 let foamMat; // created after lamp() is available (see below)
 
 foamMat = lamp('#fff8ec', 0.7, { map: texBoardCap });
+foamMat.userData.group = 'cloud';
 
 /* =========================================================
    Fairy lights (instanced, twinkling)
@@ -1284,17 +1570,19 @@ const haloMat = new THREE.PointsMaterial({
 });
 const bulbSets = [];
 const _m4 = new THREE.Matrix4(), _col = new THREE.Color();
-function addBulbs(parent, points) {
+const haloMats = {};
+function addBulbs(parent, points, group) {
   const mesh = new THREE.InstancedMesh(bulbGeo, bulbMat, points.length);
   points.forEach((p, i) => {
     mesh.setMatrixAt(i, _m4.makeTranslation(p.x, p.y, p.z));
     mesh.setColorAt(i, _col.setScalar(1));
   });
   parent.add(mesh);
-  const halo = new THREE.Points(new THREE.BufferGeometry().setFromPoints(points), haloMat);
+  haloMats[group] ||= haloMat.clone(); // one per part, so each part's glow can fade on its own
+  const halo = new THREE.Points(new THREE.BufferGeometry().setFromPoints(points), haloMats[group]);
   halo.renderOrder = 2;
   parent.add(halo);
-  bulbSets.push({ mesh, phase: points.map(() => rand() * 6.28), speed: points.map(() => 1 + rand() * 2.5) });
+  bulbSets.push({ mesh, group, phase: points.map(() => rand() * 6.28), speed: points.map(() => 1 + rand() * 2.5) });
 }
 
 /* =========================================================
@@ -1518,7 +1806,7 @@ lantern.add(sun);
     const a = (i / RIM_LEDS) * Math.PI * 2, r = SUN_R - 0.1;
     pts.push(new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0.17), new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, -0.17));
   }
-  addBulbs(sun, pts);
+  addBulbs(sun, pts, 'sun');
 }
 
 /* ---- Tilted hoop wrapped in fairy lights ---- */
@@ -1535,7 +1823,7 @@ sun.add(ring);
     const a = (i / HOOP_LEDS) * Math.PI * 2;
     pts.push(new THREE.Vector3(Math.cos(a) * (RING_R + 0.07), Math.sin(a) * (RING_R + 0.07), 0));
   }
-  addBulbs(ring, pts);
+  addBulbs(ring, pts, 'ring');
 }
 
 /* ---- Crescent moons ---- */
@@ -1544,11 +1832,12 @@ function moon(pos, rotZ) {
   const g = new THREE.Group();
   const face = lamp('#fbf4e6', 0.9, { map: cardTexture(-R1, -R1, 2 * R1, 2 * R1, 31) });
   face.userData.moon = true;
+  face.userData.group = 'moon';
   g.add(new THREE.Mesh(extrude(crescentShape(R1, R2, d), depth, 0.04), [face, foamMat]));
   const pts = scatter(88, 0.27,
     () => new THREE.Vector3((rand() * 2 - 1) * R1, (rand() * 2 - 1) * R1, depth / 2 + 0.07),
     (q) => Math.hypot(q.x, q.y) < R1 - 0.17 && Math.hypot(q.x - d, q.y) > R2 + 0.17);
-  addBulbs(g, pts);
+  addBulbs(g, pts, 'moon');
   g.position.copy(pos);
   g.rotation.z = rotZ;
   lantern.add(g);
@@ -1570,11 +1859,12 @@ const cloudGroups = CLOUDS.map(([hex, glow, x, z, bumps]) => {
   const g = new THREE.Group();
   const gold = new THREE.Color(hex).getHSL({}).s > 0.4;
   const face = lamp(hex, glow, { map: cardTexture(-2.7, 0, 5.4, 3.8, 50 + Math.round(x * 10), gold ? 0.24 : 0.12), rough: gold ? 0.5 : 0.75 });
+  face.userData.group = 'cloud';
   g.add(new THREE.Mesh(extrude(cloudShape(bumps), depth, 0.035), [face, foamMat]));
   const pts = scatter(48, 0.3,
     () => new THREE.Vector3(-2.5 + rand() * 5, 0.15 + rand() * 3.5, depth / 2 + 0.08),
     (q) => bumps.some(([bx, by, br]) => Math.hypot(q.x - bx, q.y - by) < br - 0.17));
-  addBulbs(g, pts);
+  addBulbs(g, pts, 'cloud');
   g.position.set(x, BASE_H, z);
   lantern.add(g);
   return g;
@@ -1584,6 +1874,7 @@ const cloudGroups = CLOUDS.map(([hex, glow, x, z, bumps]) => {
 const hangers = [];
 const puffyMat = lamp('#ffe8ba', 1.6, { map: texPaper, flat: true });
 const innerStarMat = lamp('#ffe2a0', 1.5, { map: texPaper, flat: true });
+puffyMat.userData.group = innerStarMat.userData.group = 'star';
 
 function stickStar(R) {
   const g = new THREE.Group();
@@ -1639,6 +1930,32 @@ const floor = new THREE.Mesh(
   new THREE.MeshStandardMaterial({ color: 0x141b30, roughness: 0.45, metalness: 0.15 }),
 );
 scene.add(floor);
+
+// Still-water reflection under the lantern. It draws the scene a second time, so it's only used on
+// desktops and switched off as soon as the adaptive quality steps down.
+const mirror = (() => {
+  const phone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
+  if (phone || (navigator.hardwareConcurrency || 4) < 4) return null;
+  const m = new Reflector(new THREE.CircleGeometry(70, 64), {
+    textureWidth: 1024, textureHeight: 1024, color: 0x8890a8, clipBias: 0.003,
+  });
+  m.rotateX(-Math.PI / 2);
+  m.position.y = -0.02;
+  // The mirror only sees layer 2, which holds just the lantern: stars, sky lanterns and other far
+  // objects are left out because they smear into long streaks near the edge of the reflection.
+  m.camera.layers.set(2);
+  lantern.traverse(o => o.layers.enable(2));
+  scene.add(m);
+  floor.material.transparent = true; // the dark floor sits on top, letting part of the reflection through
+  floor.material.opacity = 0.72;
+  return m;
+})();
+function setMirror(on) {
+  if (!mirror) return;
+  mirror.visible = on;
+  floor.material.opacity = on ? 0.72 : 1;
+  floor.material.transparent = on;
+}
 
 const pool = (() => {
   const c = document.createElement('canvas'); c.width = c.height = 256;
@@ -1762,17 +2079,46 @@ function updateFireflies(t, strength) {
 
 // Paper sky lanterns (đèn trời): shared look for the distant field and for wishes.
 const skyLanternKit = (() => {
-  const c = document.createElement('canvas'); c.width = 64; c.height = 128;
-  const g = c.getContext('2d'), gr = g.createLinearGradient(0, 128, 0, 0);
-  gr.addColorStop(0, '#fff3cf'); gr.addColorStop(0.35, '#ffc062'); gr.addColorStop(0.8, '#f07a32'); gr.addColorStop(1, '#c8531f');
-  g.fillStyle = gr; g.fillRect(0, 0, 64, 128);
-  g.strokeStyle = 'rgba(150,60,20,0.35)'; g.lineWidth = 2;
-  for (const x of [8, 24, 40, 56]) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 128); g.stroke(); }
+  // Paper skin: warm light pooling at the open bottom, bamboo ribs, a gold band and a small moon & star.
+  const W = 256, H = 256, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  const gr = g.createLinearGradient(0, H, 0, 0); // canvas y=0 is the top of the lantern
+  gr.addColorStop(0, '#fff6d8'); gr.addColorStop(0.28, '#ffd27a'); gr.addColorStop(0.62, '#f79a45'); gr.addColorStop(1, '#d4582a');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const fib = rng(77);
+  for (let i = 0; i < 900; i++) { // paper fibres
+    g.fillStyle = fib() < 0.5 ? 'rgba(255,255,255,0.06)' : 'rgba(120,50,10,0.05)';
+    g.fillRect(fib() * W, fib() * H, 1 + fib() * 3, 1);
+  }
+  g.strokeStyle = 'rgba(140,60,20,0.32)'; g.lineWidth = 2;
+  for (let i = 0; i < 8; i++) { const x = (i + 0.5) * W / 8; g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+  g.fillStyle = 'rgba(214,150,40,0.85)'; g.fillRect(0, H * 0.84, W, 5); g.fillRect(0, H * 0.9, W, 2);
+  for (const cx of [W * 0.25, W * 0.75]) { // gold crescent + star, one on each side
+    g.save(); g.translate(cx, H * 0.5); g.fillStyle = 'rgba(190,110,20,0.75)';
+    g.beginPath(); g.arc(0, 0, 17, 0, Math.PI * 2); g.arc(7, -4, 14, 0, Math.PI * 2, true); g.fill('evenodd');
+    g.beginPath();
+    for (let k = 0; k < 10; k++) { const an = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? 3 : 7; g.lineTo(18 + Math.cos(an) * rr, -14 + Math.sin(an) * rr); }
+    g.fill(); g.restore();
+  }
   const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
-  const bodyMat = new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide, fog: false });
-  const capMat = new THREE.MeshBasicMaterial({ color: 0xb04a1c, fog: false });
-  const bodyGeo = new THREE.CylinderGeometry(0.5, 0.36, 1.05, 16, 1, true).translate(0, 0.525, 0);
-  const capGeo = new THREE.CircleGeometry(0.5, 16).rotateX(-Math.PI / 2).translate(0, 1.05, 0);
+  // Colour above 1 so the paper itself catches a little bloom, like light shining through.
+  const bodyMat = new THREE.MeshBasicMaterial({ map: tex, color: new THREE.Color(1.3, 1.2, 1.1), side: THREE.DoubleSide, fog: false });
+  const prof = [[0.33, 0], [0.4, 0.12], [0.5, 0.42], [0.53, 0.66], [0.49, 0.92], [0.4, 1.1], [0.24, 1.2], [0.001, 1.24]]
+    .map(([x, y]) => new THREE.Vector2(x, y));
+  const bodyGeo = new THREE.LatheGeometry(prof, 24);
+  const rimGeo = new THREE.TorusGeometry(0.33, 0.022, 6, 24).rotateX(Math.PI / 2);
+  const rimMat = new THREE.MeshBasicMaterial({ color: 0x8a5a2a, fog: false });
+  // Small flame hanging in the mouth of the lantern.
+  const flameTex = (() => {
+    const fc = document.createElement('canvas'); fc.width = 64; fc.height = 96;
+    const fg = fc.getContext('2d'), rg = fg.createRadialGradient(32, 62, 2, 32, 58, 30);
+    rg.addColorStop(0, 'rgba(255,255,235,1)'); rg.addColorStop(0.35, 'rgba(255,214,120,0.9)');
+    rg.addColorStop(0.7, 'rgba(255,130,40,0.35)'); rg.addColorStop(1, 'rgba(255,90,20,0)');
+    fg.fillStyle = rg; fg.beginPath(); fg.moveTo(32, 6);
+    fg.bezierCurveTo(52, 40, 58, 70, 32, 92); fg.bezierCurveTo(6, 70, 12, 40, 32, 6); fg.fill();
+    const t = new THREE.CanvasTexture(fc); t.colorSpace = THREE.SRGBColorSpace; return t;
+  })();
+  const flameMat = new THREE.SpriteMaterial({ map: flameTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
   const glowMat = new THREE.SpriteMaterial({
     map: haloTex, color: 0xffa450, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
   });
@@ -1780,10 +2126,21 @@ const skyLanternKit = (() => {
     glowMat,
     make() {
       const grp = new THREE.Group();
-      grp.add(new THREE.Mesh(bodyGeo, bodyMat), new THREE.Mesh(capGeo, capMat));
+      grp.add(new THREE.Mesh(bodyGeo, bodyMat), new THREE.Mesh(rimGeo, rimMat));
+      const flame = new THREE.Sprite(flameMat);
+      flame.position.y = 0.16; flame.scale.set(0.26, 0.38, 1);
       const glow = new THREE.Sprite(glowMat);
-      glow.position.y = 0.35; glow.scale.setScalar(2.6);
-      grp.add(glow);
+      glow.position.y = 0.45; glow.scale.setScalar(2.8);
+      grp.add(flame, glow);
+      // Layer 1: seen by the main camera, left out of the water reflection (far objects smear into long bands there).
+      grp.traverse(o => o.layers.set(1));
+      // Each lantern flickers on its own, without any bookkeeping in the render loop.
+      const ph = Math.random() * 100;
+      flame.onBeforeRender = () => {
+        const t = performance.now() / 1000 + ph, f = 1 + Math.sin(t * 11) * 0.08 + Math.sin(t * 17.3) * 0.05;
+        flame.scale.set(0.26 * f, 0.38 * (2 - f), 1);
+        glow.scale.setScalar(2.8 * (0.94 + 0.06 * Math.sin(t * 7.1)));
+      };
       return grp;
     },
   };
@@ -1795,23 +2152,108 @@ const skyField = (() => {
   for (let i = 0; i < 18; i++) {
     const obj = skyLanternKit.make();
     scene.add(obj);
-    list.push({ obj, a: r() * Math.PI * 2, rad: 62 + r() * 32, y0: r() * 70, sp: 0.45 + r() * 0.5, size: 1.8 + r() * 1.2, ph: r() * 6.28 });
+    // Far out (the camera never gets past ~100 units), scaled up so they look the same size as before.
+    list.push({ obj, a: r() * Math.PI * 2, rad: 125 + r() * 40, y0: r() * 125, sp: 0.8 + r() * 0.9, size: 3.4 + r() * 2.2, ph: r() * 6.28 });
   }
   return list;
 })();
 function updateSkyField(t) {
   for (const s of skyField) {
-    const y = (s.y0 + t * s.sp) % 70;
-    const grow = THREE.MathUtils.smoothstep(y, 0, 8) * (1 - THREE.MathUtils.smoothstep(y, 52, 70));
+    const y = (s.y0 + t * s.sp) % 125;
+    const grow = THREE.MathUtils.smoothstep(y, 0, 14) * (1 - THREE.MathUtils.smoothstep(y, 92, 125));
     const a = s.a + Math.sin(t * 0.05 + s.ph) * 0.03;
-    s.obj.position.set(Math.cos(a) * s.rad, y + 2, Math.sin(a) * s.rad);
+    s.obj.position.set(Math.cos(a) * s.rad, y + 3, Math.sin(a) * s.rad);
     s.obj.rotation.set(Math.sin(t * 0.6 + s.ph) * 0.06, t * 0.2 + s.ph, 0);
     s.obj.scale.setScalar(Math.max(0.001, s.size * grow));
+    // Never let one pass right in front of the lens (it would show up as a huge smeared band).
+    s.obj.visible = camera.position.distanceTo(s.obj.position) > 45;
   }
 }
 
+// A big full moon low in the sky, with a soft halo.
+const skyMoon = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const g = c.getContext('2d'), r = rng(15);
+  const disc = g.createRadialGradient(110, 104, 10, 128, 128, 120);
+  disc.addColorStop(0, '#fffaf0'); disc.addColorStop(0.7, '#f7e7c4'); disc.addColorStop(1, '#e9cf9c');
+  g.beginPath(); g.arc(128, 128, 120, 0, Math.PI * 2); g.fillStyle = disc; g.fill();
+  g.save(); g.clip();
+  for (let i = 0; i < 14; i++) { // soft "seas" and craters
+    const x = 50 + r() * 160, y = 50 + r() * 160, rad = 8 + r() * 34;
+    const cg = g.createRadialGradient(x, y, 0, x, y, rad);
+    cg.addColorStop(0, `rgba(170,140,95,${0.1 + r() * 0.12})`); cg.addColorStop(1, 'rgba(170,140,95,0)');
+    g.fillStyle = cg; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+  }
+  g.restore();
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const grp = new THREE.Group();
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: haloTex, color: 0xffe2a8, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
+  }));
+  glow.scale.setScalar(64);
+  const face = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, color: 0xf6e6c4, transparent: true, depthWrite: false, fog: false }));
+  face.scale.setScalar(17);
+  grp.add(glow, face);
+  // Up and to the right of the lantern as seen from the opening view, far behind it.
+  const d = new THREE.Vector3(0.4, 0, 1).normalize().negate() // horizontal part of VIEWS.overview.dir (defined later)
+    .applyAxisAngle(new THREE.Vector3(0, 1, 0), -0.2);
+  grp.position.copy(d.multiplyScalar(128)).setY(30);
+  // Layer 1 only: the main camera sees it, the water's mirror camera (layer 0) doesn't.
+  glow.layers.set(1); face.layers.set(1);
+  grp.renderOrder = -8;
+  scene.add(grp);
+  return { glow, face };
+})();
+
+// A few thin clouds drifting slowly across the far sky.
+const skyClouds = (() => {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 96;
+  const g = c.getContext('2d'), r = rng(23);
+  for (let i = 0; i < 16; i++) {
+    const x = 30 + r() * 196, y = 38 + r() * 24, rad = 18 + r() * 26;
+    const cg = g.createRadialGradient(x, y, 0, x, y, rad);
+    cg.addColorStop(0, 'rgba(255,255,255,0.35)'); cg.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = cg; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+  }
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const mat = new THREE.SpriteMaterial({ map: tex, color: 0x6f7ca6, transparent: true, opacity: 0.35, depthWrite: false, fog: false });
+  const list = [];
+  for (let i = 0; i < 6; i++) {
+    const sp = new THREE.Sprite(mat);
+    sp.scale.set(70 + r() * 40, 18 + r() * 10, 1);
+    sp.renderOrder = -7;
+    sp.layers.set(1); // not mirrored in the water
+    scene.add(sp);
+    list.push({ sp, a: (i / 6) * Math.PI * 2 + r(), rad: 112 + r() * 18, y: 24 + r() * 22, sp2: 0.006 + r() * 0.006 });
+  }
+  return { mat, list };
+})();
+function updateSkyClouds(t) {
+  for (const c of skyClouds.list) {
+    const a = c.a + t * c.sp2;
+    c.sp.position.set(Math.cos(a) * c.rad, c.y, Math.sin(a) * c.rad);
+  }
+}
+
+// Soft aura behind each glowing part of the lantern, so it reads as lit from inside.
+const auras = [];
+function aura(parent, pos, size, hex, group, strength = 0.5) {
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: haloTex, color: hex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
+  }));
+  sp.position.copy(pos); sp.scale.setScalar(size); sp.renderOrder = 1;
+  parent.add(sp);
+  auras.push({ sp, group, strength });
+}
+aura(sun, new THREE.Vector3(0, 0, -0.35), SUN_R * 4.4, 0xffc37a, 'sun', 0.55);
+lantern.children.filter(o => o.isGroup && o !== sun && o.children.some(c => c.material?.[0]?.userData?.group === 'moon'))
+  .forEach(m => aura(m, new THREE.Vector3(-0.6, 0, -0.3), 7.5, 0xfff0d6, 'moon', 0.32));
+cloudGroups.forEach(g => aura(g, new THREE.Vector3(0, 1.3, -0.25), 6.2, 0xffcf8a, 'cloud', 0.26));
+hangers.forEach(h => aura(h.star, new THREE.Vector3(0, 0, 0), 2.1, 0xffdf9a, 'star', 0.55));
+aura(lantern, new THREE.Vector3(0, BASE_H * 0.5, 0), BASE_R * 3.2, 0xffd9a0, 'base', 0.22);
+
 // Mark the sun's own lamp materials so daytime can make it shine brighter.
-sun.traverse(o => { if (o.material && lampMats.includes(o.material)) o.material.userData.sun = true; });
+sun.traverse(o => { if (o.material && lampMats.includes(o.material)) { o.material.userData.sun = true; o.material.userData.group = 'sun'; } });
 
 let day = 0, dayGoal = 0;
 function applySky(d) {
@@ -1825,17 +2267,103 @@ function applySky(d) {
   stars.material.opacity = Math.pow(1 - d, 2);
   sunGlow.material.opacity = 0.55 * d;
   skyLanternKit.glowMat.opacity = 0.9 - 0.55 * d;
+  skyMoon.face.material.opacity = 1 - 0.75 * d;
+  skyMoon.glow.material.opacity = 0.62 * (1 - d);
+  skyClouds.mat.color.setHex(d > 0.5 ? 0xffffff : 0x6f7ca6);
+  skyClouds.mat.opacity = 0.35 + 0.25 * d;
+}
+
+// Small fireworks behind the lantern to celebrate new wishes.
+const fireworks = (() => {
+  const MAX = 900, pos = new Float32Array(MAX * 3), col = new Float32Array(MAX * 3), parts = [];
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  const points = new THREE.Points(geo, new THREE.PointsMaterial({
+    map: haloTex, size: 1.35, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
+  }));
+  points.frustumCulled = false;
+  points.layers.set(1); // not mirrored in the water
+  scene.add(points);
+  const PALETTE = [0xffd27a, 0xff9ec0, 0x9fe6ff, 0xfff4dc, 0xffb070, 0xc9a8ff].map(h => new THREE.Color(h));
+  let next = 0, alive = 0;
+  const right = new THREE.Vector3(), back = new THREE.Vector3();
+  function burst() {
+    right.setFromMatrixColumn(camera.matrixWorld, 0).setY(0).normalize();
+    back.copy(controls.target).sub(camera.position).setY(0).normalize();
+    const c = controls.target.clone().setY(17 + Math.random() * 7)
+      .addScaledVector(back, 12 + Math.random() * 6).addScaledVector(right, (Math.random() - 0.5) * 22);
+    const color = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+    for (let i = 0; i < 110; i++) {
+      const u = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2, r = Math.sqrt(1 - u * u), sp = 6 + Math.random() * 3.5;
+      parts[next] = { x: c.x, y: c.y, z: c.z, vx: Math.cos(a) * r * sp, vy: u * sp, vz: Math.sin(a) * r * sp, life: 0, max: 1.5 + Math.random() * 0.8, c: color };
+      next = (next + 1) % MAX;
+    }
+    alive = MAX;
+  }
+  function update(dt) {
+    if (!alive) return;
+    let any = 0;
+    for (let i = 0; i < MAX; i++) {
+      const q = parts[i];
+      if (!q || q.life >= q.max) { col[i * 3] = col[i * 3 + 1] = col[i * 3 + 2] = 0; continue; }
+      q.life += dt;
+      // A spark that dies this frame must not reach the power below: pow() of a negative number is
+      // NaN, and one NaN pixel turns into a big black block once the bloom pass blurs it.
+      if (q.life >= q.max) { col[i * 3] = col[i * 3 + 1] = col[i * 3 + 2] = 0; continue; }
+      any++;
+      q.vx *= 0.975; q.vy = q.vy * 0.975 - 3.2 * dt; q.vz *= 0.975;
+      q.x += q.vx * dt; q.y += q.vy * dt; q.z += q.vz * dt;
+      pos[i * 3] = q.x; pos[i * 3 + 1] = q.y; pos[i * 3 + 2] = q.z;
+      const k = Math.pow(Math.max(0, 1 - q.life / q.max), 1.6) * (0.7 + 0.3 * Math.sin(q.life * 30 + i)); // fade with a little sparkle
+      col[i * 3] = q.c.r * k; col[i * 3 + 1] = q.c.g * k; col[i * 3 + 2] = q.c.b * k;
+    }
+    geo.attributes.position.needsUpdate = geo.attributes.color.needsUpdate = true;
+    if (!any) alive = 0;
+  }
+  return { burst, update };
+})();
+function celebrate(n) {
+  if (REDUCED_MOTION || document.hidden) return;
+  for (let i = 0; i < n; i++) setTimeout(() => fireworks.burst(), i * 380 + Math.random() * 150);
 }
 
 /* =========================================================
    Power / brightness
    ========================================================= */
 let lampOn = true;
+// Each part of the lantern has its own glow factor: the opening sequence lights them one after
+// another, and hovering a part (or presenting it) makes it shine while the rest dims.
+const GROUPS = ['base', 'cloud', 'moon', 'star', 'sun', 'ring'];
+const LIGHT_UP = { base: [0.1, 0.9], cloud: [0.6, 1.4], moon: [1.1, 1.9], star: [1.6, 2.3], sun: [1.9, 2.8], ring: [2.6, 3.5] };
+const introF = Object.fromEntries(GROUPS.map(g => [g, 1]));
+const hlF = Object.fromEntries(GROUPS.map(g => [g, 1]));
+const glowF = Object.fromEntries(GROUPS.map(g => [g, 1]));
+let introT = null, hlTarget = null;
+function highlight(group) { hlTarget = group || null; }
+function updateGlow(dt, raw) {
+  let all = 1;
+  if (introT !== null) {
+    introT += Math.min(raw, 0.1); // real time, so slow devices still finish in ~3.5 s
+    all = 0;
+    for (const g of GROUPS) {
+      introF[g] = THREE.MathUtils.smoothstep(introT, LIGHT_UP[g][0], LIGHT_UP[g][1]);
+      all += introF[g] / GROUPS.length;
+    }
+    if (introT > 3.6) introT = null;
+  }
+  for (const g of GROUPS) {
+    const target = hlTarget ? (g === hlTarget ? 1.35 : 0.3) : 1;
+    hlF[g] += (target - hlF[g]) * Math.min(1, dt * 6);
+    glowF[g] = introF[g] * hlF[g];
+  }
+  return all;
+}
 function applyPower(p) {
   const d = day;
   for (const m of lampMats) {
     const mood = m.userData.sun ? 1 + 0.55 * d : m.userData.moon ? 1 - 0.35 * d : 1 - 0.15 * d;
-    m.emissiveIntensity = m.userData.baseGlow * p * mood;
+    m.emissiveIntensity = m.userData.baseGlow * p * mood * glowF[m.userData.group];
   }
   bulbMat.color.copy(BULB_ON).multiplyScalar(Math.max(p, 0.08) * (1 - 0.45 * d));
   warmLow.intensity = 16 * p * (1 - 0.4 * d);
@@ -1845,7 +2373,8 @@ function applyPower(p) {
   sunLight.intensity = 1.5 * d;
   bloom.strength = BLOOM * Math.min(p, 1.3) * (1 - 0.5 * d);
   pool.material.opacity = 0.3 * Math.min(p, 1.4) * (1 - 0.7 * d);
-  haloMat.opacity = 0.95 * Math.min(p, 1.2) * (1 - 0.65 * d);
+  for (const a of auras) a.sp.material.opacity = a.strength * Math.min(p, 1.3) * glowF[a.group] * (1 - 0.8 * d);
+  for (const g in haloMats) haloMats[g].opacity = 0.95 * Math.min(p, 1.2) * (1 - 0.65 * d) * Math.min(1, glowF[g]);
 }
 
 /* =========================================================
@@ -1881,28 +2410,39 @@ const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
    Parts: hotspots, chips, presentation steps
    ========================================================= */
 const PARTS = [
-  { name: 'Mặt trời', text: 'Đĩa tròn phát sáng từ bên trong, 14 tia nhũ vàng xếp đều quanh viền.',
+  { name: 'Mặt trời', short: 'Đĩa phát sáng · 14 tia nhũ vàng', text: 'Đĩa tròn phát sáng từ bên trong, 14 tia nhũ vàng xếp đều quanh viền.',
     pos: () => SUN_POS.clone().add(new THREE.Vector3(-0.9, 1.1, 0.2)), normal: [0, 0, 1], cam: VIEWS.sun },
-  { name: 'Vành đai mặt trời', text: 'Vòng tròn nghiêng ôm quanh mặt trời như vành đai hành tinh, quấn kín dây đèn đom đóm sáng lấp lánh.',
+  { name: 'Vành đai mặt trời', short: 'Vòng nghiêng quấn đèn đom đóm', text: 'Vòng tròn nghiêng ôm quanh mặt trời như vành đai hành tinh, quấn kín dây đèn đom đóm sáng lấp lánh.',
     pos: () => ring.localToWorld(new THREE.Vector3(Math.cos(-1.05) * RING_R, Math.sin(-1.05) * RING_R, 0)), normal: [0.3, 0.2, 1],
     cam: { dir: [0.45, 0.28, 1], dist: 17, target: [0.6, 9.0, 0] } },
-  { name: 'Sao treo', live: true, text: 'Sao que tre và sao giấy treo trên vành đai bằng dây len, đung đưa nhẹ theo gió.',
+  { name: 'Sao treo', short: 'Sao que tre & sao giấy, dây len', live: true, text: 'Sao que tre và sao giấy treo trên vành đai bằng dây len, đung đưa nhẹ theo gió.',
     pos: () => hangers[3].star.getWorldPosition(new THREE.Vector3()), normal: [0.2, 0, 1],
     cam: { dir: [0.35, 0.05, 1], dist: 17, target: [0.8, 7.4, 0.5] } },
-  { name: 'Vầng trăng khuyết', text: 'Hai vầng trăng lớn đặt đối xứng hai bên, gắn dày đèn đom đóm lấp lánh.',
+  { name: 'Vầng trăng khuyết', short: 'Hai trăng đối xứng, LED dày', text: 'Hai vầng trăng lớn đặt đối xứng hai bên, gắn dày đèn đom đóm lấp lánh.',
     pos: () => moonR.localToWorld(new THREE.Vector3(-2.4, 0.4, 0.2)), normal: [0.2, 0, 1],
     cam: { dir: [0.9, 0.12, 1], dist: 18, target: [2.4, 4.8, -0.8] } },
-  { name: 'Mây', text: 'Bốn tầng mây cắt bìa màu bạc, trắng và vàng nhũ, xếp lớp trước sau tạo chiều sâu.',
+  { name: 'Mây', short: '4 tầng mây bạc, trắng, nhũ vàng', text: 'Bốn tầng mây cắt bìa màu bạc, trắng và vàng nhũ, xếp lớp trước sau tạo chiều sâu.',
     pos: () => cloudGroups[3].localToWorld(new THREE.Vector3(-0.2, 1.8, 0.2)), normal: [0, 0.2, 1],
     cam: { dir: [-0.2, 0.3, 1], dist: 17, target: [0, 2.6, 0.8] } },
-  { name: 'Đế đèn', text: 'Đế tròn có dải LED phát sáng, dán logo Sun Media cùng họa tiết sao và trăng.',
+  { name: 'Đế đèn', short: 'Đế tròn LED, logo Sun Media', text: 'Đế tròn có dải LED phát sáng, dán logo Sun Media cùng họa tiết sao và trăng.',
     pos: () => new THREE.Vector3(0, BASE_H * 0.5, BASE_R + 0.05), normal: [0, 0, 1],
     cam: { dir: [0.15, 0.22, 1], dist: 14, target: [0, 1.2, 3.0] } },
 ];
 
+// Small line icons for the parts list (24×24, currentColor).
+const ico = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const PART_ICONS = {
+  sun: ico('<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>'),
+  ring: ico('<circle cx="12" cy="12" r="4.6"/><ellipse cx="12" cy="12" rx="10" ry="3.6" transform="rotate(-24 12 12)"/>'),
+  star: ico('<path d="M12 2.5v4"/><path d="M12 8.5l1.9 3.9 4.3.6-3.1 3 .7 4.3L12 18.3l-3.8 2 .7-4.3-3.1-3 4.3-.6z"/>'),
+  moon: ico('<path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1z"/>'),
+  cloud: ico('<path d="M7 18.5h10.2a4 4 0 0 0 .6-7.95A5.6 5.6 0 0 0 7.1 9.2 4.7 4.7 0 0 0 7 18.5z"/>'),
+  base: ico('<ellipse cx="12" cy="8" rx="8.5" ry="3"/><path d="M3.5 8v7.5c0 1.7 3.8 3 8.5 3s8.5-1.3 8.5-3V8"/><path d="M8 13.4h.01M12 14h.01M16 13.4h.01"/>'),
+};
 const hotspotLayer = document.getElementById('hotspots');
 const partList = document.getElementById('partList');
 PARTS.forEach((p) => {
+  p.group = { 'Mặt trời': 'sun', 'Vành đai mặt trời': 'ring', 'Sao treo': 'star', 'Vầng trăng khuyết': 'moon', 'Mây': 'cloud', 'Đế đèn': 'base' }[p.name];
   const b = document.createElement('button');
   b.className = 'hotspot';
   b.setAttribute('aria-label', p.name);
@@ -1915,23 +2455,35 @@ PARTS.forEach((p) => {
   });
   hotspotLayer.appendChild(b);
   p.el = b;
+  b.addEventListener('pointerenter', () => highlight(p.group));
+  b.addEventListener('pointerleave', () => { if (!b.classList.contains('open')) highlight(null); });
+  b.addEventListener('focus', () => highlight(p.group));
+  b.addEventListener('blur', () => highlight(null));
   p.nrm = new THREE.Vector3(...p.normal).normalize();
 
   const li = document.createElement('li');
   const row = document.createElement('button');
-  row.innerHTML = `<span class="num">${String(PARTS.indexOf(p) + 1).padStart(2, '0')}</span><span>${p.name}</span><span class="arrow">→</span>`;
+  row.innerHTML = `<span class="num">${String(PARTS.indexOf(p) + 1).padStart(2, '0')}</span><span class="pico" aria-hidden="true">${PART_ICONS[p.group]}</span><span class="pname"><b>${p.name}</b><small>${p.short}</small></span><span class="arrow">→</span>`;
   row.addEventListener('click', () => focusPart(p));
+  row.addEventListener('pointerenter', () => highlight(p.group));
+  row.addEventListener('pointerleave', () => highlight(null));
+  row.addEventListener('focus', () => highlight(p.group));
+  row.addEventListener('blur', () => highlight(null));
   p.row = row;
   li.appendChild(row);
   partList.appendChild(li);
 });
-function closeTips() { document.querySelectorAll('.hotspot.open').forEach(x => x.classList.remove('open')); }
+function closeTips() {
+  document.querySelectorAll('.hotspot.open').forEach(x => x.classList.remove('open'));
+  if (!document.body.classList.contains('presenting')) highlight(null);
+}
 document.addEventListener('click', closeTips);
 
 function setActivePart(p) { PARTS.forEach(q => q.row.classList.toggle('active', q === p)); }
 let tipTimer;
 function focusPart(p) {
   clearTimeout(tipTimer);
+  if (document.body.classList.contains('no-labels')) setLabels(true);
   setAutoRotate(false);
   setActiveView(null);
   setActivePart(p);
@@ -2131,10 +2683,16 @@ const MEMORIES = [
     vid('2026-09-21 at 08.08.07', 'Dán giấy khung mặt trời', 26),
     vid('2026-09-21 at 08.08.10', 'Miệt mài tới tối', 23),
   ] },
-  { day: 'Ngày 2', date: '22/09', title: 'Góc vui', text: 'Làm mệt thì nghỉ, cười thật tươi rồi làm tiếp!', items: [
+  { day: 'Ngày 2', date: '22/09', title: 'Dựng đế & góc vui', text: 'Cắm cột tre, luồn dây LED quanh đế — làm mệt thì nghỉ, ăn bánh, cười thật tươi rồi làm tiếp!', items: [
+    img('2026-09-22 at 13.16.34', 'Cắm cột tre, luồn dây LED quanh đế'),
+    vid('2026-09-22 at 13.21.55', 'Đi dây đèn cho đế', 17),
+    img('2026-09-22 at 13.28.03', 'Giơ ngón cái bên bánh Trung Thu'),
+    vid('2026-09-22 at 13.23.48', 'Mấy anh em quậy tí giữa giờ', 9),
     vid('2026-09-22 at 18.57.47', 'Cả nhà tạo dáng sau buổi làm', 8),
   ] },
   { day: 'Ngày 3', date: '23/09', title: 'Lên đèn', text: 'Gắn dây LED, ráp mây và trăng lên đế — lần đầu thấy lồng đèn sáng.', items: [
+    img('2026-09-23 at 13.28.04', 'Lần đầu lồng đèn sáng ✨', true),
+    img('2026-09-23 at 13.18.22', 'Ráp mây và trăng lên đế'),
     img('2026-09-23 at 19.56.53', 'Gắn LED, ráp mây và trăng lên đế'),
   ] },
   { day: 'Ngày 4', date: '24/09', title: 'Về đích', text: 'Ráp mặt trời, treo sao, chỉnh từng bóng đèn — và chiếc lồng đèn sáng rực.', items: [
@@ -2148,13 +2706,16 @@ const fmtDur = (t) => `${Math.floor(t / 60)}:${String(Math.round(t % 60)).padSta
 const PLAY_ICON = '<svg viewBox="0 0 10 10" fill="currentColor"><path d="M2 1.2v7.6a.6.6 0 0 0 .9.5l6-3.8a.6.6 0 0 0 0-1L2.9.7a.6.6 0 0 0-.9.5z"/></svg>';
 
 document.getElementById('memSub').textContent =
-  `${MEMORIES.length} ngày · ${nVid} video · ${nImg} ảnh — những khoảnh khắc cả nhóm cùng nhau làm nên chiếc lồng đèn, và cũng là nơi cất giữ kỷ niệm của Two The Top.`;
+  'Những khoảnh khắc cả nhóm cùng nhau làm nên chiếc lồng đèn — và cũng là nơi cất giữ kỷ niệm của Two The Top.';
+document.getElementById('memStats').innerHTML = [[MEMORIES.length, 'ngày'], [nVid, 'video'], [nImg, 'ảnh'], [TEAM.length, 'đôi tay']]
+  .map(([n, l]) => `<span><b>${n}</b>${l}</span>`).join('');
 document.getElementById('memThumbs').innerHTML = [ALL_MEDIA[ALL_MEDIA.length - 2], ALL_MEDIA[0], ALL_MEDIA[4]]
   .map((m, i) => `<img src="${m.thumb}" alt="" loading="lazy" decoding="async" style="--r:${[-8, 3, 10][i]}deg">`).join('');
-document.getElementById('memTimeline').innerHTML = MEMORIES.map(ch => `
-  <section class="chapter">
+document.getElementById('memTimeline').innerHTML = MEMORIES.map((ch, ci) => `
+  <section class="chapter" style="--ci:${ci}">
     <div class="chapter-meta"><div class="inner">
       <span class="date">${ch.date}</span><span class="day">${ch.day}</span><h3>${ch.title}</h3><p>${ch.text}</p>
+      <span class="count">${ch.items.length} khoảnh khắc</span>
     </div></div>
     <div class="tiles">${ch.items.map(m => `
       <button class="tile${m.feature ? ' feature' : ''}" data-i="${ALL_MEDIA.indexOf(m)}" aria-label="${m.type === 'video' ? 'Video' : 'Ảnh'}: ${m.caption}">
@@ -2163,7 +2724,20 @@ document.getElementById('memTimeline').innerHTML = MEMORIES.map(ch => `
         <span class="cap">${m.caption}</span>
       </button>`).join('')}
     </div>
-  </section>`).join('');
+  </section>`).join('') + `
+  <section class="mem-finale">
+    <span class="fin-orn" aria-hidden="true"><i></i>✦<i></i></span>
+    <h3>Và rồi, đèn sáng.</h3>
+    <p>4 ngày, 19 đôi tay — Nhật Nguyệt Đồng Huy cùng tỏa sáng.</p>
+    <button class="cta" id="memToLantern">Ngắm lồng đèn</button>
+  </section>`;
+document.getElementById('memToLantern').addEventListener('click', () => {
+  if (document.body.classList.contains('presenting')) stopPresenting();
+  closeMemories();
+  flyTo(pose(VIEWS.overview), 1.4);
+  setActiveView('overview');
+  if (isCompact()) stage.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth' });
+});
 
 const memories = document.getElementById('memories');
 function openMemories() { setOverlay(memories, true, '#memClose'); }
@@ -2287,6 +2861,7 @@ function showStep(i) {
   capText.textContent = s.text;
   [...capDots.children].forEach((d, k) => d.classList.toggle('on', k === step));
   setAutoRotate(!!(s.intro || s.team || s.memories));
+  highlight(s.group);
   flyTo(pose(s.cam), 1.8);
   s.team ? openTeam() : closeTeam();
   s.memories ? openMemories() : closeMemories();
@@ -2311,6 +2886,7 @@ function stopPresenting() {
   flyTo(pose(VIEWS.overview), 1.4);
   setActiveView('overview');
   setAutoRotate(!REDUCED_MOTION);
+  highlight(null);
 }
 document.getElementById('btnPresent').addEventListener('click', startPresenting);
 document.getElementById('capNext').addEventListener('click', () => showStep(step + 1));
@@ -2532,7 +3108,10 @@ function launchWish(text, from, mine = false, id = null) {
   obj.scale.setScalar(mine ? 1 : 0.85);
   scene.add(obj);
   const v = viewRooms();
+  // Go to the side with fewer wishes still showing their words, so bubbles don't stack up.
+  const busy = (sg) => wishes.filter(w => w.sign === sg && w.beside && w.age < 15).length;
   let sign = wishSide = -wishSide;
+  if (busy(-sign) < busy(sign)) sign = -sign;
   if (roomWidth(v.room[sign]) < MIN_ROOM) sign = -sign;
   const beside = roomWidth(v.room[sign]) >= MIN_ROOM;
   if (mine && !beside) makeRoomAbove();
@@ -2557,7 +3136,9 @@ function updateWishes(dt) {
   const v = viewRooms();
   _right.setFromMatrixColumn(camera.matrixWorld, 0).setY(0).normalize();
   _back.copy(controls.target).sub(camera.position).setY(0).normalize();
-  for (const wi of [...wishes]) {
+  const placed = []; // bubbles already positioned this frame
+  // Your own wish is placed first, so the others make way for it.
+  for (const wi of [...wishes].sort((a, b) => b.mine - a.mine)) {
     wi.age += dt;
     const a = wi.age;
     if (a > 45) { retireWish(wi); continue; }
@@ -2575,6 +3156,7 @@ function updateWishes(dt) {
       .addScaledVector(_back, wi.beside ? 0 : 3.5);
     wi.obj.position.y = wi.startY + rise;
     wi.obj.rotation.set(Math.sin(a * 0.9 + wi.ph) * 0.08, a * 0.25, Math.cos(a * 0.8 + wi.ph) * 0.06);
+    wi.obj.visible = camera.position.distanceTo(wi.obj.position) > 6;
 
     if (wi.labelAt === null && wi.obj.position.y > LANTERN_TOP) wi.labelAt = a;
     const la = a - (wi.labelAt ?? Infinity);
@@ -2594,7 +3176,18 @@ function updateWishes(dt) {
     const left = Math.min(Math.max(x - lw / 2, lo), hi - lw);
     wi.el.style.left = left + 'px';
     wi.el.style.setProperty('--tail', Math.min(Math.max(x - left, 14), lw - 14) + 'px');
-    wi.el.style.top = Math.max(76 + lh, ((1 - _wv.y) / 2) * v.h) + 'px'; // stay below the header
+    // The bubble spans [top - lh - 10, top - 10]. If it would cover one already placed, lift it above that one.
+    let top = Math.max(76 + lh, ((1 - _wv.y) / 2) * v.h); // stay below the header
+    for (let moved = true, n = 0; moved && n < 4; n++) {
+      moved = false;
+      for (const q of placed) {
+        if (left < q.l + q.w + 6 && left + lw + 6 > q.l && top - lh - 10 < q.t && top - 10 > q.t - q.h - 6) {
+          top = q.t - q.h - 16; moved = true;
+        }
+      }
+    }
+    placed.push({ l: left, t: top - 10, w: lw, h: lh });
+    wi.el.style.top = top + 'px';
   }
 }
 
@@ -2614,13 +3207,28 @@ function renderMine() {
     return li;
   }));
 }
-document.getElementById('wishSuggest').replaceChildren(...PRESET_WISHES.slice(0, 3).map(s => {
+document.getElementById('wishSuggest').replaceChildren(...PRESET_WISHES.map(s => {
   const b = document.createElement('button');
   b.type = 'button'; b.textContent = s;
   b.addEventListener('click', () => { wishText.value = s; wishText.dispatchEvent(new Event('input')); wishText.focus(); });
   return b;
 }));
-wishText.addEventListener('input', () => { wishCount.textContent = `${wishText.value.length} / 90`; });
+const wpText = document.getElementById('wpText'), wpFrom = document.getElementById('wpFrom'), wishPreview = document.getElementById('wishPreview');
+function updatePreview() {
+  const t = wishText.value.trim(), n = wishName.value.trim();
+  wpText.textContent = t || 'Lời chúc của bạn sẽ hiện ở đây…';
+  wpText.classList.toggle('empty', !t);
+  wpFrom.textContent = n ? `— ${n}` : '';
+}
+wishText.addEventListener('input', () => { wishCount.textContent = `${wishText.value.length} / 90`; updatePreview(); });
+wishName.addEventListener('input', updatePreview);
+// The little lantern rises out of the dialog before the real one takes off in the sky.
+function liftPreview() {
+  if (REDUCED_MOTION) return Promise.resolve();
+  wishPreview.classList.add('sending');
+  setTimeout(() => wishPreview.classList.remove('sending'), 1400);
+  return new Promise(r => setTimeout(r, 650));
+}
 try { wishName.value = localStorage.getItem('ttt-name') || ''; } catch {}
 
 function release(text, name, save = true, mine = true, id = null) {
@@ -2630,7 +3238,7 @@ function release(text, name, save = true, mine = true, id = null) {
   }
   closeWish();
   if (isCompact()) stage.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth' });
-  setTimeout(() => { launchWish(text, name, mine, id); sound.lift(); }, isCompact() ? 450 : 250);
+  setTimeout(() => { launchWish(text, name, mine, id); sound.lift(); if (save) celebrate(2); }, isCompact() ? 450 : 250);
 }
 
 /* ---- Shared wishes (Supabase): everyone watching sees everyone's lanterns ---- */
@@ -2780,8 +3388,9 @@ async function connectWishes() {
         if (sharedPool.length > 60) sharedPool.pop();
         addToWall(w);
         const held = ownPending.get(wishKey(w.text, w.name));
+        if (wishTotal % 10 === 0) celebrate(5); // every tenth lantern gets a bigger show
         if (held) { held.push(w); return; } // could be ours: decided once the insert answers
-        if (!sceneBusy()) launchWish(w.text, w.name, false, w.id);
+        if (!sceneBusy()) { launchWish(w.text, w.name, false, w.id); celebrate(1); }
       })
       // A wish removed from the admin page disappears everywhere at once.
       .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'wishes' }, ({ old }) => forgetWish(old.id))
@@ -2837,12 +3446,14 @@ wishForm.addEventListener('submit', async (e) => {
     }
   }
   try { localStorage.setItem('ttt-last', Date.now()); } catch {}
+  await liftPreview();
   release(text, name, true, true, row?.id ?? null);
   wishText.value = '';
   wishCount.textContent = '0 / 90';
+  updatePreview();
 });
 function openWish(tab = 'write') {
-  setWishTab(tab); renderMine(); showWishError(''); updateWishFine();
+  setWishTab(tab); renderMine(); showWishError(''); updateWishFine(); updatePreview();
   setOverlay(wishModal, true, tab === 'wall' ? '#tabWall' : '#wishText');
 }
 function closeWish() { setOverlay(wishModal, false); }
@@ -3147,6 +3758,7 @@ function watchQuality(raw) {
   composer.setPixelRatio(qRatio(qLevel));
   resize();
   qWarmup = 1.5;
+  setMirror(false);
 }
 
 /* ---- If the browser takes the GPU away (e.g. switching apps on a phone) and doesn't give it back ---- */
@@ -3176,11 +3788,9 @@ document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click'
 }));
 btnRotate.addEventListener('click', () => setAutoRotate(!controls.autoRotate));
 setToggle(btnRotate, controls.autoRotate);
-btnLabels.addEventListener('click', () => {
-  const on = !btnLabels.classList.contains('active');
-  setToggle(btnLabels, on);
-  document.body.classList.toggle('no-labels', !on);
-});
+// Labels start hidden for a cleaner view; picking a part in "Cấu tạo" turns them on.
+function setLabels(on) { setToggle(btnLabels, on); document.body.classList.toggle('no-labels', !on); }
+btnLabels.addEventListener('click', () => setLabels(!btnLabels.classList.contains('active')));
 btnPower.addEventListener('click', () => { lampOn = !lampOn; setToggle(btnPower, lampOn); sound.click(); });
 const btnDay = document.getElementById('btnDay'), btnSound = document.getElementById('btnSound');
 btnDay.addEventListener('click', () => {
@@ -3278,7 +3888,7 @@ function tick() {
 
   for (const s of bulbSets) {
     for (let i = 0; i < s.phase.length; i++) {
-      s.mesh.setColorAt(i, _col.setScalar(0.7 + 0.3 * Math.sin(t * s.speed[i] + s.phase[i])));
+      s.mesh.setColorAt(i, _col.setScalar((0.7 + 0.3 * Math.sin(t * s.speed[i] + s.phase[i])) * glowF[s.group]));
     }
     s.mesh.instanceColor.needsUpdate = true;
   }
@@ -3287,9 +3897,12 @@ function tick() {
   applySky(day);
   const goal = lampOn ? slider.value / 100 : 0;
   shown += (goal - shown) * Math.min(1, dt * 5);
-  applyPower(shown * (1 + Math.sin(t * 2.1 + 1) * 0.015));
+  const lit = updateGlow(dt, raw);
+  applyPower(shown * (1 + Math.sin(t * 2.1 + 1) * 0.015) * (0.15 + 0.85 * lit));
   updateFireflies(t, 1 - day * 0.9);
   updateSkyField(t);
+  updateSkyClouds(t);
+  fireworks.update(dt);
 
   controls.update();
   updateWishes(dt);
@@ -3298,6 +3911,51 @@ function tick() {
   requestAnimationFrame(tick);
 }
 tick();
+// Opening: the lantern starts dark, the camera glides in, then each part lights up in turn
+// while the title writes itself in. Skipped for reduced motion.
+const OPENING = !REDUCED_MOTION;
+if (OPENING) {
+  for (const g of GROUPS) introF[g] = 0;
+  const p = pose(VIEWS.overview), far = pose({ ...VIEWS.overview, dir: [0.75, 0.42, 1], dist: VIEWS.overview.dist * 1.45 });
+  camera.position.copy(far.pos);
+  controls.target.copy(p.target);
+  // Title letters, grouped per word so lines only break between words.
+  const seg = window.Intl?.Segmenter ? new Intl.Segmenter('vi', { granularity: 'grapheme' }) : null;
+  let n = 0;
+  const split = (node) => {
+    for (const child of [...node.childNodes]) {
+      if (child.nodeType === 1) { split(child); continue; }
+      if (child.nodeType !== 3) continue;
+      const frag = document.createDocumentFragment();
+      for (const part of child.textContent.split(/(\s+)/)) {
+        if (!part) continue;
+        if (/^\s+$/.test(part)) { frag.append(part); continue; }
+        const word = document.createElement('span');
+        word.className = 'word';
+        const chars = seg ? [...seg.segment(part)].map(x => x.segment) : Array.from(part);
+        for (const ch of chars) {
+          const sp = document.createElement('span');
+          sp.className = 'ch'; sp.textContent = ch; sp.style.setProperty('--i', n++);
+          word.append(sp);
+        }
+        frag.append(word);
+      }
+      child.replaceWith(frag);
+    }
+  };
+  const h1 = document.querySelector('.intro h1');
+  h1.setAttribute('aria-label', h1.textContent.replace(/\s+/g, ' ').trim());
+  split(h1);
+  document.body.classList.add('opening-pre');
+}
+function startOpening() {
+  if (!OPENING) return;
+  introT = 0;
+  document.body.classList.remove('opening-pre');
+  document.body.classList.add('opening');
+  if (!isTv()) flyTo(pose(VIEWS.overview), 3.4);
+}
+
 // Keep the intro on screen long enough to be seen (the sun and moon meet once), then fade out.
 let loaderGone = false;
 function hideLoader() {
@@ -3306,10 +3964,11 @@ function hideLoader() {
   window.__lanternReady = true;
   const el = document.getElementById('loader');
   el.querySelector('.ld-note').textContent = 'Đèn đã sáng ✨';
-  setTimeout(() => el.classList.add('done'), 350);
+  el.classList.add('lit');
+  setTimeout(() => { el.classList.add('done'); startOpening(); }, 650);
   setTimeout(() => el.remove(), 1500); // stop its animations once it has faded
 }
-requestAnimationFrame(() => setTimeout(hideLoader, Math.max(0, 1600 - performance.now())));
+requestAnimationFrame(() => setTimeout(hideLoader, Math.max(0, 2100 - performance.now()))); // long enough for the title to settle
 </script>
 </body>
 </html>
