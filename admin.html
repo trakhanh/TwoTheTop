@@ -48,6 +48,8 @@
   .btn.primary { border: 0; background: linear-gradient(135deg, #ffd48a, #ff9a45); color: #2a1605; }
   .btn:disabled { opacity: .6; cursor: progress; }
   .login form { display: grid; gap: 12px; margin-top: 14px; }
+  .remember { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--muted); cursor: pointer; }
+  .remember input { width: 16px; height: 16px; accent-color: var(--gold); }
   .note { margin: 12px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
   .note.ok { color: #9be6bd; }
   .note.err { color: var(--red); }
@@ -104,27 +106,22 @@
   <p class="sub">Gỡ lời chúc không phù hợp, lời chúc sẽ biến mất ngay trên mọi màn hình đang mở, kể cả màn hình lớn.</p>
 
   <section class="card login" id="login" hidden>
-    <b>Đăng nhập quản trị</b>
-    <p class="note" style="margin-top:6px">Nhập email quản trị, bạn sẽ nhận một link đăng nhập (không cần mật khẩu).</p>
+    <b>Mật khẩu quản trị</b>
     <form id="loginForm">
-      <input class="field" id="email" type="email" required autocomplete="email" placeholder="email@congty.com">
-      <button class="btn primary" id="sendLink" type="submit">Gửi link đăng nhập</button>
+      <input type="text" name="username" value="admin" autocomplete="username" hidden>
+      <input class="field" id="password" type="password" required autocomplete="current-password" placeholder="Mật khẩu" aria-label="Mật khẩu quản trị">
+      <label class="remember"><input type="checkbox" id="remember" checked> Ghi nhớ trên máy này</label>
+      <button class="btn primary" id="signIn" type="submit">Vào trang quản trị</button>
     </form>
     <p class="note" id="loginNote" role="status"></p>
   </section>
 
-  <section class="card" id="denied" hidden>
-    <b>Tài khoản này chưa có quyền quản trị.</b>
-    <p class="note">Đang đăng nhập bằng <b id="deniedEmail"></b>. Email này cần được thêm vào bảng <code>admins</code> trên Supabase.</p>
-    <p style="margin:14px 0 0"><button class="btn" data-signout>Đăng xuất</button></p>
-  </section>
-
   <section id="panel" hidden>
     <div class="who">
-      <span>Đang quản trị bằng <b id="adminEmail"></b></span>
+      <span>Đang ở chế độ quản trị</span>
       <span style="display:flex;gap:8px">
         <a class="btn" href="./?tv" target="_blank" rel="noopener">Mở màn hình lớn</a>
-        <button class="btn" data-signout>Đăng xuất</button>
+        <button class="btn" id="signOut">Thoát</button>
       </span>
     </div>
     <div class="stats">
@@ -145,13 +142,16 @@
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-// Same project and publishable key as the public page. What an account may do is decided on the
-// server: only emails listed in the `admins` table pass the delete policy on `wishes`.
-const db = createClient('https://frznqknnrslqmwpnpojl.supabase.co', 'sb_publishable_1Rnc5hqFEPeEq0hR7xjgvQ_hoiTkk4u');
+// Same project and publishable key as the public page. There are no accounts: the admin password is
+// checked on the server (bcrypt hash in a table the page can't read) by `admin_check` and
+// `admin_delete_wish`, so nothing in this file lets anyone delete a wish.
+const db = createClient('https://frznqknnrslqmwpnpojl.supabase.co', 'sb_publishable_1Rnc5hqFEPeEq0hR7xjgvQ_hoiTkk4u',
+  { auth: { persistSession: false } });
+const PASS_KEY = 'ttt-admin-pass';
 const PAGE = 50;
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n).toLocaleString('vi-VN');
-let rows = [], hasMore = false, channel = null, toastTimer;
+let rows = [], hasMore = false, channel = null, toastTimer, pass = '';
 
 function toast(msg) {
   $('toast').textContent = msg; $('toast').hidden = false;
@@ -164,31 +164,40 @@ function when(iso) {
   if (s < 86400) return `${Math.floor(s / 3600)} giờ trước`;
   return `${p(t.getDate())}/${p(t.getMonth() + 1)} ${p(t.getHours())}:${p(t.getMinutes())}`;
 }
-function show(which) { for (const id of ['login', 'denied', 'panel']) $(id).hidden = id !== which; }
+function show(which) { for (const id of ['login', 'panel']) $(id).hidden = id !== which; }
+const store = {
+  get() { try { return sessionStorage.getItem(PASS_KEY) || localStorage.getItem(PASS_KEY) || ''; } catch { return ''; } },
+  set(v, remember) { try { (remember ? localStorage : sessionStorage).setItem(PASS_KEY, v); } catch {} },
+  clear() { try { sessionStorage.removeItem(PASS_KEY); localStorage.removeItem(PASS_KEY); } catch {} },
+};
+function loginError(msg) { $('loginNote').className = 'note err'; $('loginNote').textContent = msg; }
 
-/* ---- Sign-in with a magic link ---- */
+/* ---- Password check (on the server) ---- */
+async function checkPass(p) {
+  const { data, error } = await db.rpc('admin_check', { p_pass: p });
+  if (error) return { ok: false, msg: error.code === 'P0001' ? error.message : 'Trang quản trị chưa được cài trên Supabase, hoặc mạng đang lỗi.' };
+  return { ok: data === true, msg: 'Sai mật khẩu.' };
+}
 $('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  $('sendLink').disabled = true;
-  const { error } = await db.auth.signInWithOtp({
-    email: $('email').value.trim(),
-    options: { emailRedirectTo: location.origin + location.pathname },
-  });
-  $('sendLink').disabled = false;
-  $('loginNote').className = 'note ' + (error ? 'err' : 'ok');
-  $('loginNote').textContent = error
-    ? `Chưa gửi được: ${error.message}`
-    : 'Đã gửi! Mở email và bấm vào link đăng nhập (kiểm tra cả thư mục Spam).';
+  $('signIn').disabled = true;
+  $('loginNote').textContent = '';
+  const p = $('password').value;
+  const { ok, msg } = await checkPass(p);
+  $('signIn').disabled = false;
+  $('password').value = '';
+  if (!ok) { loginError(msg); return; }
+  store.set(p, $('remember').checked);
+  openPanel(p);
 });
-document.querySelectorAll('[data-signout]').forEach(b => b.addEventListener('click', () => db.auth.signOut()));
-
-async function render(session) {
+$('signOut').addEventListener('click', () => {
+  store.clear(); pass = '';
   channel?.unsubscribe(); channel = null;
-  if (!session) { show('login'); return; }
-  const email = session.user.email;
-  const { data: isAdmin, error } = await db.rpc('is_admin');
-  if (error || !isAdmin) { $('deniedEmail').textContent = email; show('denied'); return; }
-  $('adminEmail').textContent = email;
+  show('login');
+});
+
+async function openPanel(p) {
+  pass = p;
   show('panel');
   loadStats();
   rows = []; await loadMore();
@@ -202,13 +211,13 @@ async function render(session) {
     })
     .subscribe();
 }
-let lastSession;
-db.auth.onAuthStateChange((_event, session) => {
-  // Only re-render when the signed-in user actually changes (token refreshes fire this too).
-  if ((session?.user?.id || null) === (lastSession?.user?.id || null) && lastSession !== undefined) return;
-  lastSession = session;
-  render(session);
-});
+// Coming back with a remembered password: check it again, then go straight to the list.
+(async () => {
+  const saved = store.get();
+  if (!saved) { show('login'); return; }
+  const { ok } = await checkPass(saved);
+  if (ok) openPanel(saved); else { store.clear(); show('login'); }
+})();
 
 /* ---- Data ---- */
 async function loadStats() {
@@ -266,10 +275,10 @@ async function remove(r, btn) {
     return;
   }
   btn.disabled = true; btn.textContent = 'Đang gỡ…';
-  const { data, error } = await db.from('wishes').delete().eq('id', r.id).select('id');
-  if (error || !data?.length) {
+  const { data, error } = await db.rpc('admin_delete_wish', { p_pass: pass, p_id: r.id });
+  if (error || data !== true) {
     btn.disabled = false; btn.classList.remove('armed'); btn.textContent = 'Gỡ';
-    toast(error ? 'Chưa gỡ được, thử lại nhé.' : 'Chưa gỡ được: tài khoản chưa có quyền xoá.');
+    toast(error?.code === 'P0001' ? error.message : error ? 'Chưa gỡ được, thử lại nhé.' : 'Chưa gỡ được: mật khẩu không còn đúng.');
     return;
   }
   rows = rows.filter(x => x.id !== r.id);
