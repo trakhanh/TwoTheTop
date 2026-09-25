@@ -649,6 +649,37 @@
   @keyframes rise-in { from { opacity: 0; transform: translateY(14px); } }
   @media (prefers-reduced-motion: reduce) { .memories.open .chapter { animation: none; } }
 
+  /* ---------- Story & poem ---------- */
+  .story-link {
+    display: inline-flex; align-items: center; gap: 8px; margin: -8px 0 18px; padding: 6px 0; border: 0; background: none; cursor: pointer;
+    font-size: 13.5px; font-weight: 600; color: var(--gold); border-bottom: 1px dashed rgba(255, 197, 110, .5);
+  }
+  .story-link:hover { color: #ffd894; border-bottom-style: solid; }
+  .story-sheet { width: min(640px, 100%); }
+  .story-title { margin: 0 0 18px; font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(28px, 4.4vw, 40px); line-height: 1.15; padding-right: 50px; }
+  .story-title em { display: block; color: var(--gold); font-style: italic; text-shadow: 0 0 26px rgba(255, 180, 90, .4); }
+  .story-text { margin: 0 0 12px; font-size: 15px; line-height: 1.7; color: #e3d6bf; }
+  .story-text b { color: var(--gold); font-weight: 600; }
+  .poem {
+    position: relative; margin: 22px 0 22px; padding: 26px 22px 20px; border-radius: 20px; text-align: center;
+    background: radial-gradient(120% 90% at 50% 0%, rgba(255, 197, 110, .16), transparent 70%), rgba(255, 255, 255, .03);
+    border: 1px solid rgba(255, 197, 110, .3);
+  }
+  .poem-orn { display: inline-flex; align-items: center; gap: 10px; color: var(--gold); font-size: 12px; margin-bottom: 12px; }
+  .poem-orn i { width: 46px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 197, 110, .8)); }
+  .poem-orn i:last-child { background: linear-gradient(270deg, transparent, rgba(255, 197, 110, .8)); }
+  .poem blockquote { margin: 0; }
+  .poem blockquote p { margin: 0; font-family: "Playfair Display", serif; font-style: italic; font-size: clamp(16px, 2.4vw, 19px); line-height: 1.85; color: #f3e6cc; }
+  .poem blockquote p:nth-child(2n) { margin-bottom: 8px; }
+  .poem figcaption { margin-top: 10px; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); opacity: .85; }
+  .team-modal.open .poem blockquote p { animation: rise-in .7s cubic-bezier(.2, .8, .2, 1) both; }
+  .team-modal.open .poem blockquote p:nth-child(1) { animation-delay: .15s; } .team-modal.open .poem blockquote p:nth-child(2) { animation-delay: .3s; }
+  .team-modal.open .poem blockquote p:nth-child(3) { animation-delay: .45s; } .team-modal.open .poem blockquote p:nth-child(4) { animation-delay: .6s; }
+  .team-modal.open .poem blockquote p:nth-child(5) { animation-delay: .75s; } .team-modal.open .poem blockquote p:nth-child(6) { animation-delay: .9s; }
+  .story-cta { width: 100%; }
+  @media (max-width: 480px) { .poem { padding: 20px 10px 16px; } .poem blockquote p { font-size: 14.5px; line-height: 1.75; } .story-text { font-size: 14.5px; } }
+  @media (prefers-reduced-motion: reduce) { .team-modal.open .poem blockquote p { animation: none; } }
+
   /* ---------- Live stats ---------- */
   .live-stats {
     display: flex; align-items: center; gap: 9px; width: fit-content; max-width: 100%; margin: -14px 0 24px; padding: 7px 14px 7px 11px;
@@ -876,6 +907,7 @@
   @media (max-height: 800px) and (min-width: 861px) {
     /* Short laptop screens: keep the essentials, drop the longer description */
     .intro .lead { display: none; }
+    .story-link { margin: -4px 0 12px; }
     .intro h1 { font-size: clamp(30px, 2.5vw, 40px); margin-bottom: 10px; }
     .meaning { font-size: 14.5px; padding: 10px 14px 10px 40px; margin-bottom: 12px; }
     .meaning::before { font-size: 36px; }
@@ -1225,9 +1257,12 @@
   <h1>Nhật Nguyệt <em>Đồng Huy</em></h1>
   <p class="meaning">Mặt Trời và Mặt Trăng cùng tỏa sáng — tinh thần đồng hành, cùng nhau tạo nên ánh sáng chung.</p>
   <p class="lead">
-    Mặt trời rực rỡ giữa vòng sao treo, hai vầng trăng ôm lấy những tầng mây lấp lánh —
-    tất cả làm nên từ que tre, bìa giấy và 19 đôi tay của Two The Top.
+    Khung tre truyền thống, bọc giấy trắng tinh khôi — mỗi ngôi sao trên giàn treo là một cá nhân,
+    một dự án tại Sunmedia, cùng nối về Mặt Trời bằng sợi dây gắn kết.
   </p>
+  <button class="story-link" id="btnStory" type="button">
+    <span aria-hidden="true">✦</span> Đọc câu chuyện &amp; bài thơ <span aria-hidden="true">→</span>
+  </button>
   <ul class="tags" aria-label="Chất liệu">
     <li>Bìa cứng</li><li>Que tre</li><li>Giấy nhũ</li><li>Giấy scan</li><li>Đèn LED đom đóm</li><li>Đế LED</li>
   </ul>
@@ -1338,6 +1373,31 @@
       <p class="wall-empty" id="wallEmpty" hidden>Chưa có ai thả đèn, bạn là người đầu tiên nhé!</p>
       <button class="chip wall-more" id="wallMore" hidden>Xem thêm lời chúc cũ hơn</button>
     </div>
+  </div>
+</div>
+
+<div class="team-modal" id="storyModal" role="dialog" aria-modal="true" aria-labelledby="storyTitle" inert>
+  <div class="team-sheet story-sheet">
+    <button class="round team-close" id="storyClose" aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="eyebrow">Câu chuyện lồng đèn</p>
+    <h2 class="story-title" id="storyTitle">Đèn Sao Treo <em>Đồng Tâm Tỏa Sáng</em></h2>
+    <p class="story-text">Tác phẩm được chế tác thủ công tỉ mỉ với khung tre truyền thống và bọc giấy trắng tinh khôi. Từng ngôi sao trên giàn treo là hình ảnh đại diện cho các cá nhân và dự án tại Sunmedia. Tuy quy mô và hình dạng mỗi ngôi sao một khác, nhưng tất cả đều giữ chung một điểm tựa: sợi dây kết nối trực tiếp với <b>“Mặt Trời Sunmedia”</b>.</p>
+    <p class="story-text">Sợi dây ấy tượng trưng cho sứ mệnh chung và sự gắn kết không tách rời. Khi Mặt Trời lan tỏa sức nóng, từng ngôi sao sẽ cùng hấp thụ và phản chiếu lại thứ ánh sáng rực rỡ nhất.</p>
+    <figure class="poem">
+      <span class="poem-orn" aria-hidden="true"><i></i>✦<i></i></span>
+      <blockquote>
+        <p>Thắt từng khung tre, bọc dải giấy hồng,</p>
+        <p>Ngôi sao Sunmedia sáng giữa khoảng không.</p>
+        <p>Mỗi dự án – một vì sao lấp lánh,</p>
+        <p>Dù to dù nhỏ, chung một tấm lòng.</p>
+        <p>Nối về Mặt Trời bằng dây gắn kết,</p>
+        <p>Cùng thắp đêm Rằm, trọn vẹn ước mong.</p>
+      </blockquote>
+      <figcaption>— Two The Top</figcaption>
+    </figure>
+    <button class="cta story-cta" id="storyToStars" type="button">Ngắm những ngôi sao treo</button>
   </div>
 </div>
 
@@ -1672,7 +1732,8 @@ function lamp(hex, glow = 1, { map = texBoard, flat = false, rough = 0.8 } = {})
   return m;
 }
 const yarnMat = new THREE.MeshStandardMaterial({ color: 0xf4ead8, emissive: 0x3a2c1a, roughness: 1 });
-const stickMat = new THREE.MeshStandardMaterial({ color: 0x6f4a28, emissive: 0x2a1606, roughness: 0.7 });
+// Bamboo frame of the stick stars: light cane colour with a warm glow, so it doesn't darken the star.
+const caneMat = new THREE.MeshStandardMaterial({ color: 0xe8c48a, emissive: 0x8a5a22, emissiveIntensity: 0.9, roughness: 0.6 });
 const hoopMat = new THREE.MeshStandardMaterial({ color: 0x8a6440, emissive: 0x3a220c, roughness: 0.75 });
 const woodMat = new THREE.MeshStandardMaterial({ color: 0x5d4330, roughness: 0.7 });
 const poleMat = new THREE.MeshStandardMaterial({ color: 0xf2efe8, roughness: 0.6 });
@@ -2024,7 +2085,7 @@ const cloudGroups = CLOUDS.map(([hex, glow, x, z, bumps]) => {
 /* ---- Hanging stars ---- */
 const hangers = [];
 const puffyMat = lamp('#ffe8ba', 1.6, { map: texPaper, flat: true });
-const innerStarMat = lamp('#ffe2a0', 1.5, { map: texPaper, flat: true });
+const innerStarMat = lamp('#ffe6aa', 2.1, { map: texPaper, flat: true });
 puffyMat.userData.group = innerStarMat.userData.group = 'star';
 
 function stickStar(R) {
@@ -2034,8 +2095,8 @@ function stickStar(R) {
     const a = Math.PI / 2 + (i * 2 * Math.PI) / 5;
     P.push(new THREE.Vector3(Math.cos(a) * R, Math.sin(a) * R, 0));
   }
-  for (let i = 0; i < 5; i++) rod(P[i], P[(i + 2) % 5], 0.03, stickMat, g, 0.06);
-  g.add(new THREE.Mesh(starGeometry(R * 0.93, 0.4, 0.18), innerStarMat));
+  for (let i = 0; i < 5; i++) rod(P[i], P[(i + 2) % 5], 0.03, caneMat, g, 0.06);
+  g.add(new THREE.Mesh(starGeometry(R * 0.96, 0.47, 0.3), innerStarMat)); // fuller paper star inside the frame
   return g;
 }
 function puffyStar(R) {
@@ -2051,7 +2112,7 @@ function hang(anchor, starY, R, type, spin = 0) {
   star.position.y = -len - R;
   pivot.add(str, star);
   lantern.add(pivot);
-  hangers.push({ pivot, star, spin, phase: rand() * 6.28, speed: 0.6 + rand() * 0.5 });
+  hangers.push({ pivot, star, type, spin, phase: rand() * 6.28, speed: 0.6 + rand() * 0.5 });
 }
 
 lantern.updateMatrixWorld(true);
@@ -2400,7 +2461,7 @@ aura(sun, new THREE.Vector3(0, 0, -0.35), SUN_R * 4.4, 0xffc37a, 'sun', 0.55);
 lantern.children.filter(o => o.isGroup && o !== sun && o.children.some(c => c.material?.[0]?.userData?.group === 'moon'))
   .forEach(m => aura(m, new THREE.Vector3(-0.6, 0, -0.3), 7.5, 0xfff0d6, 'moon', 0.32));
 cloudGroups.forEach(g => aura(g, new THREE.Vector3(0, 1.3, -0.25), 6.2, 0xffcf8a, 'cloud', 0.26));
-hangers.forEach(h => aura(h.star, new THREE.Vector3(0, 0, 0), 2.1, 0xffdf9a, 'star', 0.55));
+hangers.forEach(h => aura(h.star, new THREE.Vector3(0, 0, 0), h.type === 'stick' ? 2.8 : 2.1, 0xffdf9a, 'star', h.type === 'stick' ? 0.75 : 0.55));
 aura(lantern, new THREE.Vector3(0, BASE_H * 0.5, 0), BASE_R * 3.2, 0xffd9a0, 'base', 0.22);
 
 stars.layers.set(1);
@@ -2623,6 +2684,7 @@ function applyPower(p) {
   warmLow.intensity = 16 * p * (1 - 0.4 * d);
   warmHigh.intensity = 22 * p;
   warmBack.intensity = 34 * p;
+  caneMat.emissiveIntensity = 0.9 * Math.min(p, 1.2) * glowF.star;
   hemi.intensity = 0.35 + Math.max(0, 1 - p) * 1.4 * (1 - d) + 1.5 * d;
   sunLight.intensity = 1.5 * d;
   bloom.strength = BLOOM * Math.min(p, 1.3) * (1 - 0.5 * d);
@@ -2669,7 +2731,7 @@ const PARTS = [
   { name: 'Vành đai mặt trời', short: 'Vòng nghiêng quấn đèn đom đóm', text: 'Vòng tròn nghiêng ôm quanh mặt trời như vành đai hành tinh, quấn kín dây đèn đom đóm sáng lấp lánh.',
     pos: () => ring.localToWorld(new THREE.Vector3(Math.cos(-1.05) * RING_R, Math.sin(-1.05) * RING_R, 0)), normal: [0.3, 0.2, 1],
     cam: { dir: [0.45, 0.28, 1], dist: 17, target: [0.6, 9.0, 0] } },
-  { name: 'Sao treo', short: 'Sao que tre & sao giấy, dây len', live: true, text: 'Sao que tre và sao giấy treo trên vành đai bằng dây len, đung đưa nhẹ theo gió.',
+  { name: 'Sao treo', short: 'Mỗi sao · một người, một dự án', live: true, text: 'Mỗi ngôi sao là một cá nhân, một dự án tại Sunmedia — to nhỏ khác nhau nhưng đều nối về Mặt Trời bằng sợi dây gắn kết.',
     pos: () => hangers[3].star.getWorldPosition(new THREE.Vector3()), normal: [0.2, 0, 1],
     cam: { dir: [0.35, 0.05, 1], dist: 17, target: [0.8, 7.4, 0.5] } },
   { name: 'Vầng trăng khuyết', short: 'Hai trăng đối xứng, LED dày', text: 'Hai vầng trăng lớn đặt đối xứng hai bên, gắn dày đèn đom đóm lấp lánh.',
@@ -3102,6 +3164,9 @@ document.addEventListener('keydown', (e) => {
 /* ---- Presentation mode ---- */
 const STEPS = [
   { name: INTRO.title, text: INTRO.text, cam: VIEWS.overview, intro: true },
+  { name: 'Đèn Sao Treo – Đồng Tâm Tỏa Sáng', story: true, group: 'star',
+    text: 'Mỗi ngôi sao là một cá nhân, một dự án tại Sunmedia. Dù to dù nhỏ, tất cả cùng nối về Mặt Trời bằng sợi dây gắn kết — khi Mặt Trời tỏa sáng, từng ngôi sao cùng rực rỡ.',
+    cam: { dir: [0.35, 0.05, 1], dist: 17, target: [0.8, 7.4, 0.5] } },
   ...PARTS,
   { name: 'Hành trình làm lồng đèn', text: `${MEMORIES.length} ngày, ${nVid} video, ${nImg} bức ảnh — bấm vào từng khoảnh khắc để xem lại.`, cam: VIEWS.overview, memories: true },
   { name: 'Cảm ơn mọi người! 💛', text: `Đây là ${TEAM.length} thành viên của Two The Top — cảm ơn các anh chị đồng nghiệp tại Sun Media và Ban tổ chức đã lắng nghe!`, cam: VIEWS.overview, team: true },
@@ -3114,7 +3179,7 @@ capDots.innerHTML = STEPS.map(() => '<span></span>').join('');
 function showStep(i) {
   step = (i + STEPS.length) % STEPS.length;
   const s = STEPS[step];
-  capStep.textContent = s.intro ? 'Giới thiệu' : s.team ? 'Thành viên' : s.memories ? 'Hành trình' : `Phần ${step} / ${PARTS.length}`;
+  capStep.textContent = s.intro ? 'Giới thiệu' : s.story ? 'Câu chuyện' : s.team ? 'Thành viên' : s.memories ? 'Hành trình' : `Phần ${PARTS.indexOf(s) + 1} / ${PARTS.length}`;
   capTitle.textContent = s.name;
   capText.textContent = s.text;
   [...capDots.children].forEach((d, k) => d.classList.toggle('on', k === step));
@@ -3785,6 +3850,15 @@ btnNativeShare.addEventListener('click', () => {
   navigator.share({ title: 'Nhật Nguyệt Đồng Huy · Two The Top', text: 'Ngắm lồng đèn Trung Thu 3D của Two The Top 🏮', url: SITE_URL }).catch(() => {});
 });
 function closeShare() { setOverlay(shareModal, false); }
+const storyModal = document.getElementById('storyModal');
+function closeStory() { setOverlay(storyModal, false); }
+document.getElementById('btnStory').addEventListener('click', (e) => { e.stopPropagation(); setOverlay(storyModal, true, '#storyClose'); });
+document.getElementById('storyClose').addEventListener('click', closeStory);
+storyModal.addEventListener('click', (e) => { if (e.target === storyModal) closeStory(); });
+document.getElementById('storyToStars').addEventListener('click', () => {
+  closeStory();
+  focusPart(PARTS.find(p => p.group === 'star'));
+});
 document.getElementById('btnShare').addEventListener('click', (e) => { e.stopPropagation(); setOverlay(shareModal, true, '#btnCopy'); });
 document.getElementById('shareClose').addEventListener('click', closeShare);
 shareModal.addEventListener('click', (e) => { if (e.target === shareModal) closeShare(); });
@@ -3792,6 +3866,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   if (wishModal.classList.contains('open')) closeWish();
   if (shareModal.classList.contains('open')) closeShare();
+  if (storyModal.classList.contains('open')) closeStory();
 });
 
 /* =========================================================
