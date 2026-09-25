@@ -1673,11 +1673,15 @@ const VIEWS = {
 };
 function fitFactor() {
   const aspect = camera.aspect;
-  return aspect < 1 ? Math.min(1.9, 0.95 / aspect) : 1;
+  // Portrait: pull back just enough for the widest view (moons edge to edge) to fit.
+  return aspect < 1 ? Math.min(1.9, 0.82 / aspect) : 1;
 }
 function pose({ dir, dist, target }) {
-  const t = new THREE.Vector3(...target);
-  return { target: t, pos: new THREE.Vector3(...dir).normalize().multiplyScalar(dist * fitFactor()).add(t) };
+  const t = new THREE.Vector3(...target), d = dist * fitFactor();
+  // Presenting on a portrait phone: the caption card covers the bottom, so aim a little lower
+  // to lift the lantern up the screen.
+  if (camera.aspect < 1 && document.body.classList.contains('presenting')) t.y -= d * 0.07;
+  return { target: t, pos: new THREE.Vector3(...dir).normalize().multiplyScalar(d).add(t) };
 }
 
 let tween = null;
