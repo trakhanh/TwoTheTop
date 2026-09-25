@@ -992,6 +992,19 @@
     .wish-label { max-width: 200px !important; padding: 7px 11px 6px; font-size: 12.5px; }
     .wish-label .from, .wish-label .tag { font-size: 10.5px; }
   }
+  /* Wish dialog on phones: a sheet sitting on top of the keyboard, send button always visible */
+  @media (max-width: 860px) {
+    #wishModal { inset: auto 0 auto 0; top: var(--vvt, 0px); height: var(--vvh, 100svh); padding: 8px; align-items: end; }
+    #wishModal .team-sheet { max-height: calc(var(--vvh, 100svh) - 16px); }
+    #wishModal .wish-form .cta { position: sticky; bottom: -20px; z-index: 2; box-shadow: 0 -10px 24px 6px rgba(18, 23, 46, .95), 0 8px 30px rgba(255, 150, 60, .35); }
+    body.kbd #wishModal .team-sheet { padding-top: 16px; padding-bottom: 14px; border-radius: 20px; }
+    body.kbd #wishModal :is(.eyebrow, .team-title, .team-sub, .wish-tabs, .wish-preview, .suggest, .fine, #wishMine) { display: none; }
+    body.kbd #wishModal .team-close { top: 8px; right: 8px; width: 36px; height: 36px; }
+    body.kbd #wishModal .field { padding: 10px 12px; }
+    body.kbd #wishModal textarea.field { padding-right: 44px; }
+    body.kbd #wishModal .wish-form { gap: 8px; }
+    body.kbd #wishModal .wish-form .cta { position: static; box-shadow: 0 6px 20px rgba(255, 150, 60, .35); }
+  }
   @media (max-width: 600px) and (orientation: portrait) {
     .controls .dimmer { display: none; }
     .controls { gap: 4px; }
@@ -1259,9 +1272,9 @@
         </svg>
       </div>
       <form class="wish-form" id="wishForm">
-        <textarea class="field" id="wishText" rows="3" maxlength="90" placeholder="Lời chúc của bạn…" required></textarea>
+        <textarea class="field" id="wishText" rows="3" maxlength="90" placeholder="Lời chúc của bạn…" required enterkeyhint="send"></textarea>
         <span class="wish-count" id="wishCount">0 / 90</span>
-        <input class="field" id="wishName" maxlength="24" placeholder="Tên của bạn (không bắt buộc)" autocomplete="nickname">
+        <input class="field" id="wishName" maxlength="24" placeholder="Tên của bạn (không bắt buộc)" autocomplete="nickname" enterkeyhint="send">
         <div class="suggest" id="wishSuggest"></div>
         <p class="wish-error" id="wishError" role="alert" hidden></p>
         <button class="cta" type="submit">
@@ -2875,14 +2888,18 @@ const MEMORIES = [
     vid('2026-09-21 at 08.08.10', 'Miệt mài tới tối', 23),
   ] },
   { day: 'Ngày 2', date: '22/09', title: 'Dựng đế & góc vui', text: 'Cắm cột tre, luồn dây LED quanh đế — làm mệt thì nghỉ, ăn bánh, cười thật tươi rồi làm tiếp!', items: [
+    img('2026-09-22 at 10.15.02', 'Cắt bìa làm đế 👍'),
+    img('2026-09-22 at 10.15.01', 'Đo, cắt tấm bìa lớn cho đế'),
     img('2026-09-22 at 13.16.34', 'Cắm cột tre, luồn dây LED quanh đế'),
     vid('2026-09-22 at 13.21.55', 'Đi dây đèn cho đế', 17),
     img('2026-09-22 at 13.28.03', 'Giơ ngón cái bên bánh Trung Thu'),
     vid('2026-09-22 at 13.23.48', 'Mấy anh em quậy tí giữa giờ', 9),
-    vid('2026-09-22 at 18.57.47', 'Cả nhà tạo dáng sau buổi làm', 8),
+    vid('2026-09-22 at 18.57.47', 'Được chị Cá mời ăn bánh bao 🥟', 8),
   ] },
   { day: 'Ngày 3', date: '23/09', title: 'Lên đèn', text: 'Gắn dây LED, ráp mây và trăng lên đế — lần đầu thấy lồng đèn sáng.', items: [
     img('2026-09-23 at 13.28.04', 'Lần đầu lồng đèn sáng ✨', true),
+    img('2026-09-23 at 20.10.02', 'Thử đèn cho mặt trời'),
+    img('2026-09-23 at 20.10.01', 'Căn giấy cho mặt trời sáng đều'),
     img('2026-09-23 at 13.18.22', 'Ráp mây và trăng lên đế'),
     img('2026-09-23 at 19.56.53', 'Gắn LED, ráp mây và trăng lên đế'),
   ] },
@@ -3642,16 +3659,42 @@ wishForm.addEventListener('submit', async (e) => {
   wishText.value = '';
   wishCount.textContent = '0 / 90';
   updatePreview();
+  saveDraft();
+});
+// Keep what was typed if the dialog closes by accident (it comes back when reopened).
+const DRAFT_KEY = 'ttt-draft';
+function saveDraft() { try { sessionStorage.setItem(DRAFT_KEY, wishText.value); } catch {} }
+function restoreDraft() {
+  let d = '';
+  try { d = sessionStorage.getItem(DRAFT_KEY) || ''; } catch {}
+  if (d && !wishText.value) { wishText.value = d; wishCount.textContent = `${d.length} / 90`; }
+}
+wishText.addEventListener('input', saveDraft);
+// "Gửi" on the phone keyboard sends the wish (a line break isn't useful in a one-line wish).
+wishText.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); wishForm.requestSubmit(); }
 });
 function openWish(tab = 'write') {
-  setWishTab(tab); renderMine(); showWishError(''); updateWishFine(); updatePreview();
+  setWishTab(tab); restoreDraft(); renderMine(); showWishError(''); updateWishFine(); updatePreview();
   setOverlay(wishModal, true, tab === 'wall' ? '#tabWall' : '#wishText');
 }
 function closeWish() { setOverlay(wishModal, false); }
 document.getElementById('btnWish').addEventListener('click', (e) => { e.stopPropagation(); openWish(); });
 document.getElementById('btnWishBar').addEventListener('click', (e) => { e.stopPropagation(); openWish(); });
 document.getElementById('wishClose').addEventListener('click', closeWish);
-wishModal.addEventListener('click', (e) => { if (e.target === wishModal) closeWish(); });
+// A tap outside the dialog only closes it when nothing has been typed; use the × button otherwise.
+wishModal.addEventListener('click', (e) => { if (e.target === wishModal && !wishText.value.trim()) closeWish(); });
+
+// Phone keyboard: fit the dialog into the space above the keyboard, keep the send button in reach.
+if (window.visualViewport) {
+  const vv = window.visualViewport, root = document.documentElement;
+  const fit = () => {
+    root.style.setProperty('--vvh', `${vv.height}px`);
+    root.style.setProperty('--vvt', `${vv.offsetTop}px`);
+    document.body.classList.toggle('kbd', vv.height < window.innerHeight * 0.78);
+  };
+  vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); fit();
+}
 
 // Now and then a lantern floats up on its own: other people's wishes first, the team's otherwise.
 let poolIdx = 0, presetIdx = 0;
