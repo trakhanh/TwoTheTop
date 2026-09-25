@@ -305,12 +305,22 @@
     opacity: 0; pointer-events: none; transition: opacity .25s;
   }
   .lightbox.open { opacity: 1; pointer-events: auto; }
-  .lb-stage { height: 100%; min-width: 0; display: grid; place-items: center; touch-action: pan-y; }
+  .lb-stage { position: relative; height: 100%; min-width: 0; display: grid; place-items: center; touch-action: pan-y; }
+  .lb-stage > img, .lb-stage > video { grid-area: 1 / 1; }
+  .lb-spinner {
+    grid-area: 1 / 1; width: 44px; height: 44px; border-radius: 50%; pointer-events: none;
+    border: 3px solid rgba(255, 214, 150, .2); border-top-color: var(--gold);
+    animation: spin .8s linear infinite; opacity: 0; transition: opacity .2s;
+  }
+  .lb-stage.loading .lb-spinner { opacity: 1; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .lb-stage img, .lb-stage video { max-width: 100%; max-height: 100%; border-radius: 12px; box-shadow: 0 20px 60px rgba(0, 0, 0, .6); background: #000; }
   .lb-close { position: absolute; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); }
   .lb-cap { position: absolute; left: 0; right: 0; bottom: max(22px, env(safe-area-inset-bottom)); text-align: center; padding: 0 70px; }
   .lb-cap span { display: block; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
   .lb-cap b { font-weight: 500; font-size: 15px; }
+  .lb-original { display: inline-block; margin-left: 12px; font-size: 12.5px; color: var(--muted); text-decoration: none; border-bottom: 1px dashed currentColor; }
+  .lb-original:hover { color: var(--gold); }
 
   /* ---------- Presentation mode ---------- */
   .caption {
@@ -559,7 +569,7 @@
   <button class="round lb-nav lb-next" id="lbNext" aria-label="Tiếp">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
   </button>
-  <div class="lb-cap"><span id="lbCount"></span><b id="lbText"></b></div>
+  <div class="lb-cap"><span id="lbCount"></span><b id="lbText"></b><a class="lb-original" id="lbOriginal" href="#" download>Tải bản gốc ↓</a></div>
 </div>
 
 <div class="caption" id="caption" aria-live="polite" inert>
@@ -1451,15 +1461,24 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && teamModal.classList.contains('open') && !document.body.classList.contains('presenting')) closeTeam();
 });
 
-/* ---- Memories (IMG_VIDEO) ---- */
+/* ---- Memories ---- */
 // Ngày lấy theo tên file WhatsApp. Sửa chú thích tại đây.
+// Trang dùng bản nén nhẹ trong media/ (video 480p, clip xem trước 5 giây, ảnh thu nhỏ);
+// bản gốc chất lượng cao vẫn nằm trong IMG_VIDEO/ và tải được từ nút "Bản gốc".
+const slugOf = (stamp) => stamp.replace(' at ', '_').replace(/\./g, '-');
 const vid = (stamp, caption, dur) => ({
   type: 'video', caption, dur,
-  src: encodeURI(`IMG_VIDEO/WhatsApp Video ${stamp}.mp4`),
-  poster: `assets/posters/${stamp.replace(' at ', '_').replace(/\./g, '-')}.jpg`,
+  src: `media/video/${slugOf(stamp)}.mp4`,
+  preview: `media/preview/${slugOf(stamp)}.mp4`,
+  thumb: `media/thumb/${slugOf(stamp)}.jpg`,
+  poster: `assets/posters/${slugOf(stamp)}.jpg`,
+  original: encodeURI(`IMG_VIDEO/WhatsApp Video ${stamp}.mp4`),
 });
 const img = (stamp, caption, feature = false) => ({
-  type: 'image', caption, feature, src: encodeURI(`IMG_VIDEO/WhatsApp Image ${stamp}.jpeg`),
+  type: 'image', caption, feature,
+  src: encodeURI(`IMG_VIDEO/WhatsApp Image ${stamp}.jpeg`),
+  thumb: `media/thumb/${slugOf(stamp)}.jpg`,
+  original: encodeURI(`IMG_VIDEO/WhatsApp Image ${stamp}.jpeg`),
 });
 const MEMORIES = [
   { day: 'Ngày 1', date: '21/09', title: 'Khởi công', text: 'Vót tre, dựng khung, cắt bìa, dán giấy — cả nhóm ngồi bệt dưới sàn làm từ sáng tới tối.', items: [
@@ -1495,7 +1514,7 @@ const PLAY_ICON = '<svg viewBox="0 0 10 10" fill="currentColor"><path d="M2 1.2v
 document.getElementById('memSub').textContent =
   `${MEMORIES.length} ngày · ${nVid} video · ${nImg} ảnh — những khoảnh khắc cả nhóm cùng nhau làm nên chiếc lồng đèn, và cũng là nơi cất giữ kỷ niệm của Two The Top.`;
 document.getElementById('memThumbs').innerHTML = [ALL_MEDIA[ALL_MEDIA.length - 2], ALL_MEDIA[0], ALL_MEDIA[4]]
-  .map((m, i) => `<img src="${m.poster || m.src}" alt="" loading="lazy" style="--r:${[-8, 3, 10][i]}deg">`).join('');
+  .map((m, i) => `<img src="${m.thumb}" alt="" loading="lazy" decoding="async" style="--r:${[-8, 3, 10][i]}deg">`).join('');
 document.getElementById('memTimeline').innerHTML = MEMORIES.map(ch => `
   <section class="chapter">
     <div class="chapter-meta"><div class="inner">
@@ -1503,7 +1522,7 @@ document.getElementById('memTimeline').innerHTML = MEMORIES.map(ch => `
     </div></div>
     <div class="tiles">${ch.items.map(m => `
       <button class="tile${m.feature ? ' feature' : ''}" data-i="${ALL_MEDIA.indexOf(m)}" aria-label="${m.type === 'video' ? 'Video' : 'Ảnh'}: ${m.caption}">
-        <img src="${m.poster || m.src}" alt="" loading="lazy">
+        <img src="${m.feature ? m.src : m.thumb}" alt="" loading="lazy" decoding="async">
         <span class="badge">${m.type === 'video' ? `${PLAY_ICON}${fmtDur(m.dur)}` : 'Ảnh'}</span>
         <span class="cap">${m.caption}</span>
       </button>`).join('')}
@@ -1537,7 +1556,7 @@ document.querySelectorAll('.tile').forEach(tile => {
     tile._previewTimer = setTimeout(() => {
       if (!memories.classList.contains('open') || lightbox.classList.contains('open')) return;
       const v = document.createElement('video');
-      Object.assign(v, { src: m.src, muted: true, loop: true, playsInline: true });
+      Object.assign(v, { src: m.preview, muted: true, loop: true, playsInline: true, preload: 'auto' });
       v.addEventListener('playing', () => tile.classList.add('previewing'), { once: true });
       tile.prepend(v);
       v.play().catch(() => {});
@@ -1555,11 +1574,32 @@ const lightbox = document.getElementById('lightbox'), lbStage = document.getElem
 let lbIndex = 0;
 function renderLightbox() {
   const m = ALL_MEDIA[lbIndex];
-  lbStage.innerHTML = m.type === 'video'
-    ? `<video src="${m.src}" poster="${m.poster}" controls autoplay playsinline></video>`
-    : `<img src="${m.src}" alt="${m.caption}">`;
+  lbStage.innerHTML = (m.type === 'video'
+    ? `<video src="${m.src}" poster="${m.poster}" controls autoplay playsinline preload="auto"></video>`
+    : `<img src="${m.src}" alt="${m.caption}">`) + '<span class="lb-spinner" aria-hidden="true"></span>';
+  const media = lbStage.firstElementChild;
+  const loading = (on) => lbStage.classList.toggle('loading', on);
+  loading(true);
+  if (m.type === 'video') {
+    media.addEventListener('playing', () => loading(false));
+    media.addEventListener('canplay', () => loading(false));
+    media.addEventListener('waiting', () => loading(true));
+    media.addEventListener('error', () => loading(false));
+  } else {
+    media.addEventListener('load', () => loading(false));
+    media.addEventListener('error', () => loading(false));
+    if (media.complete) loading(false);
+  }
   document.getElementById('lbCount').textContent = `${lbIndex + 1} / ${ALL_MEDIA.length}`;
   document.getElementById('lbText').textContent = m.caption;
+  const dl = document.getElementById('lbOriginal');
+  dl.href = m.original;
+  dl.setAttribute('download', decodeURI(m.original.split('/').pop()));
+  // Warm up the neighbours so next/prev opens instantly.
+  for (const d of [1, -1]) {
+    const n = ALL_MEDIA[(lbIndex + d + ALL_MEDIA.length) % ALL_MEDIA.length];
+    new Image().src = n.type === 'video' ? n.poster : n.src;
+  }
 }
 function openLightbox(i) { stopPreviews(); lbIndex = i; renderLightbox(); setOverlay(lightbox, true, '#lbNext'); }
 function closeLightbox() { setOverlay(lightbox, false); lbStage.innerHTML = ''; }
