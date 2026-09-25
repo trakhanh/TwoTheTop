@@ -765,15 +765,31 @@
     0% { translate: 0 0; opacity: 0; } 12% { opacity: .9; } 80% { opacity: .7; }
     100% { translate: 22px -115vh; opacity: 0; }
   }
-  .ld-art { width: min(220px, 56vw); height: auto; overflow: visible; margin-bottom: 18px; filter: drop-shadow(0 0 30px rgba(255, 170, 80, .35)); }
-  .ld-rays { transform-origin: 70px 62px; animation: ld-spin 14s linear infinite; }
-  .ld-sun { animation: ld-sun 2.8s ease-in-out infinite alternate; }
-  .ld-moon { animation: ld-moon 2.8s ease-in-out infinite alternate; }
-  .ld-halo { transform-origin: 84px 62px; animation: ld-halo 2.8s ease-in-out infinite alternate; }
+  .ld-art { width: min(270px, 68vw); height: auto; overflow: visible; margin-bottom: 14px; filter: drop-shadow(0 0 26px rgba(255, 170, 80, .3)); }
+  .ld-art * { transform-box: view-box; }
+  .ld-rays { transform-origin: 88px 75px; animation: ld-spin 40s linear infinite; }
+  .ld-halo { transform-origin: 88px 75px; animation: ld-halo 3.2s ease-in-out infinite alternate; }
+  .ld-moon-halo { transform-origin: 150px 60px; animation: ld-halo 4s ease-in-out infinite alternate-reverse; }
+  .ld-moon { animation: ld-float 4.5s ease-in-out infinite; }
+  .ld-hang { transform-origin: 141px 86px; animation: ld-sway 3s ease-in-out infinite; }
+  .ld-lights { animation: ld-run 1.4s linear infinite; }
+  /* Sun and moon slowly drift together; the glow where they meet peaks as they touch */
+  .ld-sun { animation: ld-sun-in 2.8s cubic-bezier(.45, 0, .25, 1) infinite alternate; }
+  .ld-moon-in { animation: ld-moon-in 2.8s cubic-bezier(.45, 0, .25, 1) infinite alternate; }
+  .ld-kiss { mix-blend-mode: screen; transform-origin: 121px 70px; animation: ld-kiss 2.8s cubic-bezier(.45, 0, .25, 1) infinite alternate; }
+  @keyframes ld-sun-in { from { transform: translateX(-9px); } to { transform: none; } }
+  @keyframes ld-moon-in { from { transform: translateX(30px); } to { transform: none; } }
+  .ld-flare { transform-origin: 121px 70px; animation: ld-flare-spin 6s linear infinite; }
+  @keyframes ld-kiss { 0%, 55% { opacity: 0; transform: scale(.5); } 100% { opacity: 1; transform: scale(1.1); } }
+  @keyframes ld-flare-spin { to { transform: rotate(90deg); } }
+  .ld-spark { transform-origin: center; transform-box: fill-box; animation: ld-spark 2.6s ease-in-out infinite; }
+  .ld-spark.s2 { animation-delay: .7s; } .ld-spark.s3 { animation-delay: 1.3s; } .ld-spark.s4 { animation-delay: 1.9s; }
   @keyframes ld-spin { to { transform: rotate(360deg); } }
-  @keyframes ld-sun { from { transform: translateX(-10px); } to { transform: translateX(2px); } }
-  @keyframes ld-moon { from { transform: translateX(26px); } to { transform: translateX(0); } }
-  @keyframes ld-halo { from { opacity: .25; transform: scale(.85); } to { opacity: .9; transform: scale(1.08); } }
+  @keyframes ld-halo { from { opacity: .55; transform: scale(.9); } to { opacity: 1; transform: scale(1.06); } }
+  @keyframes ld-float { 50% { transform: translateY(-4px); } }
+  @keyframes ld-sway { 50% { transform: rotate(7deg); } }
+  @keyframes ld-run { to { stroke-dashoffset: -14; } }
+  @keyframes ld-spark { 0%, 100% { opacity: .25; transform: scale(.6); } 50% { opacity: 1; transform: scale(1.15) rotate(45deg); } }
   .ld-brand { margin: 0 0 8px; font-size: 12px; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); }
   .ld-title { display: grid; justify-items: center; margin: 4px 0 0; font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(27px, 7vw, 40px); line-height: 1.15; color: var(--text); }
   .ld-title .l1, .ld-title .l2 { display: block; letter-spacing: .08em; animation: ld-track 1.6s cubic-bezier(.2, .8, .2, 1) both; }
@@ -787,6 +803,7 @@
   @keyframes ld-twinkle-star { 50% { opacity: .35; transform: scale(.75) rotate(45deg); } }
   /* The moment the lantern is ready: sun and moon flare once */
   .loader.lit .ld-halo { animation: ld-flare .7s ease-out forwards; }
+  .loader.lit .ld-lights { stroke: #fff; animation-duration: .5s; }
   .loader.lit .ld-art { filter: drop-shadow(0 0 46px rgba(255, 190, 100, .75)); transition: filter .5s; }
   @keyframes ld-flare { to { opacity: 1; transform: scale(1.45); } }
   .ld-bar { position: relative; width: 150px; height: 2px; margin: 22px 0 12px; border-radius: 2px; overflow: hidden; background: rgba(255, 214, 150, .15); }
@@ -957,7 +974,7 @@
     .team-modal.open .member { animation: none; opacity: 1; transform: none; }
     .member:hover .ava svg { animation: none; }
     .heart-fly, .photo-flash { display: none; }
-    .ld-bar::after, .ld-rays, .ld-sun, .ld-moon, .ld-halo, .live-stats .dot, .ld-title .l1, .ld-title .l2, .ld-orn i, .ld-orn b { animation: none; }
+    .ld-bar::after, .ld-rays, .ld-sun, .ld-moon, .ld-halo, .ld-moon-halo, .ld-hang, .ld-lights, .ld-spark, .ld-kiss, .ld-flare, .ld-moon-in, .live-stats .dot, .ld-title .l1, .ld-title .l2, .ld-orn i, .ld-orn b { animation: none; }
     .wall li.fresh, .heart-peek.pop .hico svg { animation: none; }
     .team-sheet, .mem-sheet, .loader, .ld-inner { transition: none; }
   }
@@ -995,26 +1012,51 @@
 <div class="loader" id="loader" role="status" aria-live="polite">
   <div class="ld-sky" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="ld-inner">
-    <svg class="ld-art" viewBox="0 0 160 124" aria-hidden="true">
+    <svg class="ld-art" viewBox="0 0 200 150" aria-hidden="true">
       <defs>
-        <radialGradient id="ldSun" cx="40%" cy="38%" r="70%"><stop offset="0" stop-color="#fff6dc"/><stop offset=".55" stop-color="#ffd27a"/><stop offset="1" stop-color="#f09a3e"/></radialGradient>
-        <radialGradient id="ldGlow"><stop offset="0" stop-color="#ffcf8a" stop-opacity=".9"/><stop offset="1" stop-color="#ff9a45" stop-opacity="0"/></radialGradient>
-        <linearGradient id="ldMoon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#e8d8bd"/></linearGradient>
-        <mask id="ldCres"><rect x="-40" y="0" width="240" height="124" fill="#fff"/><circle cx="118" cy="52" r="21" fill="#000"/></mask>
+        <radialGradient id="ldSun" cx="42%" cy="38%" r="68%"><stop offset="0" stop-color="#fffbf1"/><stop offset=".45" stop-color="#ffe2a0"/><stop offset=".85" stop-color="#f7ab4c"/><stop offset="1" stop-color="#e98a36"/></radialGradient>
+        <linearGradient id="ldRay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe1a0"/><stop offset="1" stop-color="#e59a3e"/></linearGradient>
+        <radialGradient id="ldGlow"><stop offset="0" stop-color="#ffcf8a" stop-opacity=".95"/><stop offset=".5" stop-color="#ffb35f" stop-opacity=".35"/><stop offset="1" stop-color="#ff9a45" stop-opacity="0"/></radialGradient>
+        <radialGradient id="ldMoonGlow"><stop offset="0" stop-color="#e8eeff" stop-opacity=".55"/><stop offset="1" stop-color="#bcc8ff" stop-opacity="0"/></radialGradient>
+        <linearGradient id="ldMoon" x1="0" y1=".6" x2="1" y2=".2"><stop offset="0" stop-color="#ffe2a6"/><stop offset=".35" stop-color="#fff6e2"/><stop offset=".75" stop-color="#f2ead9"/><stop offset="1" stop-color="#d9cdb4"/></linearGradient>
+        <radialGradient id="ldKiss"><stop offset="0" stop-color="#fffaf0"/><stop offset=".25" stop-color="#ffe0a0" stop-opacity=".9"/><stop offset=".6" stop-color="#ffb866" stop-opacity=".35"/><stop offset="1" stop-color="#ff9a45" stop-opacity="0"/></radialGradient>
+        <radialGradient id="ldPair" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd08a" stop-opacity=".5"/><stop offset=".6" stop-color="#ffb35f" stop-opacity=".16"/><stop offset="1" stop-color="#ff9a45" stop-opacity="0"/></radialGradient>
+        <mask id="ldCres"><rect width="200" height="150" fill="#fff"/><circle cx="158" cy="54" r="19" fill="#000"/></mask>
       </defs>
-      <circle class="ld-halo" cx="84" cy="62" r="58" fill="url(#ldGlow)"/>
+      <circle class="ld-halo" cx="88" cy="75" r="72" fill="url(#ldGlow)"/>
+      <ellipse cx="112" cy="72" rx="92" ry="64" fill="url(#ldPair)"/>
+      <g transform="rotate(-18 88 75)">
+        <path d="M33 75A55 16 0 0 1 143 75" fill="none" stroke="#c9924a" stroke-width="1.3" opacity=".7"/>
+        <path class="ld-lights" d="M33 75A55 16 0 0 1 143 75" fill="none" stroke="#fff4d6" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 7" opacity=".75"/>
+      </g>
       <g class="ld-sun">
-        <g class="ld-rays" fill="#f2b650">
-          <path d="M70 18l5 12h-10z"/><path d="M70 106l5-12h-10z"/><path d="M26 62l12-5v10z"/><path d="M114 62l-12-5v10z"/>
-          <path d="M39 31l12 5-7 7z"/><path d="M101 93l-12-5 7-7z"/><path d="M39 93l5-12 7 7z"/><path d="M101 31l-5 12-7-7z"/>
+        <path class="ld-rays" d="M84.5 48.2L88.0 28.0L91.5 48.2ZM97.0 49.5L104.9 39.9L102.3 52.1ZM106.7 55.6L124.7 45.7L111.1 61.0ZM113.5 66.1L126.0 66.3L114.8 71.9ZM114.9 77.5L133.8 85.5L113.3 84.4ZM110.8 89.4L118.5 99.3L107.1 94.0ZM102.8 97.6L108.4 117.3L96.5 100.6ZM91.0 101.8L88.0 114.0L85.0 101.8ZM79.5 100.6L67.6 117.3L73.2 97.6ZM68.9 94.0L57.5 99.3L65.2 89.4ZM62.7 84.4L42.2 85.5L61.1 77.5ZM61.2 71.9L50.0 66.3L62.5 66.1ZM64.9 61.0L51.3 45.7L69.3 55.6ZM73.7 52.1L71.1 39.9L79.0 49.5Z" fill="url(#ldRay)"/>
+        <circle cx="88" cy="75" r="28" fill="url(#ldSun)"/>
+        <circle cx="88" cy="75" r="28" fill="none" stroke="#fff3d0" stroke-opacity=".7" stroke-width="1.4"/>
+        <circle cx="88" cy="75" r="23" fill="none" stroke="#e9b060" stroke-opacity=".35" stroke-width="1"/>
+      </g>
+      <g transform="rotate(-18 88 75)">
+        <path d="M143 75A55 16 0 0 1 33 75" fill="none" stroke="#c9924a" stroke-width="1.5"/>
+        <path class="ld-lights" d="M143 75A55 16 0 0 1 33 75" fill="none" stroke="#fffaf0" stroke-width="3" stroke-linecap="round" stroke-dasharray="0 7"/>
+      </g>
+      <g class="ld-moon-in"><circle class="ld-moon-halo" cx="146" cy="66" r="36" fill="url(#ldMoonGlow)"/><g class="ld-moon">
+        <circle cx="146" cy="66" r="23" fill="url(#ldMoon)" mask="url(#ldCres)"/>
+        <circle cx="146" cy="66" r="22.4" fill="none" stroke="#fff3d0" stroke-opacity=".55" stroke-width="1.1" mask="url(#ldCres)"/>
+        <g mask="url(#ldCres)" fill="#cdb88f" opacity=".4">
+          <circle cx="136" cy="71" r="3"/><circle cx="142" cy="80" r="2"/><circle cx="133" cy="61" r="1.7"/><circle cx="148" cy="84" r="1.4"/>
         </g>
-        <circle cx="70" cy="62" r="25" fill="url(#ldSun)"/>
-        <circle cx="70" cy="62" r="25" fill="none" stroke="#fff3d0" stroke-opacity=".6" stroke-width="1.5"/>
+        <g class="ld-hang" stroke="#e8c68a" stroke-width=".8">
+          <path d="M141 86.5v10"/><path d="M141 94.4Q142.288 97.712 145.6 99Q142.288 100.288 141 103.6Q139.712 100.288 136.4 99Q139.712 97.712 141 94.4Z" fill="#ffe3a0" stroke="none"/>
+        </g>
+      </g></g>
+      <g class="ld-kiss">
+        <circle cx="121" cy="70" r="17" fill="url(#ldKiss)"/>
+        <path class="ld-flare" d="M121 58.5Q122.2 68.8 132.5 70Q122.2 71.2 121 81.5Q119.8 71.2 109.5 70Q119.8 68.8 121 58.5Z" fill="#fffaf0"/>
       </g>
-      <g class="ld-moon">
-        <circle cx="106" cy="60" r="22" fill="url(#ldMoon)" mask="url(#ldCres)"/>
-        <circle cx="96" cy="52" r="1.6" fill="#ffd27a"/><circle cx="92" cy="66" r="1.3" fill="#ffd27a"/><circle cx="99" cy="76" r="1.5" fill="#ffd27a"/>
-      </g>
+      <path class="ld-spark s1" d="M40 30Q41.12 32.88 44 34Q41.12 35.12 40 38Q38.88 35.12 36 34Q38.88 32.88 40 30Z" fill="#fff3d2"/>
+      <path class="ld-spark s2" d="M176 96.8Q176.896 99.104 179.2 100Q176.896 100.896 176 103.2Q175.104 100.896 172.8 100Q175.104 99.104 176 96.8Z" fill="#fff3d2"/>
+      <path class="ld-spark s3" d="M28 101.4Q28.728 103.272 30.6 104Q28.728 104.728 28 106.6Q27.272 104.728 25.4 104Q27.272 103.272 28 101.4Z" fill="#ffe0a0"/>
+      <path class="ld-spark s4" d="M124 17.6Q124.672 19.328 126.4 20Q124.672 20.672 124 22.4Q123.328 20.672 121.6 20Q123.328 19.328 124 17.6Z" fill="#fff3d2"/>
     </svg>
     <p class="ld-brand">Two The Top · Trung Thu 2026</p>
     <p class="ld-title" aria-label="Nhật Nguyệt Đồng Huy">
@@ -1724,11 +1766,27 @@ const SUN_R = 2.7;
   const lg = lc.getContext('2d');
   lg.scale(2, 2);
   lg.fillStyle = '#ffffff'; lg.fillRect(0, 0, 512, 300);
+  {
+    const star = (x, y, r, rot = 0) => {
+      lg.save(); lg.translate(x, y); lg.rotate(rot); lg.beginPath();
+      for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * 0.45 : r; lg.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+      lg.closePath(); lg.fill(); lg.restore();
+    };
+    const moon = (x, y, r, rot = 0) => {
+      lg.save(); lg.translate(x, y); lg.rotate(rot); lg.beginPath();
+      lg.arc(0, 0, r, 0.95, Math.PI * 2 - 0.95, false); lg.arc(r * 0.55, 0, r * 0.8, Math.PI * 2 - 1.35, 1.35, true);
+      lg.fill(); lg.restore();
+    };
+    lg.fillStyle = '#b07a3e';
+    star(34, 36, 24, 0.2); moon(478, 42, 22, 0.5); moon(36, 262, 20, -0.4); star(476, 262, 22, -0.25);
+    lg.fillStyle = '#d4a257';
+    star(76, 22, 9, 0.5); star(440, 280, 8); star(18, 150, 7); star(496, 150, 7, 0.4);
+  }
   const labelTex = canvasTexture(lc);
   const logoImg = new Image();
   logoImg.onload = () => {
     const nw = logoImg.naturalWidth || 451, nh = logoImg.naturalHeight || 330;
-    const k = Math.min(470 / nw, 272 / nh), w = nw * k, h = nh * k;
+    const k = Math.min(380 / nw, 220 / nh), w = nw * k, h = nh * k; // leave the corners for the stickers
     lg.drawImage(logoImg, (512 - w) / 2, (300 - h) / 2, w, h);
     labelTex.needsUpdate = true;
   };
