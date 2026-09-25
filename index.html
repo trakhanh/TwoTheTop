@@ -38,6 +38,7 @@
     --colw: clamp(330px, 31vw, 460px);
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; } /* classes like .team-peek set display and would otherwise override it */
   html, body { margin: 0; height: 100%; }
   body {
     background: var(--bg);
@@ -452,6 +453,66 @@
   .wall-more { display: block; margin: 12px auto 0; color: var(--text); background: rgba(255, 200, 120, .12); }
   .wall-more[hidden] { display: none; }
 
+  /* ---------- Hearts ---------- */
+  .heart-peek { padding-left: 7px; }
+  .heart-peek .hico { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 110, 130, .14); }
+  .heart-peek .hico svg { width: 18px; height: 18px; fill: none; stroke: #ff7d93; stroke-width: 2; stroke-linejoin: round; transition: fill .2s; }
+  .heart-peek[aria-pressed="true"] .hico svg { fill: #ff5d7a; stroke: #ff5d7a; }
+  .heart-peek.pop .hico svg { animation: heart-pop .5s cubic-bezier(.2, .9, .3, 1.6); }
+  @keyframes heart-pop { 40% { transform: scale(1.45); } }
+  .heart-fly {
+    position: fixed; z-index: 9; left: 0; top: 0; pointer-events: none; font-size: 22px; line-height: 1;
+    animation: heart-fly 1.9s ease-out forwards;
+  }
+  @keyframes heart-fly {
+    0% { opacity: 0; transform: translate(-50%, 0) scale(.5); }
+    15% { opacity: 1; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), var(--rise, -150px)) scale(1.25) rotate(var(--rot)); }
+  }
+
+  /* ---------- Photo ---------- */
+  .photo-frame { margin: 0 0 16px; border-radius: 14px; overflow: hidden; background: #05070f; box-shadow: 0 12px 40px rgba(0, 0, 0, .45); }
+  .photo-frame img { display: block; width: 100%; height: auto; max-height: 58svh; object-fit: contain; }
+  .photo-flash { position: fixed; inset: 0; z-index: 11; background: #fff; pointer-events: none; animation: photo-flash .5s ease-out forwards; }
+  @keyframes photo-flash { from { opacity: .8; } to { opacity: 0; } }
+
+  /* ---------- Big-screen mode ---------- */
+  .tv-promo { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 12px 12px 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255, 255, 255, .04); }
+  .tv-promo div { flex: 1; min-width: 0; }
+  .tv-promo b { display: block; font-size: 14px; margin-bottom: 2px; }
+  .tv-promo span { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+  .tv-promo .chip { flex: none; color: #2a1605; background: var(--gold); font-weight: 600; }
+  .tv-hud { display: none; }
+  body.tv .tv-hud { display: block; }
+  body.tv .intro, body.tv .controls, body.tv .hint, body.tv #hotspots, body.tv .org .tag, body.tv .org .divider { display: none; }
+  body.tv .stage::before { opacity: 0; }
+  body.tv { cursor: none; }
+  body.tv.pointer { cursor: auto; }
+  .tv-title { position: fixed; z-index: 4; left: 4vw; top: 13vh; width: 26vw; }
+  .tv-title .eyebrow { font-size: clamp(12px, 1vw, 18px); }
+  .tv-title h2 { margin: 0 0 22px; font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(34px, 3.4vw, 66px); line-height: 1.2; letter-spacing: .02em; }
+  .tv-title h2 em { display: block; color: var(--gold); }
+  .tv-stats { display: grid; gap: 8px; margin: 0; font-size: clamp(16px, 1.35vw, 26px); color: var(--muted); }
+  .tv-stats b { color: var(--text); font-weight: 600; }
+  .tv-qr {
+    position: fixed; z-index: 4; left: 4vw; bottom: 6vh; width: max-content;
+    display: flex; align-items: center; gap: 18px; padding: 14px 22px 14px 14px; border-radius: 20px;
+    background: rgba(12, 18, 36, .82); border: 1px solid rgba(255, 200, 120, .35);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .tv-qr img { width: clamp(110px, 9.5vw, 190px); height: auto; padding: 8px; border-radius: 12px; background: #fff; }
+  .tv-qr b { display: block; margin-bottom: 6px; font-size: clamp(17px, 1.4vw, 28px); line-height: 1.3; white-space: nowrap; }
+  .tv-qr span { font-size: clamp(13px, 1vw, 20px); color: var(--gold); }
+  .tv-exit { position: fixed; z-index: 5; top: 20px; right: 20px; opacity: 0; transition: opacity .3s; }
+  body.tv.pointer .tv-exit { opacity: 1; }
+  body.tv .wish-label { font-size: clamp(15px, 1.25vw, 24px); padding: 12px 18px 11px; }
+  body.tv .wish-label .from, body.tv .wish-label .tag { font-size: .78em; }
+  @media (max-width: 900px) {
+    .tv-title { width: auto; right: 4vw; top: 70px; }
+    .tv-title h2 { font-size: 26px; margin-bottom: 8px; }
+    .tv-qr { max-width: none; right: 4vw; }
+  }
+
   /* ---------- Share / QR ---------- */
   .qr-card { width: min(260px, 100%); margin: 0 auto 18px; padding: 14px; border-radius: 18px; background: #fff; box-shadow: 0 0 0 3px #f2b84f, 0 12px 40px rgba(0, 0, 0, .4); }
   .qr-card img { display: block; width: 100%; height: auto; }
@@ -700,6 +761,9 @@
       <svg class="ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
       <svg class="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
     </button>
+    <button class="chip icon-btn" id="btnPhoto" title="Chụp ảnh lồng đèn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+    </button>
   </div>
 
   <div class="hint">Kéo để xoay · Cuộn để phóng to</div>
@@ -736,6 +800,10 @@
     <button class="team-peek share-peek" id="btnShare" title="Chia sẻ link và mã QR">
       <span class="sico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 17v4h-1"/></svg></span>
       <b>Chia sẻ</b>
+    </button>
+    <button class="team-peek heart-peek" id="btnHeart" aria-pressed="false" title="Thả tim cho lồng đèn" hidden>
+      <span class="hico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.3s-7.4-4.5-9.2-9.1C1.6 7.9 3.7 4.8 7 4.8c2 0 3.6 1.1 5 2.9 1.4-1.8 3-2.9 5-2.9 3.3 0 5.4 3.1 4.2 6.4-1.8 4.6-9.2 9.1-9.2 9.1z"/></svg></span>
+      <b id="heartText">Thả tim</b>
     </button>
   </div>
 
@@ -810,6 +878,28 @@
       </a>
       <button class="team-peek" id="btnNativeShare" hidden><b>Gửi qua ứng dụng…</b></button>
     </div>
+    <div class="tv-promo">
+      <div><b>Chiếu lên màn hình lớn</b><span>Lồng đèn xoay chậm kèm mã QR to, lời chúc của khán giả bay lên trực tiếp.</span></div>
+      <button class="chip" id="btnTv">Mở</button>
+    </div>
+  </div>
+</div>
+
+<div class="team-modal" id="photoModal" role="dialog" aria-modal="true" aria-labelledby="photoTitle" inert>
+  <div class="team-sheet sheet-sm">
+    <button class="round team-close" id="photoClose" aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="eyebrow">Ảnh lồng đèn</p>
+    <h2 class="team-title" id="photoTitle">Lưu khoảnh khắc</h2>
+    <div class="photo-frame"><img id="photoImg" alt="Ảnh chụp lồng đèn Mặt Trời &amp; Vầng Trăng"></div>
+    <div class="share-actions">
+      <a class="cta" id="photoSave" href="#" download="Long-den-Two-The-Top.jpg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+        Tải ảnh
+      </a>
+      <button class="team-peek" id="photoShare" hidden><b>Chia sẻ ảnh…</b></button>
+    </div>
   </div>
 </div>
 
@@ -841,6 +931,21 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
   </button>
   <div class="lb-cap"><span id="lbCount"></span><b id="lbText"></b><a class="lb-original" id="lbOriginal" href="#" download>Tải bản gốc ↓</a></div>
+</div>
+
+<div class="tv-hud" id="tvHud" aria-hidden="true">
+  <div class="tv-title" id="tvTitle">
+    <p class="eyebrow">Two The Top · Trung Thu 2026</p>
+    <h2>Khi Mặt Trời <em>gặp Vầng Trăng</em></h2>
+    <p class="tv-stats"><span id="tvWishes"></span><span id="tvHearts"></span></p>
+  </div>
+  <div class="tv-qr">
+    <img src="assets/qr.svg" alt="Mã QR mở trang lồng đèn">
+    <div><b>Quét mã để thả đèn ước 🏮</b><span>trakhanh.github.io/TwoTheTop</span></div>
+  </div>
+  <button class="round tv-exit" id="tvExit" aria-label="Thoát màn hình lớn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
 </div>
 
 <div class="caption" id="caption" aria-live="polite" inert>
@@ -2307,7 +2412,8 @@ function viewRooms() {
     if (x < minX) minX = x;
     if (x > maxX) maxX = x;
   }
-  const leftEdge = !isCompact() && !document.body.classList.contains('presenting') ? intro.offsetLeft + intro.offsetWidth + 16 : 10;
+  const leftEdge = isTv() ? (w >= 900 ? tvTitle.getBoundingClientRect().right + 16 : 10)
+    : !isCompact() && !document.body.classList.contains('presenting') ? intro.offsetLeft + intro.offsetWidth + 16 : 10;
   return { w, h, cx, pxPerUnit, leftEdge, minX, maxX, room: { [-1]: [leftEdge, minX - 12], [1]: [maxX + 12, w - 10] } };
 }
 const roomWidth = (r) => r[1] - r[0];
@@ -2378,7 +2484,7 @@ function updateWishes(dt) {
     if (!inView || fade === 0) continue;
     // Keep the bubble inside the free space (or the stage, for the behind-the-lantern case).
     const [lo, hi] = wi.beside ? room : [v.leftEdge, v.w - 10];
-    wi.el.style.maxWidth = Math.max(120, Math.min(230, hi - lo)) + 'px';
+    wi.el.style.maxWidth = Math.max(120, Math.min(isTv() ? 440 : 230, hi - lo)) + 'px';
     const x = ((_wv.x + 1) / 2) * v.w, lw = wi.el.offsetWidth;
     const left = Math.min(Math.max(x - lw / 2, lo), hi - lw);
     wi.el.style.left = left + 'px';
@@ -2443,6 +2549,7 @@ function updateWishFine() {
     ? `Lời chúc sẽ bay lên trên màn hình của mọi người đang xem trang${wishTotal ? ` · đã có ${wishTotal} chiếc đèn được thả` : ''}.`
     : 'Chưa kết nối được kho lời chúc chung, đèn của bạn chỉ bay trên máy này.';
   wallCount.textContent = wishTotal ? `(${wishTotal})` : '';
+  updateTvStats();
 }
 
 /* ---- Wall: everyone's wishes, newest first ---- */
@@ -2546,6 +2653,7 @@ async function connectWishes() {
         if (!sceneBusy()) launchWish(w.text, w.name);
       })
       .subscribe();
+    connectHearts(client);
   } catch (err) {
     console.warn('Không kết nối được kho lời chúc chung:', err);
   }
@@ -2607,7 +2715,7 @@ wishModal.addEventListener('click', (e) => { if (e.target === wishModal) closeWi
 // Now and then a lantern floats up on its own: other people's wishes first, the team's otherwise.
 let poolIdx = 0, presetIdx = 0;
 function ambientWish() {
-  if (sceneBusy() || wishes.length >= 3) return;
+  if (sceneBusy() || wishes.length >= (isTv() ? 4 : 3)) return;
   if (sharedPool.length) {
     const w = sharedPool[poolIdx++ % sharedPool.length];
     launchWish(w.text, w.name);
@@ -2615,7 +2723,11 @@ function ambientWish() {
     launchWish(PRESET_WISHES[presetIdx++ % PRESET_WISHES.length], 'Two The Top');
   }
 }
-setTimeout(() => { ambientWish(); setInterval(ambientWish, 15000); }, 6000);
+let ambientBeat = 0;
+setTimeout(() => {
+  ambientWish();
+  setInterval(() => { if (isTv() || ++ambientBeat % 2 === 0) ambientWish(); }, 7500); // every 7.5 s on the big screen, 15 s otherwise
+}, 6000);
 
 /* =========================================================
    Share / QR
@@ -2647,6 +2759,247 @@ document.addEventListener('keydown', (e) => {
   if (wishModal.classList.contains('open')) closeWish();
   if (shareModal.classList.contains('open')) closeShare();
 });
+
+/* =========================================================
+   Hearts: one per device, counted for everyone
+   ========================================================= */
+const btnHeart = document.getElementById('btnHeart'), heartText = document.getElementById('heartText');
+const heartSeen = new Set();
+let heartTotal = 0, heartsReady = false;
+let hearted = false;
+try { hearted = localStorage.getItem('ttt-hearted') === '1'; } catch {}
+const myDevice = (() => {
+  try {
+    let id = localStorage.getItem('ttt-device');
+    if (!id) { id = crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now(); localStorage.setItem('ttt-device', id); }
+    return id;
+  } catch { return null; }
+})();
+const fmtNum = (n) => n.toLocaleString('vi-VN');
+function renderHeart() {
+  heartText.textContent = heartTotal ? `${fmtNum(heartTotal)} lượt thả tim` : 'Thả tim';
+  btnHeart.setAttribute('aria-pressed', hearted);
+  btnHeart.title = hearted ? 'Bạn đã thả tim cho lồng đèn 💛' : 'Thả tim cho lồng đèn';
+  updateTvStats();
+}
+// Little hearts floating up from an element (or from random spots along the bottom on the big screen).
+function floatHearts(n, fromEl) {
+  for (let i = 0; i < n; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart-fly';
+    h.textContent = ['❤️', '💛', '🧡', '💖'][i % 4];
+    let x, y;
+    if (fromEl && fromEl.offsetParent !== null) {
+      const r = fromEl.getBoundingClientRect();
+      x = r.left + 22; y = r.top;
+    } else {
+      x = innerWidth * (0.35 + Math.random() * 0.6); y = innerHeight - 40;
+    }
+    h.style.left = x + 'px'; h.style.top = y + 'px';
+    h.style.setProperty('--dx', `${(Math.random() - 0.5) * 90}px`);
+    h.style.setProperty('--rot', `${(Math.random() - 0.5) * 40}deg`);
+    h.style.setProperty('--rise', `${-(120 + Math.random() * 120) * (isTv() ? 2.2 : 1)}px`);
+    h.style.animationDelay = `${i * 110}ms`;
+    if (isTv()) h.style.fontSize = '38px';
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 2400 + i * 110);
+  }
+}
+async function connectHearts(client) {
+  const { count, error, status } = await client.from('hearts').select('id', { count: 'exact', head: true });
+  // Table not created yet (a HEAD request comes back as a bare 404): keep the button hidden.
+  if (error || status >= 400 || count === null) { console.warn('Chưa có bảng thả tim trên Supabase'); return; }
+  heartTotal = count || 0;
+  heartsReady = true;
+  btnHeart.hidden = false;
+  renderHeart();
+  client.channel('hearts')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'hearts' }, ({ new: h }) => {
+      if (heartSeen.has(h.id)) return;
+      heartSeen.add(h.id);
+      heartTotal++;
+      renderHeart();
+      if (h.device !== myDevice) floatHearts(isTv() ? 5 : 3, btnHeart);
+    })
+    .subscribe();
+}
+btnHeart.addEventListener('click', async () => {
+  btnHeart.classList.remove('pop'); void btnHeart.offsetWidth; btnHeart.classList.add('pop');
+  floatHearts(hearted ? 2 : 5, btnHeart);
+  if (hearted || !db) return;
+  hearted = true;
+  renderHeart();
+  sound.lift();
+  const { data, error } = await db.from('hearts').insert({ device: myDevice }).select('id').single();
+  if (error && error.code !== '23505') { hearted = false; renderHeart(); return; } // 23505: this device already counted
+  try { localStorage.setItem('ttt-hearted', '1'); } catch {}
+  if (data && !heartSeen.has(data.id)) { heartSeen.add(data.id); heartTotal++; renderHeart(); }
+});
+
+/* =========================================================
+   Photo: render a sharp still of the current view with a small frame
+   ========================================================= */
+const photoModal = document.getElementById('photoModal'), photoImg = document.getElementById('photoImg');
+const photoSave = document.getElementById('photoSave'), photoShare = document.getElementById('photoShare');
+let photoFile = null, photoUrl = null;
+const logoLight = new Image();
+logoLight.src = 'assets/sunmedia-logo-light.svg';
+
+function snapshotScene(OW, OH) {
+  // Render the current view straight at the photo size (lantern centred, a little higher to leave
+  // room for the title), copy the pixels, then put everything back.
+  const pr = renderer.getPixelRatio(), saved = camera.position.clone();
+  const wide = OW > OH;
+  camera.position.copy(controls.target).addScaledVector(saved.clone().sub(controls.target), wide ? 1.2 : 1.1);
+  renderer.setPixelRatio(1); renderer.setSize(OW, OH, false);
+  composer.setPixelRatio(1); composer.setSize(OW, OH);
+  bloom.resolution.set(OW, OH);
+  camera.aspect = OW / OH;
+  camera.setViewOffset(OW, OH, 0, OH * (wide ? 0.15 : 0.1), OW, OH);
+  camera.updateProjectionMatrix();
+  composer.render();
+  const shot = document.createElement('canvas');
+  shot.width = OW; shot.height = OH;
+  shot.getContext('2d').drawImage(canvas, 0, 0, OW, OH);
+  camera.position.copy(saved);
+  renderer.setPixelRatio(pr); composer.setPixelRatio(pr); resize();
+  composer.render(); // no blank frame after the resize
+  return shot;
+}
+async function takePhoto() {
+  await Promise.all(['600 60px "Playfair Display"', 'italic 600 60px "Playfair Display"', '600 24px "Be Vietnam Pro"']
+    .map(f => document.fonts.load(f).catch(() => {})));
+  const portrait = canvas.clientWidth < canvas.clientHeight;
+  const OW = portrait ? 1080 : 1600, OH = portrait ? 1350 : 1000;
+  const out = snapshotScene(OW, OH);
+  const g = out.getContext('2d');
+  // Bottom fade + text
+  const fade = g.createLinearGradient(0, OH * 0.6, 0, OH);
+  fade.addColorStop(0, 'rgba(7,11,24,0)'); fade.addColorStop(1, 'rgba(7,11,24,0.92)');
+  g.fillStyle = fade; g.fillRect(0, OH * 0.6, OW, OH * 0.4);
+  const pad = OW * 0.06, u = OW / 1080;
+  g.textBaseline = 'alphabetic';
+  if ('letterSpacing' in g) g.letterSpacing = `${4 * u}px`;
+  g.font = `600 ${22 * u}px "Be Vietnam Pro", sans-serif`;
+  g.fillStyle = '#ffc56e';
+  g.fillText('TWO THE TOP · TRUNG THU 2026', pad, OH - pad - 92 * u);
+  if ('letterSpacing' in g) g.letterSpacing = '0px';
+  g.font = `600 ${56 * u}px "Playfair Display", serif`;
+  g.fillStyle = '#f6ecd9';
+  const first = 'Khi Mặt Trời ';
+  g.fillText(first, pad, OH - pad - 22 * u);
+  const fw = g.measureText(first).width;
+  g.font = `italic 600 ${56 * u}px "Playfair Display", serif`;
+  g.fillStyle = '#ffc56e';
+  g.fillText('gặp Vầng Trăng', pad + fw, OH - pad - 22 * u);
+  g.font = `500 ${20 * u}px "Be Vietnam Pro", sans-serif`;
+  g.fillStyle = 'rgba(246,236,217,0.7)';
+  g.fillText('trakhanh.github.io/TwoTheTop', pad, OH - pad + 16 * u);
+  if (logoLight.complete && logoLight.naturalWidth) {
+    const lh = 70 * u, lw = lh * logoLight.naturalWidth / logoLight.naturalHeight;
+    g.drawImage(logoLight, OW - pad - lw, pad * 0.7, lw, lh);
+  }
+  const blob = await new Promise(r => out.toBlob(r, 'image/jpeg', 0.92));
+  if (!blob) return;
+  if (photoUrl) URL.revokeObjectURL(photoUrl);
+  photoUrl = URL.createObjectURL(blob);
+  photoFile = new File([blob], 'Long-den-Two-The-Top.jpg', { type: 'image/jpeg' });
+  photoImg.src = photoUrl;
+  photoSave.href = photoUrl;
+  photoShare.hidden = !(navigator.canShare && navigator.canShare({ files: [photoFile] }));
+  setOverlay(photoModal, true, '#photoSave');
+}
+document.getElementById('btnPhoto').addEventListener('click', () => {
+  const flash = document.createElement('div');
+  flash.className = 'photo-flash';
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 600);
+  sound.click();
+  takePhoto();
+});
+photoShare.addEventListener('click', () => {
+  navigator.share({ files: [photoFile], title: 'Khi Mặt Trời gặp Vầng Trăng', text: 'Lồng đèn Trung Thu của Two The Top 🏮 ' + SITE_URL }).catch(() => {});
+});
+function closePhoto() { setOverlay(photoModal, false); }
+document.getElementById('photoClose').addEventListener('click', closePhoto);
+photoModal.addEventListener('click', (e) => { if (e.target === photoModal) closePhoto(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && photoModal.classList.contains('open')) closePhoto(); });
+
+/* =========================================================
+   Big-screen mode (TV / projector at the exhibition)
+   ========================================================= */
+const tvTitle = document.getElementById('tvTitle'), tvHud = document.getElementById('tvHud');
+function isTv() { return document.body.classList.contains('tv'); }
+function updateTvStats() {
+  document.getElementById('tvWishes').innerHTML = db ? `🏮 <b>${fmtNum(wishTotal)}</b> chiếc đèn ước đã bay lên` : '';
+  document.getElementById('tvHearts').innerHTML = heartsReady ? `❤️ <b>${fmtNum(heartTotal)}</b> lượt thả tim` : '';
+}
+function enterTv() {
+  if (document.body.classList.contains('presenting')) stopPresenting();
+  closeShare(); closeWish(); closeTeam(); closeMemories(); closePhoto();
+  document.body.classList.add('tv');
+  tvHud.setAttribute('aria-hidden', 'false');
+  document.documentElement.requestFullscreen?.().catch(() => {});
+  controls.autoRotateSpeed = 0.35;
+  setAutoRotate(true);
+  setActiveView('overview');
+  resize();
+  flyTo(pose(VIEWS.overview), 1.6);
+  updateTvStats();
+  showPointer();
+}
+function exitTv() {
+  document.body.classList.remove('tv', 'pointer');
+  tvHud.setAttribute('aria-hidden', 'true');
+  controls.autoRotateSpeed = 0.55;
+  if (document.fullscreenElement) document.exitFullscreen?.();
+  resize();
+  flyTo(pose(VIEWS.overview), 1.2);
+}
+let pointerTimer;
+function showPointer() {
+  document.body.classList.add('pointer');
+  clearTimeout(pointerTimer);
+  pointerTimer = setTimeout(() => document.body.classList.remove('pointer'), 2500);
+}
+document.getElementById('btnTv').addEventListener('click', enterTv);
+document.getElementById('tvExit').addEventListener('click', exitTv);
+document.addEventListener('pointermove', () => { if (isTv()) showPointer(); });
+document.addEventListener('keydown', (e) => {
+  if (!isTv()) return;
+  if (e.key === 'Escape') exitTv();
+  else if (e.key === 'f' || e.key === 'F') {
+    document.fullscreenElement ? document.exitFullscreen?.() : document.documentElement.requestFullscreen?.().catch(() => {});
+  }
+});
+// Opened as …/?tv (e.g. on the exhibition PC): start in big-screen mode; the first click goes fullscreen.
+if (new URLSearchParams(location.search).has('tv')) {
+  setTimeout(enterTv); // after the rest of the page script has run
+  stage.addEventListener('click', () => { if (isTv() && !document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(() => {}); }, { once: true });
+}
+
+/* =========================================================
+   Adaptive quality: slower devices render at a lower resolution
+   ========================================================= */
+const QUALITY = [2, 1.5, 1.2, 1]; // pixel-ratio caps, best first
+let qLevel = 0, qFrames = 0, qTime = 0, qWarmup = 3;
+const qRatio = (lvl) => Math.min(window.devicePixelRatio || 1, QUALITY[lvl]);
+function watchQuality(raw) {
+  if (document.hidden || raw > 0.5 || qLevel >= QUALITY.length - 1) return; // ignore pauses (tab switch, alerts)
+  if (qWarmup > 0) { qWarmup -= raw; return; }                              // let shaders compile first
+  qFrames++; qTime += raw;
+  if (qTime < 3) return;
+  const fps = qFrames / qTime;
+  qFrames = qTime = 0;
+  if (fps >= 40) return;
+  const now = renderer.getPixelRatio();
+  while (qLevel < QUALITY.length - 1 && qRatio(qLevel) >= now - 0.01) qLevel++;
+  if (qRatio(qLevel) >= now - 0.01) return;
+  renderer.setPixelRatio(qRatio(qLevel));
+  composer.setPixelRatio(qRatio(qLevel));
+  resize();
+  qWarmup = 1.5;
+}
 
 /* =========================================================
    Controls UI
@@ -2716,8 +3069,10 @@ function resize() {
   composer.setSize(w, h);
   bloom.resolution.set(w, h);
   camera.aspect = w / h;
-  // On wide layouts, centre the lantern in the space right of the intro column.
-  if (!isCompact() && !document.body.classList.contains('presenting')) {
+  // On wide layouts, centre the lantern in the space right of the intro column (or of the big-screen column).
+  if (isTv() && w >= 900) {
+    camera.setViewOffset(w, h, -w * 0.15, 0, w, h);
+  } else if (!isCompact() && !document.body.classList.contains('presenting') && !isTv()) {
     const colRight = intro.offsetLeft + intro.offsetWidth;
     camera.setViewOffset(w, h, -colRight / 2, 0, w, h);
   } else if (document.body.classList.contains('presenting') && h < 560 && w > h) {
@@ -2738,7 +3093,8 @@ resize();
 const clock = new THREE.Clock();
 let shown = 1;
 function tick() {
-  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  const raw = clock.getDelta(), dt = Math.min(raw, 0.05), t = clock.elapsedTime;
+  watchQuality(raw);
 
   if (zoomGoal !== null) {
     const offset = camera.position.clone().sub(controls.target);
