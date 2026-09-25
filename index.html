@@ -395,6 +395,8 @@
     background: inherit; border: inherit; border-width: 0 1px 1px 0;
   }
   .wish-label .from { display: block; margin-top: 3px; font-size: 11.5px; color: var(--gold); }
+  .wish-label.mine { border-color: rgba(255, 197, 110, .85); box-shadow: 0 6px 24px rgba(0, 0, 0, .35), 0 0 34px rgba(255, 180, 90, .45); }
+  .wish-label .tag { display: block; margin-bottom: 3px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
 
   .sheet-sm { width: min(500px, 100%); }
   .wish-form { display: grid; gap: 10px; }
@@ -423,6 +425,32 @@
   .mine li span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
   .mine li button { flex: none; border: 0; background: none; color: var(--gold); cursor: pointer; font-size: 12.5px; padding: 4px 6px; border-radius: 8px; }
   .mine li button:hover { background: rgba(255, 200, 120, .12); }
+
+  /* wall of everyone's wishes */
+  .wish-tabs { display: flex; gap: 4px; padding: 4px; margin: 0 0 18px; border-radius: 999px; background: rgba(255, 255, 255, .05); border: 1px solid var(--line); }
+  .wish-tabs button {
+    flex: 1; border: 0; background: none; cursor: pointer; padding: 9px 12px; border-radius: 999px;
+    font-size: 13.5px; color: var(--muted); white-space: nowrap; transition: background .2s, color .2s;
+  }
+  .wish-tabs button[aria-selected="true"] { background: var(--gold); color: #2a1605; font-weight: 600; }
+  .wish-tabs .count { opacity: .75; font-weight: 500; }
+  .wall { list-style: none; margin: 0; padding: 0 4px 0 0; display: grid; gap: 8px; max-height: min(56svh, 460px); overflow-y: auto; scrollbar-width: thin; overscroll-behavior: contain; }
+  .wall li {
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 10px;
+    padding: 11px 12px 10px 14px; border-radius: 14px; background: rgba(255, 255, 255, .045); border: 1px solid transparent;
+  }
+  .wall li.fresh { animation: wall-in .6s cubic-bezier(.2, .9, .3, 1.2); }
+  @keyframes wall-in { from { opacity: 0; transform: translateY(-8px); background: rgba(255, 200, 120, .2); } }
+  .wall li.mine { border-color: rgba(255, 197, 110, .35); background: rgba(255, 200, 120, .08); }
+  .wall .txt { font-size: 14.5px; line-height: 1.45; overflow-wrap: anywhere; }
+  .wall .meta { grid-column: 1; font-size: 12px; color: var(--muted); }
+  .wall .meta b { font-weight: 600; color: var(--gold); }
+  .wall .you { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; background: var(--gold); color: #2a1605; }
+  .wall button { grid-column: 2; grid-row: 1 / span 2; border: 0; background: none; color: var(--gold); cursor: pointer; font-size: 12.5px; padding: 6px 8px; border-radius: 8px; white-space: nowrap; }
+  .wall button:hover { background: rgba(255, 200, 120, .12); }
+  .wall-empty { margin: 8px 0; color: var(--muted); font-size: 14px; text-align: center; }
+  .wall-more { display: block; margin: 12px auto 0; color: var(--text); background: rgba(255, 200, 120, .12); }
+  .wall-more[hidden] { display: none; }
 
   /* ---------- Share / QR ---------- */
   .qr-card { width: min(260px, 100%); margin: 0 auto 18px; padding: 14px; border-radius: 18px; background: #fff; box-shadow: 0 0 0 3px #f2b84f, 0 12px 40px rgba(0, 0, 0, .4); }
@@ -734,23 +762,34 @@
     </button>
     <p class="eyebrow">Đèn trời</p>
     <h2 class="team-title" id="wishTitle">Thả đèn ước <span class="bob">🏮</span></h2>
-    <p class="team-sub">Viết một lời chúc Trung Thu, chiếc đèn trời sẽ mang nó bay lên cao.</p>
-    <form class="wish-form" id="wishForm">
-      <textarea class="field" id="wishText" rows="3" maxlength="90" placeholder="Lời chúc của bạn…" required></textarea>
-      <span class="wish-count" id="wishCount">0 / 90</span>
-      <input class="field" id="wishName" maxlength="24" placeholder="Tên của bạn (không bắt buộc)" autocomplete="nickname">
-      <div class="suggest" id="wishSuggest"></div>
-      <p class="wish-error" id="wishError" role="alert" hidden></p>
-      <button class="cta" type="submit">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-        Thả đèn lên trời
-      </button>
-    </form>
-    <div class="mine" id="wishMine" hidden>
-      <h3>Đèn bạn đã thả</h3>
-      <ul id="wishList"></ul>
+    <div class="wish-tabs" id="wishTabs" role="tablist" aria-label="Thả đèn ước" hidden>
+      <button role="tab" id="tabWrite" aria-selected="true" aria-controls="panelWrite">Thả đèn</button>
+      <button role="tab" id="tabWall" aria-selected="false" aria-controls="panelWall" tabindex="-1">Lời chúc của mọi người <span class="count" id="wallCount"></span></button>
     </div>
-    <p class="fine" id="wishFine"></p>
+    <div id="panelWrite" role="tabpanel" aria-labelledby="tabWrite">
+      <p class="team-sub">Viết một lời chúc Trung Thu, chiếc đèn trời sẽ mang nó bay lên cao.</p>
+      <form class="wish-form" id="wishForm">
+        <textarea class="field" id="wishText" rows="3" maxlength="90" placeholder="Lời chúc của bạn…" required></textarea>
+        <span class="wish-count" id="wishCount">0 / 90</span>
+        <input class="field" id="wishName" maxlength="24" placeholder="Tên của bạn (không bắt buộc)" autocomplete="nickname">
+        <div class="suggest" id="wishSuggest"></div>
+        <p class="wish-error" id="wishError" role="alert" hidden></p>
+        <button class="cta" type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          Thả đèn lên trời
+        </button>
+      </form>
+      <div class="mine" id="wishMine" hidden>
+        <h3>Đèn bạn đã thả</h3>
+        <ul id="wishList"></ul>
+      </div>
+      <p class="fine" id="wishFine"></p>
+    </div>
+    <div id="panelWall" role="tabpanel" aria-labelledby="tabWall" hidden>
+      <ul class="wall" id="wallList" aria-live="polite"></ul>
+      <p class="wall-empty" id="wallEmpty" hidden>Chưa có ai thả đèn, bạn là người đầu tiên nhé!</p>
+      <button class="chip wall-more" id="wallMore" hidden>Xem thêm lời chúc cũ hơn</button>
+    </div>
   </div>
 </div>
 
@@ -2265,22 +2304,33 @@ function viewRooms() {
 }
 const roomWidth = (r) => r[1] - r[0];
 
-function launchWish(text, from) {
-  if (wishes.length >= 6) retireWish(wishes[0]);
+// On narrow screens there is no room beside the lantern: raise the view a little so the
+// sky above it is free for the wish you just sent.
+function makeRoomAbove() {
+  const d = camera.position.clone().sub(controls.target).normalize();
+  flyTo(pose({ dir: [d.x, Math.max(d.y, 0.05), d.z], dist: VIEWS.overview.dist * 1.08, target: [0, 9.6, 0] }), 1.4);
+  setActiveView(null);
+}
+function launchWish(text, from, mine = false) {
+  if (wishes.length >= 6) retireWish(wishes.find(w => !w.mine) || wishes[0]);
   const obj = skyLanternKit.make();
-  obj.scale.setScalar(0.85);
+  obj.scale.setScalar(mine ? 1 : 0.85);
   scene.add(obj);
   const v = viewRooms();
   let sign = wishSide = -wishSide;
   if (roomWidth(v.room[sign]) < MIN_ROOM) sign = -sign;
   const beside = roomWidth(v.room[sign]) >= MIN_ROOM;
+  if (mine && !beside) makeRoomAbove();
   const el = document.createElement('div');
-  el.className = 'wish-label';
+  el.className = mine ? 'wish-label mine' : 'wish-label';
+  if (mine) { const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = 'Đèn của bạn ✨'; el.append(tag); }
   const txt = document.createElement('span'); txt.textContent = text; el.append(txt);
   if (from) { const f = document.createElement('span'); f.className = 'from'; f.textContent = `— ${from}`; el.append(f); }
   wishLayer.appendChild(el);
-  wishes.push({ obj, el, sign, beside, labelAt: beside ? 0 : null, speed: beside ? 0.85 : 1.5,
-    offset: beside ? 0 : (Math.random() - 0.5) * 3, age: 0, ph: Math.random() * 6.28 });
+  // Behind the lantern, your own wish starts just behind the sun so it peeks out within a second.
+  wishes.push({ obj, el, sign, beside, mine, labelAt: beside ? 0 : null,
+    startY: beside ? 0.6 : mine ? 10.5 : 2, speed: beside ? 0.85 : mine ? 1.6 : 1.5,
+    offset: beside ? 0 : (Math.random() - 0.5) * (mine ? 2 : 3), age: 0, ph: Math.random() * 6.28 });
 }
 function retireWish(w) {
   scene.remove(w.obj);
@@ -2302,11 +2352,13 @@ function updateWishes(dt) {
       ? wi.sign * (edge => Math.max(edge + 1.1, Math.min(edge + 5, Math.abs((room[0] + room[1]) / 2 - v.cx) / v.pxPerUnit)))(
           (wi.sign < 0 ? v.cx - v.minX : v.maxX - v.cx) / v.pxPerUnit)
       : wi.offset;
-    const rise = a * wi.speed + Math.max(0, a - 10) * a * 0.03;
+    // Your own wish behind the lantern pops up quickly, then drifts slowly so it can be read.
+    const climb = wi.mine && !wi.beside ? Math.min(a, 2) * wi.speed + Math.max(0, a - 2) * 0.5 : a * wi.speed;
+    const rise = climb + Math.max(0, a - 10) * a * 0.03;
     wi.obj.position.copy(controls.target).setY(0)
       .addScaledVector(_right, lateral + Math.sin(a * 0.7 + wi.ph) * 0.3)
       .addScaledVector(_back, wi.beside ? 0 : 3.5);
-    wi.obj.position.y = (wi.beside ? 0.6 : 2) + rise;
+    wi.obj.position.y = wi.startY + rise;
     wi.obj.rotation.set(Math.sin(a * 0.9 + wi.ph) * 0.08, a * 0.25, Math.cos(a * 0.8 + wi.ph) * 0.06);
 
     if (wi.labelAt === null && wi.obj.position.y > LANTERN_TOP) wi.labelAt = a;
@@ -2323,7 +2375,7 @@ function updateWishes(dt) {
     const left = Math.min(Math.max(x - lw / 2, lo), hi - lw);
     wi.el.style.left = left + 'px';
     wi.el.style.setProperty('--tail', Math.min(Math.max(x - left, 14), lw - 14) + 'px');
-    wi.el.style.top = Math.max(70, ((1 - _wv.y) / 2) * v.h) + 'px';
+    wi.el.style.top = Math.max(76 + wi.el.offsetHeight, ((1 - _wv.y) / 2) * v.h) + 'px'; // stay below the header
   }
 }
 
@@ -2332,7 +2384,7 @@ const wishForm = document.getElementById('wishForm'), wishText = document.getEle
 const wishName = document.getElementById('wishName'), wishCount = document.getElementById('wishCount');
 function renderMine() {
   const list = loadWishes();
-  document.getElementById('wishMine').hidden = !list.length;
+  document.getElementById('wishMine').hidden = !list.length || !!db; // the shared wall replaces it when online
   const ul = document.getElementById('wishList');
   ul.replaceChildren(...list.map(wi => {
     const li = document.createElement('li'), span = document.createElement('span'), b = document.createElement('button');
@@ -2359,7 +2411,7 @@ function release(text, name, save = true) {
   }
   closeWish();
   if (isCompact()) stage.scrollIntoView({ behavior: 'smooth' });
-  setTimeout(() => { launchWish(text, name); sound.lift(); }, isCompact() ? 450 : 250);
+  setTimeout(() => { launchWish(text, name, true); sound.lift(); }, isCompact() ? 450 : 250);
 }
 
 /* ---- Shared wishes (Supabase): everyone watching sees everyone's lanterns ---- */
@@ -2382,17 +2434,97 @@ function updateWishFine() {
   wishFine.textContent = db
     ? `Lời chúc sẽ bay lên trên màn hình của mọi người đang xem trang${wishTotal ? ` · đã có ${wishTotal} chiếc đèn được thả` : ''}.`
     : 'Chưa kết nối được kho lời chúc chung, đèn của bạn chỉ bay trên máy này.';
+  wallCount.textContent = wishTotal ? `(${wishTotal})` : '';
 }
+
+/* ---- Wall: everyone's wishes, newest first ---- */
+const WALL_PAGE = 30;
+const wall = [];
+let wallHasMore = false, wallLoading = false;
+const wishTabs = document.getElementById('wishTabs'), wallCount = document.getElementById('wallCount');
+const tabWrite = document.getElementById('tabWrite'), tabWall = document.getElementById('tabWall');
+const panelWrite = document.getElementById('panelWrite'), panelWall = document.getElementById('panelWall');
+const wallList = document.getElementById('wallList'), wallMore = document.getElementById('wallMore');
+function loadMineIds() { try { return new Set(JSON.parse(localStorage.getItem('ttt-mine-ids')) || []); } catch { return new Set(); } }
+function addMineId(id) {
+  const ids = [id, ...loadMineIds()].slice(0, 100);
+  try { localStorage.setItem('ttt-mine-ids', JSON.stringify(ids)); } catch {}
+}
+function timeAgo(iso) {
+  const t = new Date(iso), s = (Date.now() - t) / 1000;
+  if (!(s >= 0) || s < 60) return 'vừa xong';
+  if (s < 3600) return `${Math.floor(s / 60)} phút trước`;
+  if (s < 86400) return `${Math.floor(s / 3600)} giờ trước`;
+  const p = (n) => String(n).padStart(2, '0');
+  return `${p(t.getDate())}/${p(t.getMonth() + 1)} lúc ${p(t.getHours())}:${p(t.getMinutes())}`;
+}
+function renderWall(freshId) {
+  const mineIds = loadMineIds();
+  const mineKeys = new Set(loadWishes().map(w => wishKey(w.text, w.name))); // wishes sent before ids were kept
+  wallList.replaceChildren(...wall.map(w => {
+    const li = document.createElement('li');
+    const mine = mineIds.has(w.id) || mineKeys.has(wishKey(w.text, w.name));
+    li.className = (mine ? 'mine' : '') + (w.id === freshId ? ' fresh' : '');
+    const txt = document.createElement('span'); txt.className = 'txt'; txt.textContent = w.text;
+    const meta = document.createElement('span'); meta.className = 'meta';
+    if (w.name) { const b = document.createElement('b'); b.textContent = w.name; meta.append(b, ' · '); }
+    meta.append(timeAgo(w.created_at));
+    if (mine) { const you = document.createElement('span'); you.className = 'you'; you.textContent = 'của bạn'; meta.append(you); }
+    const again = document.createElement('button');
+    again.type = 'button'; again.textContent = 'Thả lại';
+    again.setAttribute('aria-label', `Thả lại đèn: ${w.text}`);
+    again.addEventListener('click', () => release(w.text, w.name, false));
+    li.append(txt, again, meta);
+    return li;
+  }));
+  document.getElementById('wallEmpty').hidden = wall.length > 0;
+  wallMore.hidden = !wallHasMore;
+}
+function addToWall(w) {
+  wall.unshift(w);
+  if (!panelWall.hidden) renderWall(w.id);
+}
+wallMore.addEventListener('click', async () => {
+  if (wallLoading || !db || !wall.length) return;
+  wallLoading = true; wallMore.textContent = 'Đang tải…';
+  const { data, error } = await db.from('wishes').select('id,text,name,created_at')
+    .lt('id', wall[wall.length - 1].id).order('id', { ascending: false }).limit(WALL_PAGE);
+  wallLoading = false; wallMore.textContent = 'Xem thêm lời chúc cũ hơn';
+  if (error) return;
+  wall.push(...data);
+  wallHasMore = data.length === WALL_PAGE;
+  renderWall();
+});
+function setWishTab(which) {
+  const toWall = which === 'wall';
+  tabWrite.setAttribute('aria-selected', !toWall); tabWall.setAttribute('aria-selected', toWall);
+  tabWrite.tabIndex = toWall ? -1 : 0; tabWall.tabIndex = toWall ? 0 : -1;
+  panelWrite.hidden = toWall; panelWall.hidden = !toWall;
+  if (toWall) renderWall();
+}
+tabWrite.addEventListener('click', () => setWishTab('write'));
+tabWall.addEventListener('click', () => setWishTab('wall'));
+wishTabs.addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  const toWall = e.key === 'ArrowRight';
+  setWishTab(toWall ? 'wall' : 'write');
+  (toWall ? tabWall : tabWrite).focus();
+});
+// Keep "x phút trước" honest while the wall is open.
+setInterval(() => { if (wishModal.classList.contains('open') && !panelWall.hidden) renderWall(); }, 60000);
 async function connectWishes() {
   try {
     const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
     const client = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } });
     const { data, count, error } = await client.from('wishes')
-      .select('id,text,name', { count: 'exact' }).order('id', { ascending: false }).limit(40);
+      .select('id,text,name,created_at', { count: 'exact' }).order('id', { ascending: false }).limit(40);
     if (error) throw error;
     db = client;
     for (const w of data) { seenIds.add(w.id); sharedPool.push(w); }
     wishTotal = count ?? data.length;
+    wall.push(...data);
+    wallHasMore = data.length === 40;
+    wishTabs.hidden = false;
     client.channel('wishes')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'wishes' }, ({ new: w }) => {
         if (seenIds.has(w.id)) return;
@@ -2401,6 +2533,7 @@ async function connectWishes() {
         updateWishFine();
         sharedPool.unshift(w);
         if (sharedPool.length > 60) sharedPool.pop();
+        addToWall(w);
         if (ownPending.delete(wishKey(w.text, w.name))) return;
         if (!sceneBusy()) launchWish(w.text, w.name);
       })
@@ -2432,17 +2565,32 @@ wishForm.addEventListener('submit', async (e) => {
     wishSubmit.disabled = true;
     const key = wishKey(text, name);
     ownPending.add(key);
-    const { error } = await db.from('wishes').insert({ text, name: name || null });
+    const { data: row, error } = await db.from('wishes').insert({ text, name: name || null })
+      .select('id,text,name,created_at').single();
     wishSubmit.disabled = false;
     if (error) { ownPending.delete(key); showWishError(friendlyError(error)); return; }
-    setTimeout(() => ownPending.delete(key), 20000);
+    addMineId(row.id);
+    if (!seenIds.has(row.id)) {
+      // Our answer beat the realtime echo: record it now, the echo will be ignored.
+      seenIds.add(row.id);
+      ownPending.delete(key);
+      wishTotal++;
+      sharedPool.unshift(row);
+      addToWall(row);
+      updateWishFine();
+    } else {
+      setTimeout(() => ownPending.delete(key), 20000);
+    }
   }
   try { localStorage.setItem('ttt-last', Date.now()); } catch {}
   release(text, name);
   wishText.value = '';
   wishCount.textContent = '0 / 90';
 });
-function openWish() { renderMine(); showWishError(''); updateWishFine(); setOverlay(wishModal, true, '#wishText'); }
+function openWish(tab = 'write') {
+  setWishTab(tab); renderMine(); showWishError(''); updateWishFine();
+  setOverlay(wishModal, true, tab === 'wall' ? '#tabWall' : '#wishText');
+}
 function closeWish() { setOverlay(wishModal, false); }
 document.getElementById('btnWish').addEventListener('click', (e) => { e.stopPropagation(); openWish(); });
 document.getElementById('wishClose').addEventListener('click', closeWish);
