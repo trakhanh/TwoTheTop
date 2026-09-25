@@ -926,7 +926,7 @@
     .lb-cap { padding: 0 64px; }
   }
   /* Small laptops: the full control bar no longer fits beside the intro column, so give it two rows */
-  @media (min-width: 861px) and (max-width: 1480px) {
+  @media (min-width: 861px) and (max-width: 1420px) {
     .controls { flex-wrap: wrap; justify-content: center; row-gap: 4px; width: max-content; border-radius: 20px; }
     .controls .sep { display: none; }
     .controls .sep:first-of-type { display: block; flex-basis: 100%; height: 0; margin: 0; }
@@ -968,6 +968,35 @@
   .act-grid .mem-peek .thumbs img:first-child { margin-left: 0; }
   .act-grid .sico, .act-grid .hico { width: 30px; height: 30px; }
   .live-stats { margin-top: -12px; }
+
+  /* Phone controls: the wish button only shows here */
+  .wish-bar { display: none; }
+  /* Phones held upright: controls sit under the 3D view instead of covering the lantern */
+  @media (max-width: 860px) and (orientation: portrait) {
+    .stage { height: auto; min-height: 0; }
+    #scene { height: min(64svh, 560px); min-height: 360px; }
+    .controls {
+      position: relative; left: auto; bottom: auto; transform: none; width: auto; max-width: none;
+      margin: 10px 12px 0; padding: 6px; border-radius: 18px; justify-content: center;
+    }
+    body.presenting #scene, body.tv #scene { height: 100%; min-height: 0; }
+    body.presenting .controls, body.tv .controls { display: none; }
+    .wish-bar {
+      display: flex; flex-basis: 100%; align-items: center; justify-content: center; gap: 8px; margin-top: 4px;
+      min-height: 44px; border: 0; border-radius: 14px; cursor: pointer; font-size: 15px; font-weight: 700; color: #2a1605;
+      background: linear-gradient(135deg, #ffd48a, #ff9a45); box-shadow: 0 6px 22px rgba(255, 150, 60, .35);
+    }
+    .wish-bar span { font-size: 17px; }
+    .intro { padding-top: 26px; }
+    .intro .eyebrow { font-size: 11px; letter-spacing: .12em; }
+    .wish-label { max-width: 200px !important; padding: 7px 11px 6px; font-size: 12.5px; }
+    .wish-label .from, .wish-label .tag { font-size: 10.5px; }
+  }
+  @media (max-width: 600px) and (orientation: portrait) {
+    .controls .dimmer { display: none; }
+    .controls { gap: 4px; }
+    .controls .icon-btn { flex: 1 1 0; }
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .hotspot .dot, .bob, .loader *, .loader::before, .loader::after, .member.featured::before, .member.featured::after { animation: none; }
@@ -1127,6 +1156,7 @@
     <button class="chip icon-btn" id="btnPhoto" title="Chụp ảnh lồng đèn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
     </button>
+    <button class="wish-bar" id="btnWishBar" type="button"><span aria-hidden="true">🏮</span> Thả đèn ước</button>
   </div>
 
   <div class="hint">Kéo để xoay · Cuộn để phóng to</div>
@@ -2310,6 +2340,108 @@ cloudGroups.forEach(g => aura(g, new THREE.Vector3(0, 1.3, -0.25), 6.2, 0xffcf8a
 hangers.forEach(h => aura(h.star, new THREE.Vector3(0, 0, 0), 2.1, 0xffdf9a, 'star', 0.55));
 aura(lantern, new THREE.Vector3(0, BASE_H * 0.5, 0), BASE_R * 3.2, 0xffd9a0, 'base', 0.22);
 
+stars.layers.set(1);
+
+// ---------------- Shooting stars now and then
+const shooting = (() => {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 16;
+  const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 256, 0);
+  gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.85, 'rgba(255,240,210,0.7)'); gr.addColorStop(1, 'rgba(255,255,255,1)');
+  g.fillStyle = gr; g.beginPath(); g.moveTo(0, 8); g.lineTo(250, 5); g.arc(250, 8, 3, -Math.PI / 2, Math.PI / 2); g.lineTo(0, 8); g.fill();
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+  sp.scale.set(26, 1.6, 1); sp.layers.set(1); scene.add(sp);
+  let t0 = -1, next = 5 + Math.random() * 6, from = new THREE.Vector3(), dir = new THREE.Vector3();
+  return {
+    update(t, dt, night) {
+      if (REDUCED_MOTION) return;
+      if (t0 < 0) {
+        next -= dt;
+        if (next > 0) return;
+        // start somewhere in the sky in front of the camera, heading down and sideways
+        const look = controls.target.clone().sub(camera.position).setY(0).normalize();
+        const side = new THREE.Vector3(-look.z, 0, look.x);
+        const s = Math.random() < 0.5 ? 1 : -1;
+        from.copy(look).multiplyScalar(135).addScaledVector(side, (Math.random() * 60 + 10) * -s).setY(55 + Math.random() * 30);
+        dir.copy(side).multiplyScalar(s).setY(-0.45).normalize();
+        sp.material.rotation = s > 0 ? -0.42 : Math.PI + 0.42;
+        t0 = 0;
+      }
+      t0 += dt;
+      const k = t0 / 0.9;
+      sp.position.copy(from).addScaledVector(dir, k * 60);
+      sp.material.opacity = Math.sin(Math.min(k, 1) * Math.PI) * night;
+      if (k >= 1) { t0 = -1; sp.material.opacity = 0; next = 7 + Math.random() * 10; }
+    },
+  };
+})();
+
+// ---------------- Hoa đăng: lotus lanterns drifting on the water, with ripples
+const lotus = (() => {
+  const petalGeo = new THREE.SphereGeometry(1, 12, 8);
+  const outer = new THREE.MeshStandardMaterial({ color: 0xffc9d6, emissive: 0xff8fae, emissiveIntensity: 0.55, roughness: 0.6 });
+  const inner = new THREE.MeshStandardMaterial({ color: 0xfff1f4, emissive: 0xffd2dc, emissiveIntensity: 0.7, roughness: 0.6 });
+  const leafMat = new THREE.MeshStandardMaterial({ color: 0x2c5e45, emissive: 0x0c2418, roughness: 0.8, side: THREE.DoubleSide });
+  const candleMat = new THREE.MeshBasicMaterial({ color: 0xfff1d6 });
+  const glowMat = new THREE.SpriteMaterial({ map: haloTex, color: 0xffb866, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
+  const rc = document.createElement('canvas'); rc.width = rc.height = 128;
+  const rg = rc.getContext('2d'); rg.strokeStyle = 'rgba(255,210,150,0.9)'; rg.lineWidth = 3; rg.beginPath(); rg.arc(64, 64, 58, 0, Math.PI * 2); rg.stroke();
+  const ringTex = new THREE.CanvasTexture(rc);
+  const ringGeo = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
+  const list = [], r = rng(91);
+  function make() {
+    const grp = new THREE.Group();
+    const leaf = new THREE.Mesh(new THREE.CircleGeometry(0.62, 20, 0.35, Math.PI * 2 - 0.35).rotateX(-Math.PI / 2), leafMat);
+    leaf.position.y = 0.01; grp.add(leaf);
+    const ring = (n, rad, tilt, sx, sy, mat, y) => {
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2 + (n === 6 ? 0.5 : 0);
+        const pivot = new THREE.Group(); pivot.rotation.y = a; pivot.position.y = y;
+        const petal = new THREE.Mesh(petalGeo, mat);
+        petal.scale.set(sx, sy, sx * 0.5); petal.position.set(0, sy * 0.8, rad); petal.rotation.x = tilt;
+        pivot.add(petal); grp.add(pivot);
+      }
+    };
+    ring(8, 0.26, 0.95, 0.15, 0.3, outer, 0.04);
+    ring(6, 0.14, 0.45, 0.12, 0.3, inner, 0.08);
+    const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.2, 10), candleMat); candle.position.y = 0.22; grp.add(candle);
+    const glow = new THREE.Sprite(glowMat); glow.position.y = 0.42; glow.scale.setScalar(1.3); grp.add(glow);
+    grp.traverse(o => { if (o.isMesh) o.layers.enable(2); }); // reflected in the water with the lantern
+    const ripples = [0, 1].map(() => {
+      const m = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ map: ringTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+      m.layers.set(1); m.position.y = 0.03; scene.add(m); return m;
+    });
+    grp.scale.setScalar(1.25);
+    scene.add(grp);
+    return { grp, glow, ripples };
+  }
+  for (let i = 0; i < 9; i++) {
+    const L = make();
+    L.a = (i / 9) * Math.PI * 2 + r() * 0.4; L.rad = 7.2 + r() * 5.5; L.sp = (0.012 + r() * 0.012) * (r() < 0.5 ? 1 : -1);
+    L.ph = r() * 6.28; L.spin = (r() - 0.5) * 0.2;
+    list.push(L);
+  }
+  return {
+    list,
+    update(t, night) {
+      for (const L of list) {
+        const a = L.a + t * L.sp;
+        const x = Math.cos(a) * L.rad, z = Math.sin(a) * L.rad;
+        L.grp.position.set(x, 0.02 + Math.sin(t * 1.1 + L.ph) * 0.03, z);
+        L.grp.rotation.set(Math.sin(t * 0.8 + L.ph) * 0.04, t * L.spin + L.ph, Math.cos(t * 0.7 + L.ph) * 0.04);
+        L.glow.scale.setScalar(1.3 * (0.92 + 0.08 * Math.sin(t * 6 + L.ph * 3)));
+        L.ripples.forEach((rp, k) => {
+          const u = ((t * 0.33 + L.ph + k * 0.5) % 1);
+          rp.position.set(x, 0.03, z);
+          rp.scale.setScalar(0.9 + u * 2.6);
+          rp.material.opacity = (1 - u) * 0.35 * night;
+        });
+      }
+      glowMat.opacity = 0.9 * (0.35 + 0.65 * night);
+    },
+  };
+})();
+
 // Mark the sun's own lamp materials so daytime can make it shine brighter.
 sun.traverse(o => { if (o.material && lampMats.includes(o.material)) { o.material.userData.sun = true; o.material.userData.group = 'sun'; } });
 
@@ -2329,6 +2461,7 @@ function applySky(d) {
   skyMoon.glow.material.opacity = 0.62 * (1 - d);
   skyClouds.mat.color.setHex(d > 0.5 ? 0xffffff : 0x6f7ca6);
   skyClouds.mat.opacity = 0.35 + 0.25 * d;
+
 }
 
 // Small fireworks behind the lantern to celebrate new wishes.
@@ -3516,6 +3649,7 @@ function openWish(tab = 'write') {
 }
 function closeWish() { setOverlay(wishModal, false); }
 document.getElementById('btnWish').addEventListener('click', (e) => { e.stopPropagation(); openWish(); });
+document.getElementById('btnWishBar').addEventListener('click', (e) => { e.stopPropagation(); openWish(); });
 document.getElementById('wishClose').addEventListener('click', closeWish);
 wishModal.addEventListener('click', (e) => { if (e.target === wishModal) closeWish(); });
 
@@ -3960,6 +4094,9 @@ function tick() {
   updateFireflies(t, 1 - day * 0.9);
   updateSkyField(t);
   updateSkyClouds(t);
+  { const night = 1 - day;
+    shooting.update(t, dt, night);
+    lotus.update(t, night); }
   fireworks.update(dt);
 
   controls.update();
