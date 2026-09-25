@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Two The Top · Lồng Đèn 3D</title>
 <meta name="description" content="Nhóm Two The Top giới thiệu lồng đèn Trung Thu Mặt Trời & Vầng Trăng qua mô hình 3D tương tác.">
+<meta name="theme-color" content="#0a1020">
+<link rel="canonical" href="https://trakhanh.github.io/TwoTheTop/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:site_name" content="Two The Top">
+<meta property="og:url" content="https://trakhanh.github.io/TwoTheTop/">
+<meta property="og:title" content="Khi Mặt Trời gặp Vầng Trăng · Lồng đèn 3D của Two The Top">
+<meta property="og:description" content="Lồng đèn Trung Thu làm từ que tre, bìa giấy và 19 đôi tay — xoay, phóng to, bật tắt đèn và thả đèn ước trên mô hình 3D.">
+<meta property="og:image" content="https://trakhanh.github.io/TwoTheTop/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Lồng đèn Mặt Trời & Vầng Trăng của nhóm Two The Top đang phát sáng">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Khi Mặt Trời gặp Vầng Trăng · Lồng đèn 3D của Two The Top">
+<meta name="twitter:description" content="Lồng đèn Trung Thu làm từ que tre, bìa giấy và 19 đôi tay — xem mô hình 3D tương tác.">
+<meta name="twitter:image" content="https://trakhanh.github.io/TwoTheTop/assets/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&family=Baloo+2:wght@600;700;800&display=swap&subset=vietnamese" rel="stylesheet">
@@ -349,21 +365,134 @@
   body.presenting .controls, body.presenting .hint { opacity: 0; pointer-events: none; }
   .controls, .hint { transition: opacity .35s; }
 
+  /* ---------- Day / night + sound toggles ---------- */
+  #btnDay .ico-sun, #btnDay.active .ico-moon, #btnSound .ico-on, #btnSound.active .ico-off { display: none; }
+  #btnDay.active .ico-sun, #btnSound.active .ico-on { display: block; }
+  body.daytime .org .tag, body.daytime .hint { color: #f6ecd9; text-shadow: 0 1px 8px rgba(10, 20, 40, .6); }
+  body.daytime .stage::after { background: radial-gradient(120% 90% at 60% 45%, transparent 60%, rgba(10, 20, 40, .35) 100%); }
+
+  /* ---------- Wish lanterns ---------- */
+  .wish-peek { padding-left: 7px; }
+  .wish-peek .wico {
+    width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; font-size: 17px;
+    background: radial-gradient(circle at 50% 60%, #ffe2a8, #ff9a45 75%); box-shadow: 0 0 16px rgba(255, 160, 70, .55);
+  }
+  .share-peek { padding-left: 7px; }
+  .share-peek .sico { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 200, 120, .14); color: var(--gold); }
+  .share-peek .sico svg { width: 17px; height: 17px; }
+  #wishLabels { position: fixed; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; }
+  body.presenting #wishLabels { display: none; }
+  .wish-label {
+    position: absolute; left: 0; top: 0; max-width: 230px; padding: 9px 14px 8px; border-radius: 14px;
+    transform: translateY(calc(-100% - 10px)); text-align: center; opacity: 0;
+    background: rgba(14, 20, 40, .78); border: 1px solid rgba(255, 200, 120, .35);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .35), 0 0 24px rgba(255, 170, 80, .18);
+    font-size: 13.5px; line-height: 1.45; color: var(--text);
+  }
+  .wish-label::after {
+    content: ""; position: absolute; left: var(--tail, 50%); bottom: -6px; width: 10px; height: 10px; transform: translateX(-50%) rotate(45deg);
+    background: inherit; border: inherit; border-width: 0 1px 1px 0;
+  }
+  .wish-label .from { display: block; margin-top: 3px; font-size: 11.5px; color: var(--gold); }
+
+  .sheet-sm { width: min(500px, 100%); }
+  .wish-form { display: grid; gap: 10px; }
+  .field {
+    width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line);
+    background: rgba(255, 255, 255, .05); color: var(--text); font: inherit; font-size: 15px; resize: none;
+    transition: border-color .2s, background .2s;
+  }
+  .field::placeholder { color: rgba(185, 171, 147, .7); }
+  .field:focus { outline: none; border-color: rgba(255, 197, 110, .6); background: rgba(255, 255, 255, .08); }
+  .wish-count { justify-self: end; margin-top: -6px; font-size: 12px; color: var(--muted); }
+  .suggest { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 6px; }
+  .suggest button {
+    border: 1px solid var(--line); background: rgba(255, 200, 120, .06); color: var(--muted); cursor: pointer;
+    padding: 6px 11px; border-radius: 999px; font-size: 12.5px; transition: color .2s, background .2s;
+  }
+  .suggest button:hover { color: var(--text); background: rgba(255, 200, 120, .16); }
+  .wish-form .cta { justify-self: start; }
+  .wish-form .cta:disabled { opacity: .6; cursor: progress; }
+  .wish-error { margin: 0; padding: 9px 12px; border-radius: 10px; background: rgba(255, 110, 90, .12); color: #ffb4a2; font-size: 13.5px; }
+  .fine { margin: 14px 0 0; font-size: 12px; color: var(--muted); }
+  .mine { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .mine h3 { margin: 0 0 8px; font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .mine ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 190px; overflow-y: auto; scrollbar-width: thin; }
+  .mine li { display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 12px; border-radius: 10px; background: rgba(255, 255, 255, .04); font-size: 14px; }
+  .mine li span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .mine li button { flex: none; border: 0; background: none; color: var(--gold); cursor: pointer; font-size: 12.5px; padding: 4px 6px; border-radius: 8px; }
+  .mine li button:hover { background: rgba(255, 200, 120, .12); }
+
+  /* ---------- Share / QR ---------- */
+  .qr-card { width: min(260px, 100%); margin: 0 auto 18px; padding: 14px; border-radius: 18px; background: #fff; box-shadow: 0 0 0 3px #f2b84f, 0 12px 40px rgba(0, 0, 0, .4); }
+  .qr-card img { display: block; width: 100%; height: auto; }
+  .share-url {
+    display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; margin-bottom: 14px;
+    border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 255, 255, .04);
+  }
+  .share-url span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+  .share-url .chip { flex: none; color: var(--text); background: rgba(255, 200, 120, .14); }
+  .share-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .share-actions .cta { text-decoration: none; }
+
   /* ---------- Loader ---------- */
   .loader {
-    position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; align-content: center; gap: 16px;
-    background: var(--bg); transition: opacity .8s; color: var(--muted); font-size: 14px;
+    position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; align-content: center; gap: 0;
+    padding: 24px; text-align: center; overflow: hidden; color: var(--muted);
+    background: radial-gradient(80% 60% at 50% 42%, #1b2446 0%, #0d1428 55%, #070b18 100%);
+    transition: opacity .9s ease, visibility 0s .9s;
   }
-  .loader.done { opacity: 0; pointer-events: none; }
-  .loader .orb {
-    width: 54px; height: 54px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #fff3cf, var(--gold) 45%, var(--orange) 100%);
-    animation: glow 1.4s ease-in-out infinite alternate;
+  .loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+  .loader.done .ld-inner { transform: scale(1.06); filter: blur(2px); }
+  .ld-inner { display: grid; justify-items: center; transition: transform .9s ease, filter .9s ease; }
+  /* twinkling star field: one element, many shadows */
+  .loader::before, .loader::after {
+    content: ""; position: absolute; left: 0; top: 0; width: 2px; height: 2px; border-radius: 50%; background: transparent;
+    box-shadow: 8vw 12vh #fff, 18vw 64vh #ffe9c4, 27vw 28vh #fff, 36vw 82vh #fff, 44vw 8vh #ffe9c4, 58vw 18vh #fff,
+      66vw 72vh #fff, 74vw 34vh #ffe9c4, 83vw 10vh #fff, 91vw 58vh #fff, 12vw 44vh #fff, 52vw 90vh #ffe9c4,
+      95vw 86vh #fff, 4vw 78vh #ffe9c4, 70vw 52vh #fff, 31vw 6vh #fff, 88vw 30vh #ffe9c4, 22vw 92vh #fff;
+    opacity: .7; animation: ld-twinkle 3.2s ease-in-out infinite;
   }
-  @keyframes glow { from { box-shadow: 0 0 10px rgba(255,170,80,.4); } to { box-shadow: 0 0 46px rgba(255,170,80,.9); } }
+  .loader::after { transform: translate(3vw, 5vh); opacity: .4; animation-delay: 1.6s; }
+  @keyframes ld-twinkle { 50% { opacity: .15; } }
+  .ld-sky i {
+    position: absolute; bottom: -40px; width: 14px; height: 18px; border-radius: 4px 4px 7px 7px;
+    background: linear-gradient(180deg, #d9622b, #ffb050 55%, #fff0c4);
+    box-shadow: 0 0 18px 4px rgba(255, 160, 70, .45); opacity: 0;
+    animation: ld-rise 9s linear infinite;
+  }
+  .ld-sky i:nth-child(1) { left: 14%; animation-delay: .2s; transform: scale(.8); }
+  .ld-sky i:nth-child(2) { left: 80%; animation-delay: 2.6s; }
+  .ld-sky i:nth-child(3) { left: 32%; animation-delay: 5.2s; transform: scale(.6); }
+  .ld-sky i:nth-child(4) { left: 64%; animation-delay: 7s; transform: scale(.7); }
+  @keyframes ld-rise {
+    0% { translate: 0 0; opacity: 0; } 12% { opacity: .9; } 80% { opacity: .7; }
+    100% { translate: 22px -115vh; opacity: 0; }
+  }
+  .ld-art { width: min(220px, 56vw); height: auto; overflow: visible; margin-bottom: 18px; filter: drop-shadow(0 0 30px rgba(255, 170, 80, .35)); }
+  .ld-rays { transform-origin: 70px 62px; animation: ld-spin 14s linear infinite; }
+  .ld-sun { animation: ld-sun 2.8s ease-in-out infinite alternate; }
+  .ld-moon { animation: ld-moon 2.8s ease-in-out infinite alternate; }
+  .ld-halo { transform-origin: 84px 62px; animation: ld-halo 2.8s ease-in-out infinite alternate; }
+  @keyframes ld-spin { to { transform: rotate(360deg); } }
+  @keyframes ld-sun { from { transform: translateX(-10px); } to { transform: translateX(2px); } }
+  @keyframes ld-moon { from { transform: translateX(26px); } to { transform: translateX(0); } }
+  @keyframes ld-halo { from { opacity: .25; transform: scale(.85); } to { opacity: .9; transform: scale(1.08); } }
+  .ld-brand { margin: 0 0 8px; font-size: 12px; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); }
+  .ld-title { margin: 0; font-family: "Playfair Display", serif; font-weight: 600; font-size: clamp(24px, 6.4vw, 34px); line-height: 1.25; letter-spacing: .03em; color: var(--text); }
+  .ld-title em { display: block; color: var(--gold); }
+  .ld-bar { position: relative; width: 150px; height: 2px; margin: 22px 0 12px; border-radius: 2px; overflow: hidden; background: rgba(255, 214, 150, .15); }
+  .ld-bar::after {
+    content: ""; position: absolute; inset: 0; width: 40%; border-radius: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    animation: ld-slide 1.3s ease-in-out infinite;
+  }
+  @keyframes ld-slide { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+  .ld-note { margin: 0; font-size: 13px; letter-spacing: .04em; }
 
   /* ---------- Responsive ---------- */
-  @media (max-width: 1400px) { .hint { display: none; } }
+  @media (max-width: 1640px) { .hint { display: none; } }
   @media (max-height: 900px) and (min-width: 861px) {
     .intro .eyebrow { margin-bottom: 10px; }
     .intro h1 { margin-bottom: 12px; }
@@ -403,7 +532,7 @@
     .intro h1 { font-size: clamp(30px, 8vw, 42px); }
     .controls { position: absolute; left: 50%; bottom: 12px; max-width: calc(100% - 24px); justify-content: flex-start; border-radius: 16px; }
     .dimmer input { width: 70px; }
-    #hotspots { position: absolute; }
+    #hotspots, #wishLabels { position: absolute; }
     .hotspot .tip { width: 180px; }
     body.presenting { overflow: hidden; }
     body.presenting .stage { position: fixed; inset: 0; height: auto; min-height: 0; }
@@ -440,13 +569,22 @@
     .lb-next { right: 14px; }
     .lb-cap { padding: 0 64px; }
   }
+  /* Narrow phones: controls in two rows so the day/night and sound buttons stay visible */
+  @media (max-width: 600px) {
+    .controls { flex-wrap: wrap; justify-content: center; gap: 2px; width: max-content; padding: 5px; }
+    .controls .sep { display: none; }
+    .controls .sep:first-of-type { display: block; flex-basis: 100%; height: 0; margin: 0; } /* line break after the views */
+    .chip { padding: 7px 8px; font-size: 12.5px; }
+    .icon-btn { padding: 7px 9px; }
+    .dimmer { font-size: 0; gap: 0; padding: 0 6px; }
+  }
   @media (max-width: 400px) {
     .actions > * { flex: 1 1 100%; justify-content: center; }
     .team-grid { grid-template-columns: 1fr; }
     .member { flex-direction: row; text-align: left; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .hotspot .dot, .loader .orb, .bob, .member.featured::before, .member.featured::after { animation: none; }
+    .hotspot .dot, .bob, .loader *, .loader::before, .loader::after, .member.featured::before, .member.featured::after { animation: none; }
     .team-modal.open .member { animation: none; opacity: 1; transform: none; }
     .member:hover .ava svg { animation: none; }
   }
@@ -462,7 +600,36 @@
 </head>
 <body>
 
-<div class="loader" id="loader"><div class="orb"></div><div>Đang thắp đèn…</div></div>
+<div class="loader" id="loader" role="status" aria-live="polite">
+  <div class="ld-sky" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="ld-inner">
+    <svg class="ld-art" viewBox="0 0 160 124" aria-hidden="true">
+      <defs>
+        <radialGradient id="ldSun" cx="40%" cy="38%" r="70%"><stop offset="0" stop-color="#fff6dc"/><stop offset=".55" stop-color="#ffd27a"/><stop offset="1" stop-color="#f09a3e"/></radialGradient>
+        <radialGradient id="ldGlow"><stop offset="0" stop-color="#ffcf8a" stop-opacity=".9"/><stop offset="1" stop-color="#ff9a45" stop-opacity="0"/></radialGradient>
+        <linearGradient id="ldMoon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#e8d8bd"/></linearGradient>
+        <mask id="ldCres"><rect x="-40" y="0" width="240" height="124" fill="#fff"/><circle cx="118" cy="52" r="21" fill="#000"/></mask>
+      </defs>
+      <circle class="ld-halo" cx="84" cy="62" r="58" fill="url(#ldGlow)"/>
+      <g class="ld-sun">
+        <g class="ld-rays" fill="#f2b650">
+          <path d="M70 18l5 12h-10z"/><path d="M70 106l5-12h-10z"/><path d="M26 62l12-5v10z"/><path d="M114 62l-12-5v10z"/>
+          <path d="M39 31l12 5-7 7z"/><path d="M101 93l-12-5 7-7z"/><path d="M39 93l5-12 7 7z"/><path d="M101 31l-5 12-7-7z"/>
+        </g>
+        <circle cx="70" cy="62" r="25" fill="url(#ldSun)"/>
+        <circle cx="70" cy="62" r="25" fill="none" stroke="#fff3d0" stroke-opacity=".6" stroke-width="1.5"/>
+      </g>
+      <g class="ld-moon">
+        <circle cx="106" cy="60" r="22" fill="url(#ldMoon)" mask="url(#ldCres)"/>
+        <circle cx="96" cy="52" r="1.6" fill="#ffd27a"/><circle cx="92" cy="66" r="1.3" fill="#ffd27a"/><circle cx="99" cy="76" r="1.5" fill="#ffd27a"/>
+      </g>
+    </svg>
+    <p class="ld-brand">Two The Top · Trung Thu 2026</p>
+    <p class="ld-title">Khi Mặt Trời <em>gặp Vầng Trăng</em></p>
+    <div class="ld-bar"></div>
+    <p class="ld-note">Đang thắp đèn…</p>
+  </div>
+</div>
 
 <header class="topbar">
   <div class="brand">
@@ -477,6 +644,7 @@
 
 <section class="stage" id="stage">
   <canvas id="scene" aria-label="Mô hình 3D lồng đèn Mặt Trời & Vầng Trăng" tabindex="0"></canvas>
+  <div id="wishLabels" aria-live="polite"></div>
   <div id="hotspots"></div>
 
   <div class="controls" role="toolbar" aria-label="Điều khiển mô hình">
@@ -495,6 +663,15 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
     </button>
     <label class="dimmer">Độ sáng <input type="range" id="brightness" min="0" max="150" value="100"></label>
+    <span class="sep"></span>
+    <button class="chip icon-btn" id="btnDay" title="Chuyển ngày / đêm" aria-pressed="false">
+      <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+      <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="chip icon-btn" id="btnSound" title="Nhạc nền & âm thanh" aria-pressed="false">
+      <svg class="ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+      <svg class="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+    </button>
   </div>
 
   <div class="hint">Kéo để xoay · Cuộn để phóng to</div>
@@ -524,6 +701,14 @@
       <span class="thumbs" id="memThumbs"></span>
       <b>Hành trình</b>
     </button>
+    <button class="team-peek wish-peek" id="btnWish" title="Viết lời chúc và thả đèn trời">
+      <span class="wico" aria-hidden="true">🏮</span>
+      <b>Thả đèn ước</b>
+    </button>
+    <button class="team-peek share-peek" id="btnShare" title="Chia sẻ link và mã QR">
+      <span class="sico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 17v4h-1"/></svg></span>
+      <b>Chia sẻ</b>
+    </button>
   </div>
 
   <p class="section-label">Cấu tạo</p>
@@ -539,6 +724,53 @@
     <h2 class="team-title" id="teamTitle">Gia đình Two The Top <span class="bob">🏮</span></h2>
     <p class="team-sub" id="teamSub"></p>
     <div class="team-grid" id="teamGrid"></div>
+  </div>
+</div>
+
+<div class="team-modal" id="wishModal" role="dialog" aria-modal="true" aria-labelledby="wishTitle" inert>
+  <div class="team-sheet sheet-sm">
+    <button class="round team-close" id="wishClose" aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="eyebrow">Đèn trời</p>
+    <h2 class="team-title" id="wishTitle">Thả đèn ước <span class="bob">🏮</span></h2>
+    <p class="team-sub">Viết một lời chúc Trung Thu, chiếc đèn trời sẽ mang nó bay lên cao.</p>
+    <form class="wish-form" id="wishForm">
+      <textarea class="field" id="wishText" rows="3" maxlength="90" placeholder="Lời chúc của bạn…" required></textarea>
+      <span class="wish-count" id="wishCount">0 / 90</span>
+      <input class="field" id="wishName" maxlength="24" placeholder="Tên của bạn (không bắt buộc)" autocomplete="nickname">
+      <div class="suggest" id="wishSuggest"></div>
+      <p class="wish-error" id="wishError" role="alert" hidden></p>
+      <button class="cta" type="submit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        Thả đèn lên trời
+      </button>
+    </form>
+    <div class="mine" id="wishMine" hidden>
+      <h3>Đèn bạn đã thả</h3>
+      <ul id="wishList"></ul>
+    </div>
+    <p class="fine" id="wishFine"></p>
+  </div>
+</div>
+
+<div class="team-modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle" inert>
+  <div class="team-sheet sheet-sm">
+    <button class="round team-close" id="shareClose" aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="eyebrow">Chia sẻ</p>
+    <h2 class="team-title" id="shareTitle">Mời mọi người cùng ngắm</h2>
+    <p class="team-sub">Quét mã QR hoặc gửi link, xem được trên cả điện thoại lẫn máy tính.</p>
+    <div class="qr-card"><img src="assets/qr.svg" alt="Mã QR mở trang lồng đèn 3D" width="260" height="260"></div>
+    <div class="share-url"><span id="shareUrl"></span><button class="chip" id="btnCopy">Sao chép link</button></div>
+    <div class="share-actions">
+      <a class="cta" href="assets/qr-in.png" download="QR-Long-Den-Two-The-Top.png">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+        Tải tấm QR để in
+      </a>
+      <button class="team-peek" id="btnNativeShare" hidden><b>Gửi qua ứng dụng…</b></button>
+    </div>
   </div>
 </div>
 
@@ -652,7 +884,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a1020);
 scene.fog = new THREE.Fog(0x0a1020, 40, 80);
 
-const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 200);
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 400);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.dampingFactor = 0.06;
@@ -1090,6 +1322,7 @@ function moon(pos, rotZ) {
   const R1 = 2.75, R2 = 2.3, d = 1.45, depth = 0.22;
   const g = new THREE.Group();
   const face = lamp('#fbf4e6', 0.9, { map: cardTexture(-R1, -R1, 2 * R1, 2 * R1, 31) });
+  face.userData.moon = true;
   g.add(new THREE.Mesh(extrude(crescentShape(R1, R2, d), depth, 0.04), [face, foamMat]));
   const pts = scatter(88, 0.27,
     () => new THREE.Vector3((rand() * 2 - 1) * R1, (rand() * 2 - 1) * R1, depth / 2 + 0.07),
@@ -1218,21 +1451,176 @@ const warmLow = new THREE.PointLight(0xffb060, 16, 30, 2);
 warmLow.position.set(0, 4.2, 5.5);
 const warmHigh = new THREE.PointLight(0xffc070, 22, 30, 2);
 warmHigh.position.set(0.3, 9.4, 1.4);
-scene.add(hemi, warmLow, warmHigh);
+const sunLight = new THREE.DirectionalLight(0xfff0dc, 0);
+sunLight.position.set(8, 20, 14);
+scene.add(hemi, warmLow, warmHigh, sunLight);
+
+/* =========================================================
+   Sky: day ↔ night, stars, fireflies, sky lanterns
+   ========================================================= */
+// Night is the lantern's natural look; day brings a bright sky and lets the sun take over.
+const SKY = {
+  night: { top: new THREE.Color(0x03060f), horizon: new THREE.Color(0x0e1630), floor: new THREE.Color(0x141b30),
+           hemiSky: new THREE.Color(0x8fa4ff), hemiGround: new THREE.Color(0x20150a) },
+  day:   { top: new THREE.Color(0x3b8be0), horizon: new THREE.Color(0xcfe5f7), floor: new THREE.Color(0xa89a8c),
+           hemiSky: new THREE.Color(0xfff3e0), hemiGround: new THREE.Color(0x7a5c40) },
+};
+const skyDome = new THREE.Mesh(
+  new THREE.SphereGeometry(160, 32, 16),
+  new THREE.ShaderMaterial({
+    uniforms: { top: { value: SKY.night.top.clone() }, horizon: { value: SKY.night.horizon.clone() } },
+    vertexShader: 'varying vec3 vDir; void main() { vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: `uniform vec3 top; uniform vec3 horizon; varying vec3 vDir;
+      void main() { float h = max(vDir.y, 0.0); gl_FragColor = vec4(mix(horizon, top, pow(smoothstep(0.0, 0.6, h), 0.55)), 1.0); }`,
+    side: THREE.BackSide, depthWrite: false, fog: false,
+  }),
+);
+skyDome.renderOrder = -10;
+scene.add(skyDome);
+scene.background = null;
+
+const stars = (() => {
+  const N = 900, pos = [], col = [], r = rng(99);
+  for (let i = 0; i < N; i++) {
+    const u = r() * Math.PI * 2, y = 0.06 + Math.pow(r(), 0.8) * 0.94, s = Math.sqrt(1 - y * y);
+    pos.push(Math.cos(u) * s * 150, y * 150, Math.sin(u) * s * 150);
+    const b = 0.35 + r() * 0.65;
+    col.push(b, b * (0.92 + r() * 0.08), b * (0.85 + r() * 0.15));
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  const p = new THREE.Points(g, new THREE.PointsMaterial({
+    size: 2.2, sizeAttenuation: false, vertexColors: true, transparent: true, depthWrite: false, fog: false,
+  }));
+  p.renderOrder = -9;
+  return p;
+})();
+scene.add(stars);
+
+// Warm glow behind the sun disc that swells in daytime.
+const sunGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+  map: haloTex, color: 0xffc070, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
+}));
+sunGlow.position.copy(SUN_POS).add(new THREE.Vector3(0, 0, -0.8));
+sunGlow.scale.setScalar(16);
+scene.add(sunGlow);
+
+// Fireflies drifting around the lantern.
+const fireflies = (() => {
+  const N = 60, r = rng(404);
+  const data = Array.from({ length: N }, () => {
+    // Keep them outside the lantern's silhouette so they never sit on top of it.
+    const a = r() * Math.PI * 2, rad = 7.5 + r() * 6;
+    return { x: Math.cos(a) * rad, z: Math.sin(a) * rad, y: 0.8 + r() * 12, ph: r() * 6.28, sp: 0.18 + r() * 0.3, blink: 0.5 + r() * 1.2 };
+  });
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N * 3), 3));
+  g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(N * 3), 3));
+  const points = new THREE.Points(g, new THREE.PointsMaterial({
+    map: haloTex, size: 0.45, color: 0xeaff9c, vertexColors: true, transparent: true,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  }));
+  points.frustumCulled = false;
+  return { points, data };
+})();
+scene.add(fireflies.points);
+function updateFireflies(t, strength) {
+  const pos = fireflies.points.geometry.attributes.position, col = fireflies.points.geometry.attributes.color;
+  fireflies.data.forEach((f, i) => {
+    const k = t * f.sp + f.ph;
+    pos.setXYZ(i, f.x + Math.sin(k) * 0.9, f.y + Math.sin(k * 1.3 + f.ph) * 0.6, f.z + Math.cos(k * 0.9) * 0.9);
+    const b = Math.pow(Math.max(0, Math.sin(t * f.blink + f.ph * 3)), 3) * strength;
+    col.setXYZ(i, b, b, b);
+  });
+  pos.needsUpdate = col.needsUpdate = true;
+}
+
+// Paper sky lanterns (đèn trời): shared look for the distant field and for wishes.
+const skyLanternKit = (() => {
+  const c = document.createElement('canvas'); c.width = 64; c.height = 128;
+  const g = c.getContext('2d'), gr = g.createLinearGradient(0, 128, 0, 0);
+  gr.addColorStop(0, '#fff3cf'); gr.addColorStop(0.35, '#ffc062'); gr.addColorStop(0.8, '#f07a32'); gr.addColorStop(1, '#c8531f');
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 128);
+  g.strokeStyle = 'rgba(150,60,20,0.35)'; g.lineWidth = 2;
+  for (const x of [8, 24, 40, 56]) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 128); g.stroke(); }
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const bodyMat = new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide, fog: false });
+  const capMat = new THREE.MeshBasicMaterial({ color: 0xb04a1c, fog: false });
+  const bodyGeo = new THREE.CylinderGeometry(0.5, 0.36, 1.05, 16, 1, true).translate(0, 0.525, 0);
+  const capGeo = new THREE.CircleGeometry(0.5, 16).rotateX(-Math.PI / 2).translate(0, 1.05, 0);
+  const glowMat = new THREE.SpriteMaterial({
+    map: haloTex, color: 0xffa450, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
+  });
+  return {
+    glowMat,
+    make() {
+      const grp = new THREE.Group();
+      grp.add(new THREE.Mesh(bodyGeo, bodyMat), new THREE.Mesh(capGeo, capMat));
+      const glow = new THREE.Sprite(glowMat);
+      glow.position.y = 0.35; glow.scale.setScalar(2.6);
+      grp.add(glow);
+      return grp;
+    },
+  };
+})();
+
+// Distant field: rises forever, growing in at the horizon and shrinking away up high.
+const skyField = (() => {
+  const r = rng(808), list = [];
+  for (let i = 0; i < 18; i++) {
+    const obj = skyLanternKit.make();
+    scene.add(obj);
+    list.push({ obj, a: r() * Math.PI * 2, rad: 62 + r() * 32, y0: r() * 70, sp: 0.45 + r() * 0.5, size: 1.8 + r() * 1.2, ph: r() * 6.28 });
+  }
+  return list;
+})();
+function updateSkyField(t) {
+  for (const s of skyField) {
+    const y = (s.y0 + t * s.sp) % 70;
+    const grow = THREE.MathUtils.smoothstep(y, 0, 8) * (1 - THREE.MathUtils.smoothstep(y, 52, 70));
+    const a = s.a + Math.sin(t * 0.05 + s.ph) * 0.03;
+    s.obj.position.set(Math.cos(a) * s.rad, y + 2, Math.sin(a) * s.rad);
+    s.obj.rotation.set(Math.sin(t * 0.6 + s.ph) * 0.06, t * 0.2 + s.ph, 0);
+    s.obj.scale.setScalar(Math.max(0.001, s.size * grow));
+  }
+}
+
+// Mark the sun's own lamp materials so daytime can make it shine brighter.
+sun.traverse(o => { if (o.material && lampMats.includes(o.material)) o.material.userData.sun = true; });
+
+let day = 0, dayGoal = 0;
+function applySky(d) {
+  const { night: N, day: D } = SKY;
+  skyDome.material.uniforms.top.value.lerpColors(N.top, D.top, d);
+  skyDome.material.uniforms.horizon.value.lerpColors(N.horizon, D.horizon, d);
+  scene.fog.color.lerpColors(N.horizon, D.horizon, d);
+  floor.material.color.lerpColors(N.floor, D.floor, d);
+  hemi.color.lerpColors(N.hemiSky, D.hemiSky, d);
+  hemi.groundColor.lerpColors(N.hemiGround, D.hemiGround, d);
+  stars.material.opacity = Math.pow(1 - d, 2);
+  sunGlow.material.opacity = 0.55 * d;
+  skyLanternKit.glowMat.opacity = 0.9 - 0.55 * d;
+}
 
 /* =========================================================
    Power / brightness
    ========================================================= */
 let lampOn = true;
 function applyPower(p) {
-  for (const m of lampMats) m.emissiveIntensity = m.userData.baseGlow * p;
-  bulbMat.color.copy(BULB_ON).multiplyScalar(Math.max(p, 0.08));
-  warmLow.intensity = 16 * p;
+  const d = day;
+  for (const m of lampMats) {
+    const mood = m.userData.sun ? 1 + 0.55 * d : m.userData.moon ? 1 - 0.35 * d : 1 - 0.15 * d;
+    m.emissiveIntensity = m.userData.baseGlow * p * mood;
+  }
+  bulbMat.color.copy(BULB_ON).multiplyScalar(Math.max(p, 0.08) * (1 - 0.45 * d));
+  warmLow.intensity = 16 * p * (1 - 0.4 * d);
   warmHigh.intensity = 22 * p;
-  hemi.intensity = 0.35 + Math.max(0, 1 - p) * 1.4;
-  bloom.strength = BLOOM * Math.min(p, 1.3);
-  pool.material.opacity = 0.3 * Math.min(p, 1.4);
-  haloMat.opacity = 0.95 * Math.min(p, 1.2);
+  hemi.intensity = 0.35 + Math.max(0, 1 - p) * 1.4 * (1 - d) + 1.5 * d;
+  sunLight.intensity = 1.5 * d;
+  bloom.strength = BLOOM * Math.min(p, 1.3) * (1 - 0.5 * d);
+  pool.material.opacity = 0.3 * Math.min(p, 1.4) * (1 - 0.7 * d);
+  haloMat.opacity = 0.95 * Math.min(p, 1.2) * (1 - 0.65 * d);
 }
 
 /* =========================================================
@@ -1606,8 +1994,8 @@ function renderLightbox() {
     new Image().src = n.type === 'video' ? n.poster : n.src;
   }
 }
-function openLightbox(i) { stopPreviews(); lbIndex = i; renderLightbox(); setOverlay(lightbox, true, '#lbNext'); }
-function closeLightbox() { setOverlay(lightbox, false); lbStage.innerHTML = ''; }
+function openLightbox(i) { stopPreviews(); lbIndex = i; renderLightbox(); setOverlay(lightbox, true, '#lbNext'); sound.duck(true); }
+function closeLightbox() { setOverlay(lightbox, false); lbStage.innerHTML = ''; sound.duck(false); }
 function stepLightbox(d) { lbIndex = (lbIndex + d + ALL_MEDIA.length) % ALL_MEDIA.length; renderLightbox(); }
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
 document.getElementById('lbPrev').addEventListener('click', () => stepLightbox(-1));
@@ -1690,6 +2078,421 @@ document.addEventListener('fullscreenchange', () => {
 });
 
 /* =========================================================
+   Sound: background music synthesised on the fly + small effects
+   ========================================================= */
+// Original melody on the Vietnamese five-tone scale (hò xự xang xê cống ≈ C D F G A),
+// plucked like a đàn tranh over a soft pad. Nothing is downloaded.
+const sound = (() => {
+  const SCALE = [0, 2, 5, 7, 9];
+  const midi = (deg, base = 48) => base + SCALE[((deg % 5) + 5) % 5] + 12 * Math.floor(deg / 5);
+  const hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
+  const EIGHTH = 60 / 70 / 2;
+  const CHORDS = [[48, 55], [53, 60], [50, 57], [43, 50]]; // C, F, D, G (root + fifth)
+  let ctx = null, master, bus, on = false, ducked = false, timer = null;
+  let next = 0, slot = 0, phrase = [], phraseSeed = 1;
+
+  function init() {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = 0;
+    master.connect(ctx.destination);
+    bus = ctx.createGain();
+    const verb = ctx.createConvolver(), len = ctx.sampleRate * 2.8;
+    const ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = ir.getChannelData(ch);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2);
+    }
+    verb.buffer = ir;
+    const wet = ctx.createGain(); wet.gain.value = 0.45;
+    bus.connect(master); bus.connect(verb); verb.connect(wet); wet.connect(master);
+  }
+
+  function pluck(freq, t, vel = 0.22, dur = 1.8) {
+    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter();
+    o.type = 'triangle'; o2.type = 'sine';
+    o.frequency.setValueAtTime(freq * 1.015, t); o.frequency.exponentialRampToValueAtTime(freq, t + 0.09);
+    o2.frequency.setValueAtTime(freq * 2.01, t);
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(3200, t); lp.frequency.exponentialRampToValueAtTime(900, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vel, t + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    const g2 = ctx.createGain(); g2.gain.value = 0.25;
+    o.connect(lp); o2.connect(g2); g2.connect(lp); lp.connect(g); g.connect(bus);
+    o.start(t); o2.start(t); o.stop(t + dur + 0.05); o2.stop(t + dur + 0.05);
+  }
+  function pad(notes, t, dur) {
+    for (const m of notes) for (const det of [-6, 6]) {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = hz(m); o.detune.value = det;
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.028, t + 1.4);
+      g.gain.setValueAtTime(0.028, t + dur - 1.2); g.gain.linearRampToValueAtTime(0.0001, t + dur + 0.4);
+      o.connect(g); g.connect(bus); o.start(t); o.stop(t + dur + 0.5);
+    }
+  }
+  function chime(freq, t, vel = 0.05) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vel, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 3);
+    o.connect(g); g.connect(bus); o.start(t); o.stop(t + 3.1);
+  }
+
+  // Two-bar phrases (16 eighths), arranged A A B A so the tune comes back like a song.
+  function makePhrase(seed, chord) {
+    const r = rng(seed), notes = [];
+    let deg = 5 + Math.floor(r() * 4);
+    for (let i = 0; i < 16; i++) {
+      const strong = i % 4 === 0;
+      if (i === 15 || (!strong && r() < 0.42)) { notes.push(null); continue; }
+      deg = Math.max(3, Math.min(12, deg + [-2, -1, -1, 0, 1, 1, 2][Math.floor(r() * 7)]));
+      notes.push(deg);
+    }
+    notes[12] = chord === 3 ? 6 : 5; // settle on a stable tone before the breath
+    notes[13] = notes[14] = null;
+    return notes;
+  }
+  function schedule() {
+    while (next < ctx.currentTime + 0.6) {
+      const bar2 = Math.floor(slot / 16), inPhrase = slot % 16, chord = bar2 % 4;
+      if (inPhrase === 0) {
+        if (chord === 0 && bar2 % 8 === 0) phraseSeed = 1 + Math.floor(Math.random() * 1e6);
+        phrase = makePhrase(chord === 2 ? phraseSeed + 7 : phraseSeed, chord);
+        pad(CHORDS[chord], next, EIGHTH * 16);
+      }
+      const deg = phrase[inPhrase];
+      if (deg !== null) {
+        const long = inPhrase === 12;
+        pluck(hz(midi(deg)), next + (Math.random() - 0.5) * 0.012, long ? 0.2 : 0.14 + Math.random() * 0.06, long ? 3 : 1.6);
+      }
+      if (inPhrase === 8 && Math.random() < 0.35) chime(hz(midi(10 + Math.floor(Math.random() * 5))), next);
+      next += EIGHTH; slot++;
+    }
+  }
+  function setOn(v) {
+    if (v && !ctx) init();
+    on = v;
+    const t = ctx.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setValueAtTime(master.gain.value, t);
+    if (on) {
+      ctx.resume();
+      master.gain.linearRampToValueAtTime(ducked ? 0 : 0.8, t + 1.2);
+      if (!timer) { next = ctx.currentTime + 0.1; slot = 0; timer = setInterval(schedule, 150); schedule(); }
+    } else {
+      master.gain.linearRampToValueAtTime(0, t + 0.5);
+      clearInterval(timer); timer = null;
+      setTimeout(() => { if (!on) ctx.suspend(); }, 700);
+    }
+  }
+  function duck(v) {
+    ducked = v;
+    if (!on) return;
+    const t = ctx.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setValueAtTime(master.gain.value, t);
+    master.gain.linearRampToValueAtTime(v ? 0 : 0.8, t + 0.4);
+  }
+  // Tiny "tách" of a switch.
+  function click() {
+    if (!on) return;
+    const t = ctx.currentTime, len = Math.floor(ctx.sampleRate * 0.03);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 6);
+    const src = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+    src.buffer = buf; bp.type = 'bandpass'; bp.frequency.value = 2800; bp.Q.value = 1.4; g.gain.value = 0.9;
+    src.connect(bp); bp.connect(g); g.connect(master); src.start(t);
+  }
+  // Rising arpeggio when a wish lantern takes off.
+  function lift() {
+    if (!on) return;
+    const t = ctx.currentTime;
+    [5, 7, 8, 10, 12].forEach((deg, i) => chime(hz(midi(deg + 3)), t + i * 0.11, 0.07));
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!ctx || !on) return;
+    document.hidden ? ctx.suspend() : ctx.resume();
+  });
+  return { get on() { return on; }, setOn, duck, click, lift };
+})();
+
+/* =========================================================
+   Wish lanterns
+   ========================================================= */
+const WISH_KEY = 'ttt-wishes';
+const PRESET_WISHES = [
+  'Chúc cả nhà Trung Thu đoàn viên, ấm áp 🏮',
+  'Mong Two The Top mãi rực rỡ như mặt trời ☀️',
+  'Chúc Sun Media ngày càng tỏa sáng ✨',
+  'Chúc các em nhỏ một mùa trăng thật vui 🌕',
+  'Cảm ơn 19 đôi tay đã cùng thắp sáng lồng đèn 💛',
+];
+const wishLayer = document.getElementById('wishLabels');
+const wishes = [];
+let wishSide = 1; // alternate left / right
+function loadWishes() { try { return JSON.parse(localStorage.getItem(WISH_KEY)) || []; } catch { return []; } }
+function saveWishes(list) { try { localStorage.setItem(WISH_KEY, JSON.stringify(list.slice(0, 12))); } catch {} }
+
+// Wishes never cover the big lantern: they rise in the empty space to its left or right
+// (worked out in screen pixels every frame, so orbiting and zooming keep them clear).
+// When there is no room at the sides (narrow phones) they start behind the lantern
+// and only show their words once they have risen above it.
+const LANTERN_TOP = 13.2, MIN_ROOM = 120;
+const _wv = new THREE.Vector3(), _tv = new THREE.Vector3(), _right = new THREE.Vector3(), _back = new THREE.Vector3();
+// Points around the lantern's outline (base, sun with rays, hoop, both moons), projected
+// each frame to find how much of the screen it covers.
+const silhouette = (() => {
+  lantern.updateMatrixWorld(true);
+  const pts = [], V = THREE.Vector3;
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2, c = Math.cos(a), s = Math.sin(a);
+    pts.push(new V(c * BASE_R, 0, s * BASE_R), new V(c * BASE_R, BASE_H, s * BASE_R));
+    pts.push(SUN_POS.clone().add(new V(c * (SUN_R + 1.4), s * (SUN_R + 1.4), 0)));
+    pts.push(ring.localToWorld(new V(c * RING_R, s * RING_R, 0)));
+    for (const m of [[-3.25, 4.5], [3.45, 4.7]]) pts.push(new V(m[0] + c * 2.75, m[1] + s * 2.75, -1.4));
+  }
+  return pts;
+})();
+function viewRooms() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  const pxPerUnit = h / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.distanceTo(controls.target));
+  _tv.copy(controls.target).project(camera);
+  const cx = ((_tv.x + 1) / 2) * w;
+  let minX = Infinity, maxX = -Infinity;
+  for (const p of silhouette) {
+    const x = ((_wv.copy(p).project(camera).x + 1) / 2) * w;
+    if (x < minX) minX = x;
+    if (x > maxX) maxX = x;
+  }
+  const leftEdge = !isCompact() && !document.body.classList.contains('presenting') ? intro.offsetLeft + intro.offsetWidth + 16 : 10;
+  return { w, h, cx, pxPerUnit, leftEdge, minX, maxX, room: { [-1]: [leftEdge, minX - 12], [1]: [maxX + 12, w - 10] } };
+}
+const roomWidth = (r) => r[1] - r[0];
+
+function launchWish(text, from) {
+  if (wishes.length >= 6) retireWish(wishes[0]);
+  const obj = skyLanternKit.make();
+  obj.scale.setScalar(0.85);
+  scene.add(obj);
+  const v = viewRooms();
+  let sign = wishSide = -wishSide;
+  if (roomWidth(v.room[sign]) < MIN_ROOM) sign = -sign;
+  const beside = roomWidth(v.room[sign]) >= MIN_ROOM;
+  const el = document.createElement('div');
+  el.className = 'wish-label';
+  const txt = document.createElement('span'); txt.textContent = text; el.append(txt);
+  if (from) { const f = document.createElement('span'); f.className = 'from'; f.textContent = `— ${from}`; el.append(f); }
+  wishLayer.appendChild(el);
+  wishes.push({ obj, el, sign, beside, labelAt: beside ? 0 : null, speed: beside ? 0.85 : 1.5,
+    offset: beside ? 0 : (Math.random() - 0.5) * 3, age: 0, ph: Math.random() * 6.28 });
+}
+function retireWish(w) {
+  scene.remove(w.obj);
+  w.el.remove();
+  wishes.splice(wishes.indexOf(w), 1);
+}
+function updateWishes(dt) {
+  if (!wishes.length) return;
+  const v = viewRooms();
+  _right.setFromMatrixColumn(camera.matrixWorld, 0).setY(0).normalize();
+  _back.copy(controls.target).sub(camera.position).setY(0).normalize();
+  for (const wi of [...wishes]) {
+    wi.age += dt;
+    const a = wi.age;
+    if (a > 45) { retireWish(wi); continue; }
+    const room = v.room[wi.sign];
+    // Sideways distance in world units: centre of the free space, capped so it stays near the lantern.
+    const lateral = wi.beside
+      ? wi.sign * (edge => Math.max(edge + 1.1, Math.min(edge + 5, Math.abs((room[0] + room[1]) / 2 - v.cx) / v.pxPerUnit)))(
+          (wi.sign < 0 ? v.cx - v.minX : v.maxX - v.cx) / v.pxPerUnit)
+      : wi.offset;
+    const rise = a * wi.speed + Math.max(0, a - 10) * a * 0.03;
+    wi.obj.position.copy(controls.target).setY(0)
+      .addScaledVector(_right, lateral + Math.sin(a * 0.7 + wi.ph) * 0.3)
+      .addScaledVector(_back, wi.beside ? 0 : 3.5);
+    wi.obj.position.y = (wi.beside ? 0.6 : 2) + rise;
+    wi.obj.rotation.set(Math.sin(a * 0.9 + wi.ph) * 0.08, a * 0.25, Math.cos(a * 0.8 + wi.ph) * 0.06);
+
+    if (wi.labelAt === null && wi.obj.position.y > LANTERN_TOP) wi.labelAt = a;
+    const la = a - (wi.labelAt ?? Infinity);
+    const fade = THREE.MathUtils.smoothstep(la, 0.6, 1.6) * (1 - THREE.MathUtils.smoothstep(la, 12, 14));
+    _wv.copy(wi.obj.position).setY(wi.obj.position.y + 1.3).project(camera);
+    const inView = _wv.z < 1 && Math.abs(_wv.x) < 1.1 && _wv.y < 1.05;
+    wi.el.style.opacity = inView ? fade : 0;
+    if (!inView || fade === 0) continue;
+    // Keep the bubble inside the free space (or the stage, for the behind-the-lantern case).
+    const [lo, hi] = wi.beside ? room : [v.leftEdge, v.w - 10];
+    wi.el.style.maxWidth = Math.max(120, Math.min(230, hi - lo)) + 'px';
+    const x = ((_wv.x + 1) / 2) * v.w, lw = wi.el.offsetWidth;
+    const left = Math.min(Math.max(x - lw / 2, lo), hi - lw);
+    wi.el.style.left = left + 'px';
+    wi.el.style.setProperty('--tail', Math.min(Math.max(x - left, 14), lw - 14) + 'px');
+    wi.el.style.top = Math.max(70, ((1 - _wv.y) / 2) * v.h) + 'px';
+  }
+}
+
+const wishModal = document.getElementById('wishModal');
+const wishForm = document.getElementById('wishForm'), wishText = document.getElementById('wishText');
+const wishName = document.getElementById('wishName'), wishCount = document.getElementById('wishCount');
+function renderMine() {
+  const list = loadWishes();
+  document.getElementById('wishMine').hidden = !list.length;
+  const ul = document.getElementById('wishList');
+  ul.replaceChildren(...list.map(wi => {
+    const li = document.createElement('li'), span = document.createElement('span'), b = document.createElement('button');
+    span.textContent = wi.text;
+    b.type = 'button'; b.textContent = 'Thả lại';
+    b.addEventListener('click', () => release(wi.text, wi.name, false));
+    li.append(span, b);
+    return li;
+  }));
+}
+document.getElementById('wishSuggest').replaceChildren(...PRESET_WISHES.slice(0, 3).map(s => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.textContent = s;
+  b.addEventListener('click', () => { wishText.value = s; wishText.dispatchEvent(new Event('input')); wishText.focus(); });
+  return b;
+}));
+wishText.addEventListener('input', () => { wishCount.textContent = `${wishText.value.length} / 90`; });
+try { wishName.value = localStorage.getItem('ttt-name') || ''; } catch {}
+
+function release(text, name, save = true) {
+  if (save) {
+    saveWishes([{ text, name, at: Date.now() }, ...loadWishes()]);
+    try { localStorage.setItem('ttt-name', name); } catch {}
+  }
+  closeWish();
+  if (isCompact()) stage.scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => { launchWish(text, name); sound.lift(); }, isCompact() ? 450 : 250);
+}
+
+/* ---- Shared wishes (Supabase): everyone watching sees everyone's lanterns ---- */
+// The publishable key is meant to live in the browser; the table's policies only allow
+// reading and adding wishes, and a trigger rejects spam and rude words.
+const SUPABASE_URL = 'https://frznqknnrslqmwpnpojl.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_1Rnc5hqFEPeEq0hR7xjgvQ_hoiTkk4u';
+const COOLDOWN_MS = 15000;
+let db = null, wishTotal = 0;
+const sharedPool = [];              // shared wishes that float up now and then, newest first
+const seenIds = new Set();
+const ownPending = new Set(); // our own wishes, already launched locally (skip the realtime echo)
+const wishFine = document.getElementById('wishFine'), wishError = document.getElementById('wishError');
+const wishSubmit = wishForm.querySelector('button[type=submit]');
+const wishKey = (text, name) => `${text}|${name || ''}`;
+const sceneBusy = () => document.hidden || document.body.classList.contains('presenting')
+  || !!document.querySelector('.team-modal.open, .memories.open, .lightbox.open');
+
+function updateWishFine() {
+  wishFine.textContent = db
+    ? `Lời chúc sẽ bay lên trên màn hình của mọi người đang xem trang${wishTotal ? ` · đã có ${wishTotal} chiếc đèn được thả` : ''}.`
+    : 'Chưa kết nối được kho lời chúc chung, đèn của bạn chỉ bay trên máy này.';
+}
+async function connectWishes() {
+  try {
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+    const client = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } });
+    const { data, count, error } = await client.from('wishes')
+      .select('id,text,name', { count: 'exact' }).order('id', { ascending: false }).limit(40);
+    if (error) throw error;
+    db = client;
+    for (const w of data) { seenIds.add(w.id); sharedPool.push(w); }
+    wishTotal = count ?? data.length;
+    client.channel('wishes')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'wishes' }, ({ new: w }) => {
+        if (seenIds.has(w.id)) return;
+        seenIds.add(w.id);
+        wishTotal++;
+        updateWishFine();
+        sharedPool.unshift(w);
+        if (sharedPool.length > 60) sharedPool.pop();
+        if (ownPending.delete(wishKey(w.text, w.name))) return;
+        if (!sceneBusy()) launchWish(w.text, w.name);
+      })
+      .subscribe();
+  } catch (err) {
+    console.warn('Không kết nối được kho lời chúc chung:', err);
+  }
+  updateWishFine();
+}
+connectWishes();
+
+function showWishError(msg) { wishError.textContent = msg; wishError.hidden = !msg; }
+function friendlyError(err) {
+  if (err.code === 'P0001') return err.message;              // from the server trigger (spam / rude words)
+  if (err.code === '42501' || err.code === '23514') return 'Lời chúc chưa hợp lệ, bạn kiểm tra lại độ dài nhé.';
+  return 'Chưa gửi được, bạn kiểm tra mạng rồi thử lại nhé.';
+}
+wishForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const text = wishText.value.trim().replace(/\s+/g, ' ');
+  const name = wishName.value.trim().replace(/\s+/g, ' ');
+  if (!text) return;
+  let last = 0;
+  try { last = +localStorage.getItem('ttt-last') || 0; } catch {}
+  const wait = Math.ceil((last + COOLDOWN_MS - Date.now()) / 1000);
+  if (wait > 0) { showWishError(`Đèn trước vừa bay, chờ ${wait} giây rồi thả tiếp nhé.`); return; }
+  showWishError('');
+  if (db) {
+    wishSubmit.disabled = true;
+    const key = wishKey(text, name);
+    ownPending.add(key);
+    const { error } = await db.from('wishes').insert({ text, name: name || null });
+    wishSubmit.disabled = false;
+    if (error) { ownPending.delete(key); showWishError(friendlyError(error)); return; }
+    setTimeout(() => ownPending.delete(key), 20000);
+  }
+  try { localStorage.setItem('ttt-last', Date.now()); } catch {}
+  release(text, name);
+  wishText.value = '';
+  wishCount.textContent = '0 / 90';
+});
+function openWish() { renderMine(); showWishError(''); updateWishFine(); setOverlay(wishModal, true, '#wishText'); }
+function closeWish() { setOverlay(wishModal, false); }
+document.getElementById('btnWish').addEventListener('click', (e) => { e.stopPropagation(); openWish(); });
+document.getElementById('wishClose').addEventListener('click', closeWish);
+wishModal.addEventListener('click', (e) => { if (e.target === wishModal) closeWish(); });
+
+// Now and then a lantern floats up on its own: other people's wishes first, the team's otherwise.
+let poolIdx = 0, presetIdx = 0;
+function ambientWish() {
+  if (sceneBusy() || wishes.length >= 3) return;
+  if (sharedPool.length) {
+    const w = sharedPool[poolIdx++ % sharedPool.length];
+    launchWish(w.text, w.name);
+  } else {
+    launchWish(PRESET_WISHES[presetIdx++ % PRESET_WISHES.length], 'Two The Top');
+  }
+}
+setTimeout(() => { ambientWish(); setInterval(ambientWish, 15000); }, 6000);
+
+/* =========================================================
+   Share / QR
+   ========================================================= */
+const SITE_URL = 'https://trakhanh.github.io/TwoTheTop/';
+const shareModal = document.getElementById('shareModal');
+const btnCopy = document.getElementById('btnCopy'), btnNativeShare = document.getElementById('btnNativeShare');
+document.getElementById('shareUrl').textContent = SITE_URL.replace('https://', '');
+btnNativeShare.hidden = !navigator.share;
+btnCopy.addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(SITE_URL); }
+  catch {
+    const r = document.createRange(); r.selectNodeContents(document.getElementById('shareUrl'));
+    getSelection().removeAllRanges(); getSelection().addRange(r);
+    return;
+  }
+  btnCopy.textContent = 'Đã sao chép ✓';
+  setTimeout(() => { btnCopy.textContent = 'Sao chép link'; }, 2000);
+});
+btnNativeShare.addEventListener('click', () => {
+  navigator.share({ title: 'Khi Mặt Trời gặp Vầng Trăng · Two The Top', text: 'Ngắm lồng đèn Trung Thu 3D của Two The Top 🏮', url: SITE_URL }).catch(() => {});
+});
+function closeShare() { setOverlay(shareModal, false); }
+document.getElementById('btnShare').addEventListener('click', (e) => { e.stopPropagation(); setOverlay(shareModal, true, '#btnCopy'); });
+document.getElementById('shareClose').addEventListener('click', closeShare);
+shareModal.addEventListener('click', (e) => { if (e.target === shareModal) closeShare(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (wishModal.classList.contains('open')) closeWish();
+  if (shareModal.classList.contains('open')) closeShare();
+});
+
+/* =========================================================
    Controls UI
    ========================================================= */
 const btnRotate = document.getElementById('btnRotate');
@@ -1713,7 +2516,16 @@ btnLabels.addEventListener('click', () => {
   setToggle(btnLabels, on);
   document.body.classList.toggle('no-labels', !on);
 });
-btnPower.addEventListener('click', () => { lampOn = !lampOn; setToggle(btnPower, lampOn); });
+btnPower.addEventListener('click', () => { lampOn = !lampOn; setToggle(btnPower, lampOn); sound.click(); });
+const btnDay = document.getElementById('btnDay'), btnSound = document.getElementById('btnSound');
+btnDay.addEventListener('click', () => {
+  dayGoal = dayGoal ? 0 : 1;
+  setToggle(btnDay, !!dayGoal);
+  btnDay.title = dayGoal ? 'Chuyển sang đêm' : 'Chuyển sang ngày';
+  document.body.classList.toggle('daytime', !!dayGoal);
+  sound.click();
+});
+btnSound.addEventListener('click', () => { sound.setOn(!sound.on); setToggle(btnSound, sound.on); });
 slider.addEventListener('input', () => { if (!lampOn) { lampOn = true; setToggle(btnPower, true); } });
 controls.addEventListener('start', () => { tween = null; setActiveView(null); setActivePart(null); });
 
@@ -1800,19 +2612,31 @@ function tick() {
     s.mesh.instanceColor.needsUpdate = true;
   }
 
+  day += (dayGoal - day) * Math.min(1, dt * 1.8);
+  applySky(day);
   const goal = lampOn ? slider.value / 100 : 0;
   shown += (goal - shown) * Math.min(1, dt * 5);
   applyPower(shown * (1 + Math.sin(t * 2.1 + 1) * 0.015));
+  updateFireflies(t, 1 - day * 0.9);
+  updateSkyField(t);
 
   controls.update();
+  updateWishes(dt);
   if (!lightbox.classList.contains('open') && !memories.classList.contains('open')) composer.render();
   if (!document.body.classList.contains('presenting')) updateHotspots();
   requestAnimationFrame(tick);
 }
 tick();
-const hideLoader = () => document.getElementById('loader').classList.add('done');
-requestAnimationFrame(hideLoader);
-setTimeout(hideLoader, 1500);
+// Keep the intro on screen long enough to be seen (the sun and moon meet once), then fade out.
+let loaderGone = false;
+function hideLoader() {
+  if (loaderGone) return;
+  loaderGone = true;
+  const el = document.getElementById('loader');
+  el.querySelector('.ld-note').textContent = 'Đèn đã sáng ✨';
+  setTimeout(() => el.classList.add('done'), 350);
+}
+requestAnimationFrame(() => setTimeout(hideLoader, Math.max(0, 1600 - performance.now())));
 </script>
 </body>
 </html>
